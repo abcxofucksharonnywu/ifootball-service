@@ -42,7 +42,7 @@ public class Tweet {
     @Transient
     private boolean star;
 
-    private Date date;
+    private long date;
 
 
     public long getId() {
@@ -149,11 +149,11 @@ public class Tweet {
         this.time = time;
     }
 
-    public Date getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(long date) {
         this.date = date;
     }
 

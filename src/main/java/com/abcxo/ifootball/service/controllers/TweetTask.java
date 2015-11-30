@@ -79,7 +79,7 @@ public class TweetTask {
 
                         tweet.setSource(source);
                         tweet.setTime(time);
-                        tweet.setDate(new Date());
+                        tweet.setDate(new Date().getTime());
                         tweet.setTweetType(Tweet.TweetType.PUBLIC);
                         tweet = tweetRepo.saveAndFlush(tweet);
 
@@ -169,7 +169,7 @@ public class TweetTask {
 
                             tweet.setSource(source);
                             tweet.setTime(time);
-                            tweet.setDate(new Date());
+                            tweet.setDate(new Date().getTime());
                             tweet.setTweetType(Tweet.TweetType.NEWS);
                             tweet = tweetRepo.saveAndFlush(tweet);
 

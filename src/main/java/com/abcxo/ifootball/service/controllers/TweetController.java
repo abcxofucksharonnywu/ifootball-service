@@ -41,7 +41,7 @@ public class TweetController {
         tweet.setSummary(content);
         tweet.setContent(Utils.content(String.format(Constants.TWEET_ADD_HTML, content, "")));
         tweet.setTime(Utils.getTime());
-        tweet.setDate(new Date());
+        tweet.setDate(new Date().getTime());
         tweet = tweetRepo.saveAndFlush(tweet);
 
         //保持userTweet
