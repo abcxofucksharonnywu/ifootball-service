@@ -183,7 +183,7 @@ public class TweetController {
 
         }
         List<Long> tids = userTweetRepo.findTidsByUidsAndUserTweetType(uids, UserTweet.UserTweetType.ADD);
-        List<Tweet> tweets = tweetRepo.findAllByOrderByDateAsc(tids);
+        List<Tweet> tweets = tweetRepo.findAllByOrderByDateDesc(tids);
         for (Tweet tweet : tweets) {
             tweet.setStar(userTweetRepo.findOneByUidAndTidAndUserTweetType(uid, tweet.getId(), UserTweet.UserTweetType.STAR) != null);
             Long tid2 = tweetTweetRepo.findTid2ByTidAndTweetTweetType(tweet.getId(), TweetTweet.TweetTweetType.REPEAT);

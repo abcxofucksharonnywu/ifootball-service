@@ -17,8 +17,8 @@ public interface TweetRepo extends JpaRepository<Tweet, Long> {
 
     Tweet findByTitle(String title);
 
-    @Query("SELECT t FROM Tweet t WHERE id IN (:tids) ORDER BY date ASC ")
-    List<Tweet> findAllByOrderByDateAsc(@Param("tids") List<Long> tids);
+    @Query("SELECT t FROM Tweet t WHERE id IN (:tids) ORDER BY date DESC ")
+    List<Tweet> findAllByOrderByDateDesc(@Param("tids") List<Long> tids);
 
     @Modifying
     @Transactional
