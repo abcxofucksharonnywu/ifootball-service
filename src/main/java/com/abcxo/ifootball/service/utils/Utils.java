@@ -35,7 +35,7 @@ public class Utils {
 
     public static String content(String content) {
         try {
-            return upload(content.getBytes());
+            return upload(content.getBytes("UTF8"));
         } catch (Exception e) {
             e.printStackTrace();
         }
