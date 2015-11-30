@@ -10,35 +10,36 @@ public class Tweet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    //用户
     private long uid;
+    private String icon;
+    private String name;
 
-
+    //操作
     private int commentCount;
     private int repeatCount;
     private int starCount;
-    @Transient
-    private boolean star;
 
 
-
-    private String icon;
-    private String name;
+    //推文内容
     private String title;
     private String source;
+    private String summary;
     private String content;
-    private String cover;
-    private String url;
-    private String lon;
-    private String lat;
+
+    @Column(length = 3000)
     private String images;
     private String time;
 
-    private TweetMainType mainType = TweetMainType.NORMAL;
-    private TweetDetailType detailType = TweetDetailType.TWEET;
+    private double lon;
+    private double lat;
 
+    private TweetType tweetType;
 
     @Transient
     private Tweet originTweet;
+    @Transient
+    private boolean star;
 
 
     public long getId() {
@@ -55,6 +56,22 @@ public class Tweet {
 
     public void setUid(long uid) {
         this.uid = uid;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getCommentCount() {
@@ -81,30 +98,6 @@ public class Tweet {
         this.starCount = starCount;
     }
 
-    public boolean isStar() {
-        return star;
-    }
-
-    public void setStar(boolean star) {
-        this.star = star;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -121,46 +114,20 @@ public class Tweet {
         this.source = source;
     }
 
+    public String getSummary() {
+        return summary;
+    }
 
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
 
     public String getContent() {
         return content;
     }
 
-    public void setContent(String text) {
-        this.content = text;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getLon() {
-        return lon;
-    }
-
-    public void setLon(String lon) {
-        this.lon = lon;
-    }
-
-    public String getLat() {
-        return lat;
-    }
-
-    public void setLat(String lat) {
-        this.lat = lat;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getImages() {
@@ -179,20 +146,20 @@ public class Tweet {
         this.time = time;
     }
 
-    public TweetMainType getMainType() {
-        return mainType;
+    public double getLon() {
+        return lon;
     }
 
-    public void setMainType(TweetMainType mainType) {
-        this.mainType = mainType;
+    public void setLon(double lon) {
+        this.lon = lon;
     }
 
-    public TweetDetailType getDetailType() {
-        return detailType;
+    public double getLat() {
+        return lat;
     }
 
-    public void setDetailType(TweetDetailType detailType) {
-        this.detailType = detailType;
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 
     public Tweet getOriginTweet() {
@@ -203,39 +170,37 @@ public class Tweet {
         this.originTweet = originTweet;
     }
 
-    public enum TweetMainType {
+    public boolean isStar() {
+        return star;
+    }
+
+    public void setStar(boolean star) {
+        this.star = star;
+    }
+
+    public TweetType getTweetType() {
+        return tweetType;
+    }
+
+    public void setTweetType(TweetType tweetType) {
+        this.tweetType = tweetType;
+    }
+
+    public enum TweetType {
 
         NORMAL(0),
         TEAM(1),
         NEWS(2),
-        SPECIAL(3);
+        PUBLIC(3),
+        SPECIAL(4);
         private int index;
 
-        TweetMainType(int index) {
+        TweetType(int index) {
             this.index = index;
         }
 
         public static int size() {
-            return TweetMainType.values().length;
-        }
-
-        public int getIndex() {
-            return index;
-        }
-    }
-
-    public enum TweetDetailType {
-
-        TWEET(0),
-        NEWS(1);
-        private int index;
-
-        TweetDetailType(int index) {
-            this.index = index;
-        }
-
-        public static int size() {
-            return TweetDetailType.values().length;
+            return TweetType.values().length;
         }
 
         public int getIndex() {

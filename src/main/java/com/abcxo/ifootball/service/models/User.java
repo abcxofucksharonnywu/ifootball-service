@@ -12,30 +12,28 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Transient
     private String index;
-    private String username;
+    private String groupName;
     private String email;
     private String name;
     private String sign;
     private String password;
     private String avatar;
     private String cover;
-    @Transient
-    private String distance;
-    private String time;
-    private String lon;
-    private String lat;
+
+    private double lon;
+    private double lat;
     private int focusCount;
     private int fansCount;
+
     private GenderType gender = GenderType.MALE;
     private UserType userType = UserType.NORMAL;
 
     @Transient
-    private UserMainType mainType = UserMainType.NORMAL;
-
-    @Transient
     private boolean focus;
+    @Transient
+    private String distance;
+
 
     public long getId() {
         return id;
@@ -53,12 +51,12 @@ public class User {
         this.index = index;
     }
 
-    public String getUsername() {
-        return username;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     public String getEmail() {
@@ -76,7 +74,6 @@ public class User {
     public void setName(String name) {
         this.name = name;
         setIndex(Utils.getNameIndex(name));
-
     }
 
     public String getSign() {
@@ -111,35 +108,19 @@ public class User {
         this.cover = cover;
     }
 
-    public String getDistance() {
-        return distance;
-    }
-
-    public void setDistance(String distance) {
-        this.distance = distance;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public String getLon() {
+    public double getLon() {
         return lon;
     }
 
-    public void setLon(String lon) {
+    public void setLon(double lon) {
         this.lon = lon;
     }
 
-    public String getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public void setLat(String lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
@@ -175,33 +156,21 @@ public class User {
         this.userType = userType;
     }
 
-    public UserMainType getMainType() {
-        return mainType;
+    public String getDistance() {
+        return distance;
     }
 
-    public void setMainType(UserMainType mainType) {
-        this.mainType = mainType;
+    public void setDistance(String distance) {
+        this.distance = distance;
     }
 
-    public enum UserMainType {
 
-        NORMAL(0),
-        CONTACT(1),
-        DISCOVER(2),
-        SPECIAL(3);
-        private int index;
+    public boolean isFocus() {
+        return focus;
+    }
 
-        UserMainType(int index) {
-            this.index = index;
-        }
-
-        public static int size() {
-            return UserMainType.values().length;
-        }
-
-        public int getIndex() {
-            return index;
-        }
+    public void setFocus(boolean focus) {
+        this.focus = focus;
     }
 
     public enum GenderType {
@@ -227,8 +196,9 @@ public class User {
 
         NORMAL(0),
         TEAM(1),
-        VIP(2),
-        SUPER(3);
+        NEWS(2),
+        PUBLIC(3),
+        SPECIAL(4);
         private int index;
 
         UserType(int index) {
@@ -244,12 +214,6 @@ public class User {
         }
     }
 
-    public boolean isFocus() {
-        return focus;
-    }
 
-    public void setFocus(boolean focus) {
-        this.focus = focus;
-    }
 }
 

@@ -2,7 +2,12 @@ package com.abcxo.ifootball.service.controllers;
 
 import com.abcxo.ifootball.service.models.*;
 import com.abcxo.ifootball.service.repos.*;
+import com.abcxo.ifootball.service.utils.Constants;
 import com.abcxo.ifootball.service.utils.Utils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +40,9 @@ public class TweetController {
                      @RequestParam("originTid") long originTid,
                      @RequestBody Tweet tweet) {
 
+        String content = tweet.getContent();
+        tweet.setSummary(content);
+        tweet.setContent(Utils.content(String.format(Constants.TWEET_ADD_HTML, content, "")));
         tweet.setTime(Utils.getTime());
         tweet = tweetRepo.saveAndFlush(tweet);
 
@@ -95,21 +103,33 @@ public class TweetController {
                        @RequestParam("image") MultipartFile[] images) {
         Tweet tweet = tweetRepo.findOne(tid);
         List<String> imageUrls = new ArrayList<>();
+        StringBuffer imageContent = new StringBuffer();
         for (MultipartFile image : images) {
             String imageUrl = Utils.image(image);
             imageUrls.add(imageUrl);
+            imageContent.append(String.format(Constants.TWEET_ADD_IMAGE_HTML, imageUrl));
         }
-        if (imageUrls.size() > 0) {
-            tweet.setCover(imageUrls.get(0));
-        }
-
+        String content = tweet.getSummary();
+        tweet.setContent(Utils.content(String.format(Constants.TWEET_ADD_HTML, content, imageContent)));
         tweet.setImages(String.join(";", imageUrls));
         tweet = tweetRepo.saveAndFlush(tweet);
         return tweet;
     }
 
 
+    @RequestMapping(value = "/tweet", method = RequestMethod.GET)
+    public Tweet get(@RequestParam("uid") long uid, @RequestParam("tid") long tid) {
+        Tweet tweet = tweetRepo.findOne(uid);
+        tweet.setStar(userTweetRepo.findOneByUidAndTidAndUserTweetType(uid, tweet.getId(), UserTweet.UserTweetType.STAR) != null);
+        Long tid2 = tweetTweetRepo.findTid2ByTidAndTweetTweetType(tweet.getId(), TweetTweet.TweetTweetType.REPEAT);
+        if (tid2 != null) {
+            tweet.setOriginTweet(tweetRepo.findOne(tid2));
+        }
+        return tweet;
+    }
+
     public enum GetsType {
+
         HOME(0),
         TEAM(1),
         NEWS(2),
@@ -129,16 +149,6 @@ public class TweetController {
         }
     }
 
-    @RequestMapping(value = "/tweet", method = RequestMethod.GET)
-    public Tweet get(@RequestParam("uid") long uid, @RequestParam("tid") long tid) {
-        Tweet tweet = tweetRepo.findOne(uid);
-        tweet.setStar(userTweetRepo.findOneByUidAndTidAndUserTweetType(uid, tweet.getId(), UserTweet.UserTweetType.STAR) != null);
-        Long tid2 = tweetTweetRepo.findTid2ByTidAndTweetTweetType(tweet.getId(), TweetTweet.TweetTweetType.REPEAT);
-        if (tid2 != null) {
-            tweet.setOriginTweet(tweetRepo.findOne(tid2));
-        }
-        return tweet;
-    }
 
     @RequestMapping(value = "/tweet/list", method = RequestMethod.GET)
     public List<Tweet> gets(@RequestParam("uid") long uid,
@@ -146,15 +156,33 @@ public class TweetController {
                             @RequestParam("pageIndex") int pageIndex,
                             @RequestParam("pageSize") int pageSize) {
         List<Long> uids = new ArrayList<>();
-        if (getsType == GetsType.HOME) {
-            uids = userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
-            uids.add(0, uid);
-        } else if (getsType == GetsType.TEAM) {
-            uids = userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.TEAM);
-        } else if (getsType == GetsType.NEWS) {
-            uids = userRepo.findUidsByUserType(User.UserType.TEAM);
-        } else if (getsType == GetsType.USER) {
-            uids.add(0, uid);
+        if (uid > 0 && (getsType == GetsType.HOME || getsType == GetsType.USER)) {
+            uids.add(uid);
+        }
+        if (getsType != GetsType.USER) {
+            List<User> users = new ArrayList<>();
+            if (uid > 0) {
+                users.addAll(userRepo.findAll(userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS)));
+            } else {
+                users.add(userRepo.findByName(Constants.NEWS_YINGCHAO));
+                users.add(userRepo.findByName(Constants.NEWS_XIJIA));
+                users.add(userRepo.findByName(Constants.NEWS_DEJIA));
+                users.add(userRepo.findByName(Constants.NEWS_YIJIA));
+                users.add(userRepo.findByName(Constants.NEWS_FAJIA));
+                users.add(userRepo.findByName(Constants.NEWS_ZHONGCHAO));
+                users.add(userRepo.findByName(Constants.NEWS_HUABIAN));
+            }
+            for (User user : users) {
+                if (getsType == GetsType.HOME && (user.getUserType() == User.UserType.NORMAL ||
+                        user.getUserType() == User.UserType.PUBLIC)) {
+                    uids.add(user.getId());
+                } else if (getsType == GetsType.TEAM && user.getUserType() == User.UserType.TEAM) {
+                    uids.add(user.getId());
+                } else if (getsType == GetsType.NEWS && user.getUserType() == User.UserType.NEWS) {
+                    uids.add(user.getId());
+                }
+            }
+
         }
         List<Long> tids = userTweetRepo.findTidsByUidsAndUserTweetType(uids, UserTweet.UserTweetType.ADD);
         List<Tweet> tweets = tweetRepo.findAll(tids);
@@ -174,21 +202,16 @@ public class TweetController {
     public void star(@RequestParam("uid") long uid,
                      @RequestParam("tid") long tid,
                      @RequestParam("star") boolean star) {
+        userTweetRepo.deleteByUidAndTidAndUserTweetType(uid, tid, UserTweet.UserTweetType.STAR);
+        Tweet tweet = tweetRepo.findOne(tid);
+        tweet.setStarCount(star ? tweet.getStarCount() + 1 : tweet.getStarCount() - 1);
+        tweetRepo.saveAndFlush(tweet);
         if (star) {
-            Tweet tweet = tweetRepo.findOne(tid);
-            tweet.setStarCount(tweet.getStarCount() + 1);
-            tweetRepo.saveAndFlush(tweet);
             UserTweet userTweet = new UserTweet();
             userTweet.setUid(uid);
             userTweet.setTid(tid);
             userTweet.setUserTweetType(UserTweet.UserTweetType.STAR);
-            userTweetRepo.deleteByUidAndTidAndUserTweetType(uid, tid, UserTweet.UserTweetType.STAR);
             userTweetRepo.saveAndFlush(userTweet);
-        } else {
-            Tweet tweet = tweetRepo.findOne(tid);
-            tweet.setStarCount(tweet.getStarCount() - 1);
-            tweetRepo.saveAndFlush(tweet);
-            userTweetRepo.deleteByUidAndTidAndUserTweetType(uid, tid, UserTweet.UserTweetType.STAR);
         }
 
     }

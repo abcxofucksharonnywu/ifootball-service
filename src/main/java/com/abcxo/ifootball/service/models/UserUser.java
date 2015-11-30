@@ -54,8 +54,7 @@ public class UserUser {
 
         FOCUS(0),
         STAR(1),
-        TEAM(2),
-        SPECIAL(3);
+        SPECIAL(2);
         private int index;
 
         UserUserType(int index) {

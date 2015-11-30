@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,27 +15,6 @@ import java.util.List;
  */
 @RestController
 public class MessageController {
-
-    private Message testMessage() {
-        Message message = new Message();
-        message.setUid(0);
-        message.setUid2(0);
-        message.setTid(1);
-        message.setTime("3小时前");
-        message.setTitle("山东C罗");
-        message.setText("里皮时代，恒大队的外援威震中超，尤其是孔卡、穆里奇、埃尔克森的南美前场铁三角组合，在2013年横扫亚洲赛场。“恒大靠外援”的标签，在那一年被贴得格外严实，撕都撕不掉。三人的进球，在那一年占了恒大队全队进球的七成。");
-        message.setIcon("http://tse1.mm.bing.net/th?&id=OIP.Me12f5a011ec53760dd2ab88e4d24e115o0&w=300&h=300&c=0&pid=1.9&rs=0&p=0");
-
-        return message;
-    }
-
-    public List<Message> testMesages() {
-        List<Message> messages = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
-            messages.add(testMessage());
-        }
-        return messages;
-    }
 
 
     @Autowired
@@ -85,35 +65,27 @@ public class MessageController {
                               @RequestParam("getsType") GetsType getsType,
                               @RequestParam("pageIndex") int pageIndex,
                               @RequestParam("pageSize") int pageSize) {
-
-        Message message = testMessage();
-        messageRepo.save(message);
-        List<Message> messages = messageRepo.findAll();
-        for (Message m : messages) {
-            if (getsType == GetsType.COMMENT_TWEET) {
-                m.setMainType(Message.MessageMainType.COMMENT_TWEET);
-                m.setDetailType(Message.MessageDetailType.COMMENT);
-            } else if (getsType == GetsType.CHAT_USER) {
-                m.setMainType(Message.MessageMainType.CHAT_USER);
-                m.setDetailType(Message.MessageDetailType.NONE);
-            } else {
-                Message.MessageMainType mainType = Message.MessageMainType.valueOf(m.getMessageType().name());
-                if (mainType == Message.MessageMainType.FOCUS ||
-                        mainType == Message.MessageMainType.STAR) {
-                    m.setDetailType(Message.MessageDetailType.USER);
-                } else if (mainType == Message.MessageMainType.COMMENT ||
-                        mainType == Message.MessageMainType.PROMPT) {
-                    m.setDetailType(Message.MessageDetailType.TWEET);
-                } else if (mainType == Message.MessageMainType.CHAT) {
-                    m.setDetailType(Message.MessageDetailType.CHAT);
-                } else {
-                    m.setDetailType(Message.MessageDetailType.NORMAL);
-                }
-                m.setMainType(mainType);
-
-            }
+        if (getsType == GetsType.ALL) {
+            return messageRepo.findByUid2(uid2);
+        } else if (getsType == GetsType.CHAT) {
+            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.CHAT);
+        } else if (getsType == GetsType.CHAT_USER) {
+            return messageRepo.findByUidsAndUid2sAndMessageType(Arrays.asList(uid, uid2), Arrays.asList(uid, uid2), Message.MessageType.CHAT);
+        } else if (getsType == GetsType.COMMENT) {
+            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.COMMENT);
+        } else if (getsType == GetsType.COMMENT_TWEET) {
+            return messageRepo.findByTidAndMessageType(tid, Message.MessageType.COMMENT);
+        } else if (getsType == GetsType.PROMPT) {
+            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.PROMPT);
+        } else if (getsType == GetsType.FOCUS) {
+            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.FOCUS);
+        } else if (getsType == GetsType.STAR) {
+            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.STAR);
+        } else if (getsType == GetsType.OTHER) {
+            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.SPECIAL);
         }
-        return messages;
+        return null;
+
     }
 
     @RequestMapping(value = "/message/chat", method = RequestMethod.POST)

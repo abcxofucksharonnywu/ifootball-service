@@ -11,27 +11,16 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    //用户id
     private long uid;
     private long uid2;
     private long tid;
 
     private String icon;
     private String title;
-    private String text;
-    private String cover;
-    private String url;
-    private String lon;
-    private String lat;
-    private String images;
+    private String content;
     private String time;
-
     private MessageType messageType = MessageType.NORMAL;
-
-    @Transient
-    private MessageMainType mainType = MessageMainType.NORMAL;
-
-    @Transient
-    private MessageDetailType detailType = MessageDetailType.NORMAL;
 
 
     public long getId() {
@@ -82,52 +71,12 @@ public class Message {
         this.title = title;
     }
 
-    public String getText() {
-        return text;
+    public String getContent() {
+        return content;
     }
 
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getLon() {
-        return lon;
-    }
-
-    public void setLon(String lon) {
-        this.lon = lon;
-    }
-
-    public String getLat() {
-        return lat;
-    }
-
-    public void setLat(String lat) {
-        this.lat = lat;
-    }
-
-    public String getImages() {
-        return images;
-    }
-
-    public void setImages(String images) {
-        this.images = images;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getTime() {
@@ -146,24 +95,7 @@ public class Message {
         this.messageType = messageType;
     }
 
-    public MessageMainType getMainType() {
-        return mainType;
-    }
-
-    public void setMainType(MessageMainType mainType) {
-        this.mainType = mainType;
-    }
-
-    public MessageDetailType getDetailType() {
-        return detailType;
-    }
-
-    public void setDetailType(MessageDetailType detailType) {
-        this.detailType = detailType;
-    }
-
     public enum MessageType {
-
         NORMAL(0),
         FOCUS(1),
         COMMENT(2),
@@ -187,56 +119,5 @@ public class Message {
         }
     }
 
-
-    public enum MessageMainType {
-
-        NORMAL(0),
-        FOCUS(1),
-        COMMENT(2),
-        PROMPT(3),
-        STAR(4),
-        CHAT(5),
-        SPECIAL(6),
-        COMMENT_TWEET(7),
-        CHAT_USER(8);
-
-
-        private int index;
-
-        MessageMainType(int index) {
-            this.index = index;
-        }
-
-        public static int size() {
-            return MessageType.values().length;
-        }
-
-        public int getIndex() {
-            return index;
-        }
-    }
-
-    public enum MessageDetailType {
-
-        NORMAL(0),
-        USER(1),
-        TWEET(2),
-        COMMENT(3),
-        CHAT(4),
-        NONE(5);
-        private int index;
-
-        MessageDetailType(int index) {
-            this.index = index;
-        }
-
-        public static int size() {
-            return MessageType.values().length;
-        }
-
-        public int getIndex() {
-            return index;
-        }
-    }
 
 }
