@@ -8,23 +8,13 @@ import com.abcxo.ifootball.service.repos.UserRepo;
 import com.abcxo.ifootball.service.repos.UserTweetRepo;
 import com.abcxo.ifootball.service.utils.Constants;
 import com.abcxo.ifootball.service.utils.Utils;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 /**
  * Created by shadow on 15/11/30.
@@ -63,11 +53,12 @@ public class TweetTask {
                     String link = host + child.getElementsByTag("a").first().attr("href");
                     Document article = Utils.getDocument(link);
                     Element detailEl = article.getElementsByClass("detail").first();
-                    Element contentEl = detailEl.getElementsByTag("div").first();
-                    String title = contentEl.getElementsByTag("h1").first().text();
-                    String time = contentEl.getElementsByClass("time").first().text();
-                    String source = contentEl.getElementsByClass("name").first().text();
-                    String summary = contentEl.text().substring(0, summaryMax);
+                    Element contentEl = detailEl.getElementsByTag("div").get(1);
+                    String title = detailEl.getElementsByTag("h1").first().text();
+                    String time = detailEl.getElementsByClass("time").first().text();
+                    String source = detailEl.getElementsByClass("name").first().text();
+                    String text = contentEl.text();
+                    String summary = text.substring(0, text.length() > summaryMax ? summaryMax : text.length() - 1);
 
                     if (tweetRepo.findByTitle(title) == null) {
                         Tweet tweet = new Tweet();
@@ -88,6 +79,7 @@ public class TweetTask {
 
                         tweet.setSource(source);
                         tweet.setTime(time);
+                        tweet.setDate(new Date());
                         tweet.setTweetType(Tweet.TweetType.PUBLIC);
                         tweet = tweetRepo.saveAndFlush(tweet);
 
@@ -138,7 +130,7 @@ public class TweetTask {
                         Element contentEl = article.getElementsByClass("content").first();
                         String summary = contentEl.text().substring(0, summaryMax);
                         if (tweetRepo.findByTitle(title) == null) {
-                            String name ;
+                            String name;
                             if (tag.contains(Constants.GROUP_YINGCHAO)) {
                                 name = Constants.NEWS_YINGCHAO;
                             } else if (tag.contains(Constants.GROUP_XIJIA)) {
@@ -177,6 +169,7 @@ public class TweetTask {
 
                             tweet.setSource(source);
                             tweet.setTime(time);
+                            tweet.setDate(new Date());
                             tweet.setTweetType(Tweet.TweetType.NEWS);
                             tweet = tweetRepo.saveAndFlush(tweet);
 

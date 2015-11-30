@@ -1,6 +1,7 @@
 package com.abcxo.ifootball.service.models;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by SHARON on 15/10/29.
@@ -34,12 +35,14 @@ public class Tweet {
     private double lon;
     private double lat;
 
-    private TweetType tweetType;
+    private TweetType tweetType = TweetType.NORMAL;
 
     @Transient
     private Tweet originTweet;
     @Transient
     private boolean star;
+
+    private Date date;
 
 
     public long getId() {
@@ -144,6 +147,14 @@ public class Tweet {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public double getLon() {

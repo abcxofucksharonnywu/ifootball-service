@@ -4,16 +4,13 @@ import com.abcxo.ifootball.service.models.*;
 import com.abcxo.ifootball.service.repos.*;
 import com.abcxo.ifootball.service.utils.Constants;
 import com.abcxo.ifootball.service.utils.Utils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,6 +41,7 @@ public class TweetController {
         tweet.setSummary(content);
         tweet.setContent(Utils.content(String.format(Constants.TWEET_ADD_HTML, content, "")));
         tweet.setTime(Utils.getTime());
+        tweet.setDate(new Date());
         tweet = tweetRepo.saveAndFlush(tweet);
 
         //保持userTweet
@@ -185,7 +183,7 @@ public class TweetController {
 
         }
         List<Long> tids = userTweetRepo.findTidsByUidsAndUserTweetType(uids, UserTweet.UserTweetType.ADD);
-        List<Tweet> tweets = tweetRepo.findAll(tids);
+        List<Tweet> tweets = tweetRepo.findAllByOrderByDateAsc(tids);
         for (Tweet tweet : tweets) {
             tweet.setStar(userTweetRepo.findOneByUidAndTidAndUserTweetType(uid, tweet.getId(), UserTweet.UserTweetType.STAR) != null);
             Long tid2 = tweetTweetRepo.findTid2ByTidAndTweetTweetType(tweet.getId(), TweetTweet.TweetTweetType.REPEAT);
@@ -193,6 +191,7 @@ public class TweetController {
                 tweet.setOriginTweet(tweetRepo.findOne(tid2));
             }
         }
+
         return tweets;
 
     }
