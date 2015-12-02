@@ -12,15 +12,10 @@ import com.abcxo.ifootball.service.utils.Constants;
 import com.abcxo.ifootball.service.utils.Constants.UserAlreadyExistException;
 import com.abcxo.ifootball.service.utils.Constants.UserValidateException;
 import com.abcxo.ifootball.service.utils.Utils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,8 +62,9 @@ public class UserController {
             focus(user.getId(), userRepo.findByName(Constants.NEWS_YIJIA).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.NEWS_FAJIA).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.NEWS_ZHONGCHAO).getId(), true);
+            focus(user.getId(), userRepo.findByName(Constants.NEWS_OUGUAN).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.NEWS_HUABIAN).getId(), true);
-            focus(user.getId(), userRepo.findByName(Constants.PUBLIC_IMPORTANT).getId(), true);
+            focus(user.getId(), userRepo.findByName(Constants.PUBLIC_ZHONGDA).getId(), true);
             return user;
         }
     }

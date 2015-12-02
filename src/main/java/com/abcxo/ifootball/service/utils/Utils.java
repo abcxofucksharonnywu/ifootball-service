@@ -82,6 +82,7 @@ public class Utils {
     public static Document getDocument(String url) {
         try {
             return Jsoup.connect(url)
+                    .timeout(30000)
                     .header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36").get();
         } catch (Exception e) {
             e.printStackTrace();

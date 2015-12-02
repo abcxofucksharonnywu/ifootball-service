@@ -121,7 +121,9 @@ public class TweetController {
         tweet.setStar(userTweetRepo.findOneByUidAndTidAndUserTweetType(uid, tweet.getId(), UserTweet.UserTweetType.STAR) != null);
         Long tid2 = tweetTweetRepo.findTid2ByTidAndTweetTweetType(tweet.getId(), TweetTweet.TweetTweetType.REPEAT);
         if (tid2 != null) {
-            tweet.setOriginTweet(tweetRepo.findOne(tid2));
+            Tweet originTweet = tweetRepo.findOne(tid2);
+            originTweet.setStar(userTweetRepo.findOneByUidAndTidAndUserTweetType(uid, originTweet.getId(), UserTweet.UserTweetType.STAR) != null);
+            tweet.setOriginTweet(originTweet);
         }
         return tweet;
     }
@@ -162,13 +164,16 @@ public class TweetController {
             if (uid > 0) {
                 users.addAll(userRepo.findAll(userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS)));
             } else {
+                users.add(userRepo.findByName(Constants.PUBLIC_ZHONGDA));
                 users.add(userRepo.findByName(Constants.NEWS_YINGCHAO));
                 users.add(userRepo.findByName(Constants.NEWS_XIJIA));
                 users.add(userRepo.findByName(Constants.NEWS_DEJIA));
                 users.add(userRepo.findByName(Constants.NEWS_YIJIA));
                 users.add(userRepo.findByName(Constants.NEWS_FAJIA));
                 users.add(userRepo.findByName(Constants.NEWS_ZHONGCHAO));
+                users.add(userRepo.findByName(Constants.NEWS_OUGUAN));
                 users.add(userRepo.findByName(Constants.NEWS_HUABIAN));
+
             }
             for (User user : users) {
                 if (getsType == GetsType.HOME && (user.getUserType() == User.UserType.NORMAL ||
@@ -188,7 +193,9 @@ public class TweetController {
             tweet.setStar(userTweetRepo.findOneByUidAndTidAndUserTweetType(uid, tweet.getId(), UserTweet.UserTweetType.STAR) != null);
             Long tid2 = tweetTweetRepo.findTid2ByTidAndTweetTweetType(tweet.getId(), TweetTweet.TweetTweetType.REPEAT);
             if (tid2 != null) {
-                tweet.setOriginTweet(tweetRepo.findOne(tid2));
+                Tweet originTweet = tweetRepo.findOne(tid2);
+                originTweet.setStar(userTweetRepo.findOneByUidAndTidAndUserTweetType(uid, originTweet.getId(), UserTweet.UserTweetType.STAR) != null);
+                tweet.setOriginTweet(originTweet);
             }
         }
 

@@ -46,8 +46,9 @@ public class Constants {
     public static final String NEWS_YIJIA = "意甲新闻";
     public static final String NEWS_FAJIA = "法甲新闻";
     public static final String NEWS_ZHONGCHAO = "中超新闻";
+    public static final String NEWS_OUGUAN = "欧冠新闻";
     public static final String NEWS_HUABIAN = "花边新闻";
-    public static final String PUBLIC_IMPORTANT = "重大新闻";
+    public static final String PUBLIC_ZHONGDA = "重大新闻";
 
     public static final String TWEET_HTML = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no\"><title></title><style type=\"text/css\">img{width:100%%}</style></head><body>%s</body></html>";
     public static final String TWEET_ADD_HTML = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no\"><style type=\"text/css\">img{width:33%%}</style></head><body><div>%s</div><table width=\"100%%\">%s</table></body></html>";

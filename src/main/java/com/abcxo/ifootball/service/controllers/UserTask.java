@@ -89,6 +89,13 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
                         "http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg")
         );
 
+        users.add(runInitNews(
+                        Constants.NEWS_OUGUAN,
+                        "欧洲冠军联赛，简称欧冠，是欧洲足球协会联盟主办的年度足球比赛，代表欧洲俱乐部足球最高荣誉和水平，被认为是全世界最高素质，最具影响力以及最高水平的俱乐部赛事，亦是世界上奖金最高的足球赛事和体育赛事之一，估计每届赛事约有超过十亿电视观众通过人造卫星观看赛事。",
+                        "http://d.hiphotos.baidu.com/baike/w%3D268/sign=0cb200f70855b3199cf985737ba88286/e824b899a9014c08cd776453087b02087af4f4fc.jpg",
+                        "http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg")
+        );
+
 
         users.add(runInitNews(
                         Constants.NEWS_HUABIAN,
@@ -99,7 +106,7 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
 
         //特殊帐号
         users.add(runInitPublic(
-                        Constants.PUBLIC_IMPORTANT,
+                        Constants.PUBLIC_ZHONGDA,
                         "最新最快最准确的足球快讯，欧洲足球新闻一手掌握。",
                         "http://h.hiphotos.baidu.com/zhidao/wh%3D450%2C600/sign=7e73edad9d22720e7b9beafe4efb2670/79f0f736afc379317dd1cee6eec4b74542a91147.jpg",
                         "http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg")
