@@ -13,6 +13,8 @@ import com.abcxo.ifootball.service.utils.Constants.UserAlreadyExistException;
 import com.abcxo.ifootball.service.utils.Constants.UserValidateException;
 import com.abcxo.ifootball.service.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -136,19 +138,21 @@ public class UserController {
                            @RequestParam("getsType") GetsType getsType,
                            @RequestParam("pageIndex") int pageIndex,
                            @RequestParam("pageSize") int pageSize) {
+        PageRequest pageRequest = new PageRequest(pageIndex, pageSize);
         if (getsType == GetsType.FRIEND) {
             List<Long> uids = userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
             List<Long> uid2s = userUserRepo.findUidsByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
             List<Long> uidSames = uid2s.stream().filter(id -> uids.contains(id)).collect(Collectors.toList());
-            return userRepo.findAll(uidSames);
+
+            return userRepo.findByIdIn(uidSames, pageRequest).getContent();
         } else if (getsType == GetsType.FOCUS) {
             List<Long> uids = userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
-            return userRepo.findAll(uids);
+            return userRepo.findByIdIn(uids, pageRequest).getContent();
         } else if (getsType == GetsType.FANS) {
             List<Long> uids = userUserRepo.findUidsByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
-            return userRepo.findAll(uids);
+            return userRepo.findByIdIn(uids, pageRequest).getContent();
         } else if (getsType == GetsType.DISCOVER) {
-            return userRepo.findAll();
+            return userRepo.findAll(pageRequest).getContent();
         }
         return null;
     }

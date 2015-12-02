@@ -5,6 +5,9 @@ import com.abcxo.ifootball.service.repos.*;
 import com.abcxo.ifootball.service.utils.Constants;
 import com.abcxo.ifootball.service.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -188,7 +191,8 @@ public class TweetController {
 
         }
         List<Long> tids = userTweetRepo.findTidsByUidsAndUserTweetType(uids, UserTweet.UserTweetType.ADD);
-        List<Tweet> tweets = tweetRepo.findAllByOrderByDateDesc(tids);
+        PageRequest pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.DESC, "date");
+        Page<Tweet> tweets = tweetRepo.findByIdIn(tids, pageRequest);
         for (Tweet tweet : tweets) {
             tweet.setStar(userTweetRepo.findOneByUidAndTidAndUserTweetType(uid, tweet.getId(), UserTweet.UserTweetType.STAR) != null);
             Long tid2 = tweetTweetRepo.findTid2ByTidAndTweetTweetType(tweet.getId(), TweetTweet.TweetTweetType.REPEAT);
@@ -198,9 +202,7 @@ public class TweetController {
                 tweet.setOriginTweet(originTweet);
             }
         }
-
-        return tweets;
-
+        return tweets.getContent();
     }
 
 

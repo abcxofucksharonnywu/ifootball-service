@@ -2,10 +2,13 @@ package com.abcxo.ifootball.service.repos;
 
 import com.abcxo.ifootball.service.models.Message;
 import com.abcxo.ifootball.service.models.Tweet;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -23,4 +26,5 @@ public interface MessageRepo extends JpaRepository<Message, Long> {
     @Query("SELECT m FROM Message m WHERE uid IN (:uids) AND uid2 IN (:uid2s)  AND messageType = (:messageType)")
     List<Message> findByUidsAndUid2sAndMessageType(@Param("uids") List<Long> uids,@Param("uid2s") List<Long> uid2s,@Param("messageType") Message.MessageType messageType);
 
+    Page<Message> findByIdIn(Collection<Long> tids, Pageable pageable);
 }
