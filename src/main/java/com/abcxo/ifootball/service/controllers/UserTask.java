@@ -24,13 +24,9 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
     public UserRepo userRepo;
 
 
-    @Autowired
-    public TweetTask tweetTask;
-
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         runInitUsers();
-        tweetTask.runInitTweets();
     }
 
     public void runInitUsers() {

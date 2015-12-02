@@ -12,6 +12,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -32,44 +33,45 @@ public class TweetTask {
 
     public TweetTask() {
         hupuUrls.put("切尔西", "/soccer/tag/344.html");
-//        hupuUrls.put("曼联", "/soccer/tag/342.html");
-//        hupuUrls.put("曼城", "/soccer/tag/120.html");
-//        hupuUrls.put("阿森纳", "/soccer/tag/287.html");
-//        hupuUrls.put("利物浦", "/soccer/tag/343.html");
-//        hupuUrls.put("热刺", "/soccer/tag/496.html");
-//
-//        hupuUrls.put("皇马", "/soccer/tag/396.html");
-//        hupuUrls.put("巴萨", "/soccer/tag/380.html");
-//        hupuUrls.put("马竞技", "/soccer/tag/603.html");
-//
-//        hupuUrls.put("AC米兰", "/soccer/tag/229.html");
-//        hupuUrls.put("国米", "/soccer/tag/969.html");
-//        hupuUrls.put("尤文", "/soccer/tag/261.html");
-//        hupuUrls.put("罗马", "/soccer/tag/495.html");
-//        hupuUrls.put("那不勒", "/soccer/tag/700.html");
-//
-//        hupuUrls.put("拜仁", "/soccer/tag/1341.html");
-//        hupuUrls.put("多特", "/soccer/tag/487.html");
-//
-//        hupuUrls.put("日尔曼", "/soccer/tag/465.html");
-//
-////        hupuUrls.put("埃因霍温", "/soccer/tag/16623.html");
-////        hupuUrls.put("本菲卡", "/soccer/tag/6502.html");
-////        hupuUrls.put("波尔图", "/soccer/tag/1388.html");
-////        hupuUrls.put("阿贾克斯", "/soccer/tag/1121.html");
-//
-//        hupuUrls.put("广州恒大淘宝", "/china/tag/11654.html");
-//        hupuUrls.put("上海上港", "/china/tag/12136.html");
-//        hupuUrls.put("北京国安", "/china/tag/11794.html");
-//        hupuUrls.put("山东鲁能", "/china/tag/11676.html");
-//        hupuUrls.put("上海绿地申花", "/china/tag/11633.html");
+        hupuUrls.put("曼联", "/soccer/tag/342.html");
+        hupuUrls.put("曼城", "/soccer/tag/120.html");
+        hupuUrls.put("阿森纳", "/soccer/tag/287.html");
+        hupuUrls.put("利物浦", "/soccer/tag/343.html");
+        hupuUrls.put("热刺", "/soccer/tag/496.html");
+
+        hupuUrls.put("皇马", "/soccer/tag/396.html");
+        hupuUrls.put("巴萨", "/soccer/tag/380.html");
+        hupuUrls.put("马竞技", "/soccer/tag/603.html");
+
+        hupuUrls.put("AC米兰", "/soccer/tag/229.html");
+        hupuUrls.put("国米", "/soccer/tag/969.html");
+        hupuUrls.put("尤文", "/soccer/tag/261.html");
+        hupuUrls.put("罗马", "/soccer/tag/495.html");
+        hupuUrls.put("那不勒", "/soccer/tag/700.html");
+
+        hupuUrls.put("拜仁", "/soccer/tag/1341.html");
+        hupuUrls.put("多特", "/soccer/tag/487.html");
+
+        hupuUrls.put("日尔曼", "/soccer/tag/465.html");
+
+//        hupuUrls.put("埃因霍温", "/soccer/tag/16623.html");
+//        hupuUrls.put("本菲卡", "/soccer/tag/6502.html");
+//        hupuUrls.put("波尔图", "/soccer/tag/1388.html");
+//        hupuUrls.put("阿贾克斯", "/soccer/tag/1121.html");
+
+        hupuUrls.put("广州恒大淘宝", "/china/tag/11654.html");
+        hupuUrls.put("上海上港", "/china/tag/12136.html");
+        hupuUrls.put("北京国安", "/china/tag/11794.html");
+        hupuUrls.put("山东鲁能", "/china/tag/11676.html");
+        hupuUrls.put("上海绿地申花", "/china/tag/11633.html");
 
     }
 
+    @Scheduled(fixedDelay = 40 * 60 * 1000)
     public void runInitTweets() {
         List<Tweet> tweets = new ArrayList<>();
-//        tweets.addAll(runGrepNewsInZhiboba());
-//        tweets.addAll(runGrepPublicInDongqiudi(Constants.PUBLIC_ZHONGDA, "/?tab=1"));
+        tweets.addAll(runGrepNewsInZhiboba());
+        tweets.addAll(runGrepPublicInDongqiudi(Constants.PUBLIC_ZHONGDA, "/?tab=1"));
 
         //球队虎扑
         for (Map.Entry<String, String> entry : hupuUrls.entrySet()) {
@@ -303,7 +305,7 @@ public class TweetTask {
 
 
         } catch (Exception e) {
-            System.out.println("grep team news "+name);
+            System.out.println("grep team news " + name);
             e.printStackTrace();
         }
         return tweets;
