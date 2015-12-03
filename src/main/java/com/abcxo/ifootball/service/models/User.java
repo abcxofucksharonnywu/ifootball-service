@@ -34,6 +34,9 @@ public class User {
     @Transient
     private String distance;
 
+    @Transient
+    private long distanceLong;
+
 
     public long getId() {
         return id;
@@ -164,6 +167,14 @@ public class User {
         this.distance = distance;
     }
 
+
+    public long getDistanceLong() {
+        return distanceLong;
+    }
+
+    public void setDistanceLong(long distanceLong) {
+        this.distanceLong = distanceLong;
+    }
 
     public boolean isFocus() {
         return focus;

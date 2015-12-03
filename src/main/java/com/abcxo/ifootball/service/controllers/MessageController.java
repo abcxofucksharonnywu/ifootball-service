@@ -84,7 +84,7 @@ public class MessageController {
         } else if (getsType == GetsType.OTHER) {
             return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.SPECIAL);
         }
-        return null;
+        return new ArrayList<>();
 
     }
 

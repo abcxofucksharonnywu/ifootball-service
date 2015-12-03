@@ -18,7 +18,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -138,23 +140,72 @@ public class UserController {
                            @RequestParam("getsType") GetsType getsType,
                            @RequestParam("pageIndex") int pageIndex,
                            @RequestParam("pageSize") int pageSize) {
-        PageRequest pageRequest = new PageRequest(pageIndex, pageSize);
-        if (getsType == GetsType.FRIEND) {
-            List<Long> uids = userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
-            List<Long> uid2s = userUserRepo.findUidsByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
-            List<Long> uidSames = uid2s.stream().filter(id -> uids.contains(id)).collect(Collectors.toList());
+        if (uid > 0) {
+            PageRequest pageRequest = new PageRequest(pageIndex, pageSize);
+            if (getsType == GetsType.FRIEND) {
+                List<Long> uids = userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
+                List<Long> uid2s = userUserRepo.findUidsByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
+                List<Long> uidSames = uid2s.stream().filter(id -> uids.contains(id)).collect(Collectors.toList());
 
-            return userRepo.findByIdIn(uidSames, pageRequest).getContent();
-        } else if (getsType == GetsType.FOCUS) {
-            List<Long> uids = userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
-            return userRepo.findByIdIn(uids, pageRequest).getContent();
-        } else if (getsType == GetsType.FANS) {
-            List<Long> uids = userUserRepo.findUidsByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
-            return userRepo.findByIdIn(uids, pageRequest).getContent();
-        } else if (getsType == GetsType.DISCOVER) {
-            return userRepo.findAll(pageRequest).getContent();
+                return userRepo.findByIdIn(uidSames, pageRequest).getContent();
+            } else if (getsType == GetsType.FOCUS) {
+                List<Long> uids = userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
+                return userRepo.findByIdIn(uids, pageRequest).getContent();
+            } else if (getsType == GetsType.FANS) {
+                List<Long> uids = userUserRepo.findUidsByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
+                return userRepo.findByIdIn(uids, pageRequest).getContent();
+            } else if (getsType == GetsType.DISCOVER) {
+                User user = userRepo.findOne(uid);
+                List<User> users = userRepo.findByUserType(User.UserType.NORMAL);
+                List<User> userList = new ArrayList<>();
+
+
+                for (int i = 0; i < users.size(); i++) {
+                    User user2 = users.get(i);
+                    if (user.getLat() != 0 && user.getLon() != 0 && user2.getLat() != 0 && user2.getLon() != 0) {
+                        user2.setDistanceLong(Utils.distance(user.getLon(), user.getLat(), user2.getLon(), user2.getLat()));
+                        String str;
+                        if (user2.getDistanceLong() < 1000) {
+                            str = String.format("%dm", user2.getDistanceLong());
+                        } else {
+                            str = String.format("%.2fkm", user2.getDistanceLong() / 1000.0f);
+                        }
+                        user2.setDistance(str);
+                    } else {
+                        user2.setDistanceLong(Long.MAX_VALUE);
+                        user2.setDistance("很远");
+                    }
+                    if (user.getId() != user2.getId()) {
+                        userList.add(user2);
+                    }
+                }
+
+                userList.sort(new Comparator<User>() {
+                    @Override
+                    public int compare(User o1, User o2) {
+                        return o1.getDistanceLong() < o2.getDistanceLong() ? 1 : -1;
+                    }
+                });
+
+                List<User> discoverUsers = new ArrayList<>();
+                for (int i = 0; i < userList.size(); i++) {
+                    if (i > (pageIndex - 1) * pageSize && i < pageIndex * pageSize) {
+                        continue;
+                    } else if (i < (pageIndex + 1) * pageSize && i >= pageIndex * pageSize) {
+                        User user2 = users.get(i);
+                        discoverUsers.add(user2);
+
+                    } else {
+                        break;
+                    }
+                }
+
+                return discoverUsers;
+            }
         }
-        return null;
+
+
+        return new ArrayList<>();
     }
 
 

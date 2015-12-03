@@ -119,7 +119,7 @@ public class TweetTask {
                             imgs.add(img);
                         }
                         tweet.setImages(String.join(";", imgs));
-                        tweet.setContent(Utils.content(String.format(Constants.TWEET_HTML, contentEl.toString())));
+                        tweet.setContent(Utils.content(Constants.TWEET_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, contentEl.toString())));
 
                         tweet.setSource(source);
                         tweet.setTime(time);
@@ -212,7 +212,7 @@ public class TweetTask {
                                 imgs.add(img);
                             }
                             tweet.setImages(String.join(";", imgs));
-                            tweet.setContent(Utils.content(String.format(Constants.TWEET_HTML, contentEl.toString())));
+                            tweet.setContent(Utils.content(Constants.TWEET_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, contentEl.toString())));
 
                             tweet.setSource(source);
                             tweet.setTime(time);
@@ -281,7 +281,7 @@ public class TweetTask {
                             imgs.add(img);
                         }
                         tweet.setImages(String.join(";", imgs));
-                        tweet.setContent(Utils.content(String.format(Constants.TWEET_HTML, contentEl.toString())));
+                        tweet.setContent(Utils.content(Constants.TWEET_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, contentEl.toString())));
 
                         tweet.setSource(source);
                         tweet.setTime(time);

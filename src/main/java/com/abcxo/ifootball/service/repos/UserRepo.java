@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
@@ -18,6 +19,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
     User findByEmailAndPassword(String email, String password);
 
     User findByEmail(String email);
+
     User findByName(String name);
 
     List<User> findByGroupNameAndUserType(String groupName, User.UserType userType);
@@ -27,4 +29,6 @@ public interface UserRepo extends JpaRepository<User, Long> {
     @Modifying
     @Transactional
     void deleteByUserType(User.UserType userType);
+
+    List<User> findByUserType(User.UserType userType);
 }

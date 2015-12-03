@@ -50,7 +50,9 @@ public class Constants {
     public static final String NEWS_HUABIAN = "花边新闻";
     public static final String PUBLIC_ZHONGDA = "重大新闻";
 
-    public static final String TWEET_HTML = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no\"><title></title><style type=\"text/css\">img{width:100%%}</style></head><body>%s</body></html>";
+
+    public static final String TWEET_HTML_CONTENT_TAG="#content#";
+    public static final String TWEET_HTML = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no\"><title></title><style type=\"text/css\">img{width:100%}</style><script type=\"text/javascript\">function load(){for(var n=document.getElementsByTagName(\"img\"),o=0;o<n.length;o++)!function(o){var c=n[o];c.onclick=function(){window.open(c.src)}}(o)}</script></head><body onload=\"load()\">#content#</body></html>";
     public static final String TWEET_ADD_HTML = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no\"><style type=\"text/css\">img{width:33%%}</style></head><body><div>%s</div><table width=\"100%%\">%s</table></body></html>";
     public static final String TWEET_ADD_IMAGE_HTML = "<img src=\"%s\" />";
 
