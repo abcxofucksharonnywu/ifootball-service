@@ -18,10 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -76,8 +73,10 @@ public class UserController {
 
     @RequestMapping(value = "/user", method = RequestMethod.PUT)
     public User edit(@RequestBody User user) {
-        user.setIndex(Utils.getNameIndex(user.getName()));
-        user = userRepo.saveAndFlush(user);
+        if (userRepo.findOne(user.getId()) != null) {
+            user.setIndex(Utils.getNameIndex(user.getName()));
+            user = userRepo.saveAndFlush(user);
+        }
         return user;
     }
 
@@ -180,10 +179,10 @@ public class UserController {
                     }
                 }
 
-                userList.sort(new Comparator<User>() {
+                Collections.sort(userList, new Comparator<User>() {
                     @Override
                     public int compare(User o1, User o2) {
-                        return o1.getDistanceLong() < o2.getDistanceLong() ? 1 : -1;
+                        return ((Long) o1.getDistanceLong()).compareTo(o2.getDistanceLong());
                     }
                 });
 
