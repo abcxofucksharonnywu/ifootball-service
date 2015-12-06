@@ -90,7 +90,7 @@ public class TweetTask {
         System.out.println("tweet runInitQieerxi " + tweets.size());
     }
 
-    /*
+
 
     //曼联
     @Scheduled(fixedDelay = 40 * 60 * 1000)
@@ -272,7 +272,7 @@ public class TweetTask {
         System.out.println("tweet runInitShenghua " + tweets.size());
     }
 
-*/
+
 
     //抓取方法
     public List<Tweet> runGrepPublicInDongqiudi(String name, String label) {
