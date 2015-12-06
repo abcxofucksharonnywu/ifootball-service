@@ -1,9 +1,6 @@
 package com.abcxo.ifootball.service.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by shadow on 15/11/15.
@@ -15,7 +12,7 @@ public class UserTweet {
     private long id;
     private long uid;
     private long tid;
-    private UserTweetType userTweetType;
+    private UserTweetType userTweetType = UserTweetType.ADD;
 
     public long getId() {
         return id;

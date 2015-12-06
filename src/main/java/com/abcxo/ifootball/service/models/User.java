@@ -3,18 +3,22 @@ package com.abcxo.ifootball.service.models;
 import com.abcxo.ifootball.service.utils.Utils;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by SHARON on 15/10/29.
  */
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"email"}),@UniqueConstraint(columnNames = {"name"})})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String index;
     private String groupName;
+    @NotNull
     private String email;
+    @NotNull
     private String name;
     private String sign;
     private String password;
@@ -36,6 +40,7 @@ public class User {
 
     @Transient
     private long distanceLong;
+    private String deviceToken;
 
 
     public long getId() {
@@ -174,6 +179,14 @@ public class User {
 
     public void setDistanceLong(long distanceLong) {
         this.distanceLong = distanceLong;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 
     public boolean isFocus() {

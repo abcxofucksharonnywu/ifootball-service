@@ -1,21 +1,19 @@
 package com.abcxo.ifootball.service.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by shadow on 15/11/15.
  */
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"tid", "tid2", "tweetTweetType"})})
 public class TweetTweet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private long tid;
     private long tid2;
-    private TweetTweetType tweetTweetType;
+    private TweetTweetType tweetTweetType = TweetTweetType.REPEAT;
 
 
     public long getId() {

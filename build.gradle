@@ -26,6 +26,8 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile("junit:junit")
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
 //    compile("mysql:mysql-connector-java")
@@ -33,7 +35,10 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile 'com.qiniu:qiniu-java-sdk:7.0.+'
     compile 'org.jsoup:jsoup:1.8.3'
-    testCompile("junit:junit")
+    compile 'org.json:json:20151123'
+    compile 'org.apache.httpcomponents:httpclient:4.3.5'
+    compile 'com.belerweb:pinyin4j:2.5.0'
+
 
 }
 

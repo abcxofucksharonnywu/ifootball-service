@@ -1,7 +1,10 @@
 package com.abcxo.ifootball.service.models;
 
+import com.abcxo.ifootball.service.utils.Constants;
+import org.springframework.util.StringUtils;
+
 import javax.persistence.*;
-import java.util.Date;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by SHARON on 15/10/29.
@@ -11,7 +14,7 @@ public class Tweet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    //用户
+    @NotNull
     private long uid;
     private String icon;
     private String name;
@@ -121,7 +124,11 @@ public class Tweet {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(String text) {
+        String summary = "";
+        if (!StringUtils.isEmpty(text)) {
+            summary = text.substring(0, text.length() > Constants.MAX_SUMMARY ? Constants.MAX_SUMMARY : text.length() - 1);
+        }
         this.summary = summary;
     }
 

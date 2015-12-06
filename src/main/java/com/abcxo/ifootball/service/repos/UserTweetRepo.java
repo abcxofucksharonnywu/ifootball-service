@@ -21,5 +21,5 @@ public interface UserTweetRepo extends JpaRepository<UserTweet, Long> {
     @Transactional
     long deleteByUidAndTidAndUserTweetType(long uid, long tid, UserTweet.UserTweetType userTweetType);
 
-    UserTweet findOneByUidAndTidAndUserTweetType(long uid, long tid, UserTweet.UserTweetType userTweetType);
+    UserTweet findByUidAndTidAndUserTweetType(long uid, long tid, UserTweet.UserTweetType userTweetType);
 }

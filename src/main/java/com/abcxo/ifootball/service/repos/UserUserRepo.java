@@ -23,6 +23,5 @@ public interface UserUserRepo extends JpaRepository<UserUser, Long> {
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM UserUser WHERE uid =(:uid) AND  uid2 IN (:uid2s) AND userUserType = (:userUserType)")
-    void deleteByUid2s(@Param("uid") long uid, @Param("uid2s") List<Long> uid2s, @Param("userUserType") UserUser.UserUserType userUserType);
+    void deleteByUidAndUid2InAndUserUserType(long uid, List<Long> uid2s, UserUser.UserUserType userUserType);
 }

@@ -102,8 +102,6 @@ public class TweetTask {
                     String time = detailEl.getElementsByClass("time").first().text();
                     String source = detailEl.getElementsByClass("name").first().text();
                     String text = contentEl.text();
-                    String summary = text.substring(0, text.length() > summaryMax ? summaryMax : text.length() - 1);
-
                     if (tweetRepo.findByTitle(title) == null) {
                         Tweet tweet = new Tweet();
                         tweet.setUid(user.getId());
@@ -111,7 +109,7 @@ public class TweetTask {
                         tweet.setName(user.getName());
 
                         tweet.setTitle(title);
-                        tweet.setSummary(summary);
+                        tweet.setSummary(text);
                         Elements imgEls = contentEl.getElementsByTag("img");
                         List<String> imgs = new ArrayList<>();
                         for (Element imgEl : imgEls) {
@@ -173,7 +171,6 @@ public class TweetTask {
                         Document article = Utils.getDocument(link);
                         Element contentEl = article.getElementsByClass("content").first();
                         String text = contentEl.text();
-                        String summary = text.substring(0, text.length() > summaryMax ? summaryMax : text.length() - 1);
                         if (tweetRepo.findByTitle(title) == null) {
                             String name;
                             if (tag.contains(Constants.GROUP_YINGCHAO)) {
@@ -204,7 +201,7 @@ public class TweetTask {
                             tweet.setName(user.getName());
 
                             tweet.setTitle(title);
-                            tweet.setSummary(summary);
+                            tweet.setSummary(text);
                             Elements imgEls = contentEl.getElementsByTag("img");
                             List<String> imgs = new ArrayList<>();
                             for (Element imgEl : imgEls) {
@@ -253,7 +250,6 @@ public class TweetTask {
             Elements list = root.getElementsByClass("list");
 
             int max = 30;
-            int summaryMax = 70;
             int i = 0;
             for (Element element : list) {
                 if (i < max) {
@@ -265,7 +261,6 @@ public class TweetTask {
                     String time = article.getElementById("pubtime_baidu").text();
                     Element contentEl = article.getElementsByClass("artical-content").first();
                     String text = contentEl.text();
-                    String summary = text.substring(0, text.length() > summaryMax ? summaryMax : text.length() - 1);
                     if (tweetRepo.findByTitle(title) == null) {
                         Tweet tweet = new Tweet();
                         tweet.setUid(user.getId());
@@ -273,7 +268,7 @@ public class TweetTask {
                         tweet.setName(user.getName());
 
                         tweet.setTitle(title);
-                        tweet.setSummary(summary);
+                        tweet.setSummary(text);
                         Elements imgEls = contentEl.getElementsByTag("img");
                         List<String> imgs = new ArrayList<>();
                         for (Element imgEl : imgEls) {

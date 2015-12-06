@@ -1,21 +1,19 @@
 package com.abcxo.ifootball.service.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by shadow on 15/11/15.
  */
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"uid", "uid2", "userUserType"})})
 public class UserUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private long uid;
     private long uid2;
-    private UserUserType userUserType;
+    private UserUserType userUserType = UserUserType.FOCUS;
 
 
     public long getId() {

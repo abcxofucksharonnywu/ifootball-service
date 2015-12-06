@@ -1,14 +1,10 @@
 package com.abcxo.ifootball.service.repos;
 
 import com.abcxo.ifootball.service.models.Message;
-import com.abcxo.ifootball.service.models.Tweet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -17,14 +13,13 @@ import java.util.List;
 public interface MessageRepo extends JpaRepository<Message, Long> {
 
 
-    List<Message> findByUid2(long uid2);
+    Page<Message> findByUid2(long uid2,Pageable pageable);
 
-    List<Message> findByUid2AndMessageType(long uid2, Message.MessageType messageType);
+    Page<Message> findByUid2AndMessageType(long uid2, Message.MessageType messageType,Pageable pageable);
 
-    List<Message> findByTidAndMessageType(long tid, Message.MessageType messageType);
+    Page<Message> findByTidAndMessageType(long tid, Message.MessageType messageType,Pageable pageable);
 
-    @Query("SELECT m FROM Message m WHERE uid IN (:uids) AND uid2 IN (:uid2s)  AND messageType = (:messageType)")
-    List<Message> findByUidsAndUid2sAndMessageType(@Param("uids") List<Long> uids,@Param("uid2s") List<Long> uid2s,@Param("messageType") Message.MessageType messageType);
+    Page<Message> findByUidInAndUid2InAndMessageType(List<Long> uids,List<Long> uid2s,Message.MessageType messageType,Pageable pageable);
 
-    Page<Message> findByIdIn(Collection<Long> tids, Pageable pageable);
+
 }

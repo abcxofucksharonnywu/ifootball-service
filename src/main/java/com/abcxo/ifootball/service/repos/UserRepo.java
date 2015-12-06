@@ -1,12 +1,10 @@
 package com.abcxo.ifootball.service.repos;
 
-import com.abcxo.ifootball.service.models.Tweet;
 import com.abcxo.ifootball.service.models.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
@@ -24,7 +22,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     List<User> findByGroupNameAndUserType(String groupName, User.UserType userType);
 
-    Page<User> findByIdIn(Collection<Long> tids, Pageable pageable);
+    Page<User> findByIdInAndUserType(Collection<Long> ids,User.UserType userType, Pageable pageable);
 
     @Modifying
     @Transactional

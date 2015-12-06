@@ -4,6 +4,8 @@ import com.abcxo.ifootball.service.models.Message;
 import com.abcxo.ifootball.service.repos.*;
 import com.abcxo.ifootball.service.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -65,24 +67,26 @@ public class MessageController {
                               @RequestParam("getsType") GetsType getsType,
                               @RequestParam("pageIndex") int pageIndex,
                               @RequestParam("pageSize") int pageSize) {
+        PageRequest pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.DESC, "date");
         if (getsType == GetsType.ALL) {
-            return messageRepo.findByUid2(uid2);
+            return messageRepo.findByUid2(uid2, pageRequest).getContent();
         } else if (getsType == GetsType.CHAT) {
-            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.CHAT);
+            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.CHAT, pageRequest).getContent();
         } else if (getsType == GetsType.CHAT_USER) {
-            return messageRepo.findByUidsAndUid2sAndMessageType(Arrays.asList(uid, uid2), Arrays.asList(uid, uid2), Message.MessageType.CHAT);
+            pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.ASC, "date");
+            return messageRepo.findByUidInAndUid2InAndMessageType(Arrays.asList(uid, uid2), Arrays.asList(uid, uid2), Message.MessageType.CHAT, pageRequest).getContent();
         } else if (getsType == GetsType.COMMENT) {
-            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.COMMENT);
+            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.COMMENT, pageRequest).getContent();
         } else if (getsType == GetsType.COMMENT_TWEET) {
-            return messageRepo.findByTidAndMessageType(tid, Message.MessageType.COMMENT);
+            return messageRepo.findByTidAndMessageType(tid, Message.MessageType.COMMENT, pageRequest).getContent();
         } else if (getsType == GetsType.PROMPT) {
-            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.PROMPT);
+            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.PROMPT, pageRequest).getContent();
         } else if (getsType == GetsType.FOCUS) {
-            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.FOCUS);
+            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.FOCUS, pageRequest).getContent();
         } else if (getsType == GetsType.STAR) {
-            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.STAR);
+            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.STAR, pageRequest).getContent();
         } else if (getsType == GetsType.OTHER) {
-            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.SPECIAL);
+            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.SPECIAL, pageRequest).getContent();
         }
         return new ArrayList<>();
 
@@ -91,6 +95,7 @@ public class MessageController {
     @RequestMapping(value = "/message/chat", method = RequestMethod.POST)
     public void chat(@RequestBody Message message) {
         message.setTime(Utils.getTime());
+        message.setDate(System.currentTimeMillis());
         Utils.message(messageRepo.saveAndFlush(message));
     }
 

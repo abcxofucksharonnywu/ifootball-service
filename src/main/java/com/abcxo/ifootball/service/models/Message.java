@@ -1,6 +1,7 @@
 package com.abcxo.ifootball.service.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by SHARON on 15/10/29.
@@ -11,7 +12,6 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    //用户id
     private long uid;
     private long uid2;
     private long tid;
@@ -20,6 +20,8 @@ public class Message {
     private String title;
     private String content;
     private String time;
+    private double date;
+    @NotNull
     private MessageType messageType = MessageType.NORMAL;
 
 
@@ -85,6 +87,29 @@ public class Message {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public double getDate() {
+        return date;
+    }
+
+    public void setDate(double date) {
+        this.date = date;
+    }
+
+    public String getDescription() {
+        switch (messageType) {
+            case FOCUS:
+                return getTitle() + "关注了你";
+            case COMMENT:
+                return getTitle() + "评论了你";
+            case PROMPT:
+                return getTitle() + "@了你";
+            case STAR:
+                return getTitle() + "赞了你";
+
+        }
+        return getContent();
     }
 
     public MessageType getMessageType() {

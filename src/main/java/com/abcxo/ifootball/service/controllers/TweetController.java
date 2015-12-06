@@ -76,6 +76,7 @@ public class TweetController {
                 message.setTitle(user.getName());
                 message.setIcon(user.getAvatar());
                 message.setTime(Utils.getTime());
+                message.setDate(System.currentTimeMillis());
                 messageRepo.saveAndFlush(message);
                 Utils.message(message);
             }
@@ -121,11 +122,11 @@ public class TweetController {
     @RequestMapping(value = "/tweet", method = RequestMethod.GET)
     public Tweet get(@RequestParam("uid") long uid, @RequestParam("tid") long tid) {
         Tweet tweet = tweetRepo.findOne(uid);
-        tweet.setStar(userTweetRepo.findOneByUidAndTidAndUserTweetType(uid, tweet.getId(), UserTweet.UserTweetType.STAR) != null);
-        Long tid2 = tweetTweetRepo.findTid2ByTidAndTweetTweetType(tweet.getId(), TweetTweet.TweetTweetType.REPEAT);
-        if (tid2 != null) {
-            Tweet originTweet = tweetRepo.findOne(tid2);
-            originTweet.setStar(userTweetRepo.findOneByUidAndTidAndUserTweetType(uid, originTweet.getId(), UserTweet.UserTweetType.STAR) != null);
+        tweet.setStar(userTweetRepo.findByUidAndTidAndUserTweetType(uid, tweet.getId(), UserTweet.UserTweetType.STAR) != null);
+        TweetTweet tweetTweet = tweetTweetRepo.findByTidAndTweetTweetType(tweet.getId(), TweetTweet.TweetTweetType.REPEAT);
+        if (tweetTweet != null) {
+            Tweet originTweet = tweetRepo.findOne(tweetTweet.getTid2());
+            originTweet.setStar(userTweetRepo.findByUidAndTidAndUserTweetType(uid, originTweet.getId(), UserTweet.UserTweetType.STAR) != null);
             tweet.setOriginTweet(originTweet);
         }
         return tweet;
@@ -194,11 +195,11 @@ public class TweetController {
         PageRequest pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.DESC, "date");
         Page<Tweet> tweets = tweetRepo.findByIdIn(tids, pageRequest);
         for (Tweet tweet : tweets) {
-            tweet.setStar(userTweetRepo.findOneByUidAndTidAndUserTweetType(uid, tweet.getId(), UserTweet.UserTweetType.STAR) != null);
-            Long tid2 = tweetTweetRepo.findTid2ByTidAndTweetTweetType(tweet.getId(), TweetTweet.TweetTweetType.REPEAT);
-            if (tid2 != null) {
-                Tweet originTweet = tweetRepo.findOne(tid2);
-                originTweet.setStar(userTweetRepo.findOneByUidAndTidAndUserTweetType(uid, originTweet.getId(), UserTweet.UserTweetType.STAR) != null);
+            tweet.setStar(userTweetRepo.findByUidAndTidAndUserTweetType(uid, tweet.getId(), UserTweet.UserTweetType.STAR) != null);
+            TweetTweet tweetTweet = tweetTweetRepo.findByTidAndTweetTweetType(tweet.getId(), TweetTweet.TweetTweetType.REPEAT);
+            if (tweetTweet != null) {
+                Tweet originTweet = tweetRepo.findOne(tweetTweet.getTid2());
+                originTweet.setStar(userTweetRepo.findByUidAndTidAndUserTweetType(uid, originTweet.getId(), UserTweet.UserTweetType.STAR) != null);
                 tweet.setOriginTweet(originTweet);
             }
         }
@@ -210,17 +211,35 @@ public class TweetController {
     public void star(@RequestParam("uid") long uid,
                      @RequestParam("tid") long tid,
                      @RequestParam("star") boolean star) {
-        userTweetRepo.deleteByUidAndTidAndUserTweetType(uid, tid, UserTweet.UserTweetType.STAR);
         Tweet tweet = tweetRepo.findOne(tid);
+        if (star) {
+            if (userTweetRepo.findByUidAndTidAndUserTweetType(uid, tid, UserTweet.UserTweetType.STAR) == null) {
+                UserTweet userTweet = new UserTweet();
+                userTweet.setUid(uid);
+                userTweet.setTid(tid);
+                userTweet.setUserTweetType(UserTweet.UserTweetType.STAR);
+                userTweetRepo.saveAndFlush(userTweet);
+
+                User user = userRepo.findOne(uid);
+                Message message = new Message();
+                message.setUid(uid);
+                message.setUid2(tweet.getUid());
+                message.setTid(tid);
+                message.setMessageType(Message.MessageType.STAR);
+                message.setTitle(user.getName());
+                message.setContent(user.getName());
+                message.setIcon(user.getAvatar());
+                message.setTime(Utils.getTime());
+                message.setDate(System.currentTimeMillis());
+                Utils.message(messageRepo.saveAndFlush(message));
+            } else {
+                return;
+            }
+        } else {
+            userTweetRepo.deleteByUidAndTidAndUserTweetType(uid, tid, UserTweet.UserTweetType.STAR);
+        }
         tweet.setStarCount(star ? tweet.getStarCount() + 1 : tweet.getStarCount() - 1);
         tweetRepo.saveAndFlush(tweet);
-        if (star) {
-            UserTweet userTweet = new UserTweet();
-            userTweet.setUid(uid);
-            userTweet.setTid(tid);
-            userTweet.setUserTweetType(UserTweet.UserTweetType.STAR);
-            userTweetRepo.saveAndFlush(userTweet);
-        }
 
     }
 
@@ -238,7 +257,10 @@ public class TweetController {
         userTweet.setUserTweetType(UserTweet.UserTweetType.COMMENT);
         userTweetRepo.saveAndFlush(userTweet);
 
+
+        message.setMessageType(Message.MessageType.COMMENT);
         message.setTime(Utils.getTime());
+        message.setDate(System.currentTimeMillis());
         Utils.message(messageRepo.saveAndFlush(message));
     }
 

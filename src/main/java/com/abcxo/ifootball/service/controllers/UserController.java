@@ -4,8 +4,10 @@ package com.abcxo.ifootball.service.controllers;
  * Created by shadow on 15/10/23.
  */
 
+import com.abcxo.ifootball.service.models.Message;
 import com.abcxo.ifootball.service.models.User;
 import com.abcxo.ifootball.service.models.UserUser;
+import com.abcxo.ifootball.service.repos.MessageRepo;
 import com.abcxo.ifootball.service.repos.UserRepo;
 import com.abcxo.ifootball.service.repos.UserUserRepo;
 import com.abcxo.ifootball.service.utils.Constants;
@@ -14,7 +16,6 @@ import com.abcxo.ifootball.service.utils.Constants.UserValidateException;
 import com.abcxo.ifootball.service.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,21 +30,35 @@ public class UserController {
     @Autowired
     private UserUserRepo userUserRepo;
 
+    @Autowired
+    private MessageRepo messageRepo;
+
     //注册
     @RequestMapping(value = "/user/login", method = RequestMethod.GET)
     public User login(@RequestParam(value = "email", defaultValue = "") String email,
-                      @RequestParam(value = "password", defaultValue = "") String password) {
+                      @RequestParam(value = "password", defaultValue = "") String password,
+                      @RequestParam(value = "deviceToken", defaultValue = "") String deviceToken) {
 
         User user = userRepo.findByEmailAndPassword(email, password);
         if (user == null) {
             throw new UserValidateException();
         }
+        user.setDeviceToken(deviceToken);
         return user;
+    }
+
+
+    @RequestMapping(value = "/user/logout", method = RequestMethod.GET)
+    public void logout(@RequestParam(value = "uid") long uid) {
+        User user = userRepo.findOne(uid);
+        user.setDeviceToken(null);
+        userRepo.saveAndFlush(user);
     }
 
     @RequestMapping(value = "/user/register", method = RequestMethod.POST)
     public User register(@RequestParam(value = "email", defaultValue = "") String email,
-                         @RequestParam(value = "password", defaultValue = "") String password) {
+                         @RequestParam(value = "password", defaultValue = "") String password,
+                         @RequestParam(value = "deviceToken", defaultValue = "") String deviceToken) {
 
         User user = userRepo.findByEmail(email);
         if (user != null) {
@@ -56,6 +71,7 @@ public class UserController {
             user.setPassword(password);
             user.setAvatar("http://tse1.mm.bing.net/th?&id=OIP.Me12f5a011ec53760dd2ab88e4d24e115o0&w=300&h=300&c=0&pid=1.9&rs=0&p=0");
             user.setCover("http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg");
+            user.setDeviceToken(deviceToken);
             user = userRepo.saveAndFlush(user);
             focus(user.getId(), userRepo.findByName(Constants.NEWS_YINGCHAO).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.NEWS_XIJIA).getId(), true);
@@ -139,20 +155,20 @@ public class UserController {
                            @RequestParam("getsType") GetsType getsType,
                            @RequestParam("pageIndex") int pageIndex,
                            @RequestParam("pageSize") int pageSize) {
+        List<User> getsUsers = new ArrayList<>();
         if (uid > 0) {
             PageRequest pageRequest = new PageRequest(pageIndex, pageSize);
             if (getsType == GetsType.FRIEND) {
                 List<Long> uids = userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
                 List<Long> uid2s = userUserRepo.findUidsByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
                 List<Long> uidSames = uid2s.stream().filter(id -> uids.contains(id)).collect(Collectors.toList());
-
-                return userRepo.findByIdIn(uidSames, pageRequest).getContent();
+                getsUsers.addAll(userRepo.findByIdInAndUserType(uidSames, User.UserType.NORMAL, pageRequest).getContent());
             } else if (getsType == GetsType.FOCUS) {
                 List<Long> uids = userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
-                return userRepo.findByIdIn(uids, pageRequest).getContent();
+                getsUsers.addAll(userRepo.findByIdInAndUserType(uids, User.UserType.NORMAL, pageRequest).getContent());
             } else if (getsType == GetsType.FANS) {
                 List<Long> uids = userUserRepo.findUidsByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
-                return userRepo.findByIdIn(uids, pageRequest).getContent();
+                getsUsers.addAll(userRepo.findByIdInAndUserType(uids, User.UserType.NORMAL, pageRequest).getContent());
             } else if (getsType == GetsType.DISCOVER) {
                 User user = userRepo.findOne(uid);
                 List<User> users = userRepo.findByUserType(User.UserType.NORMAL);
@@ -186,38 +202,65 @@ public class UserController {
                     }
                 });
 
-                List<User> discoverUsers = new ArrayList<>();
+
                 for (int i = 0; i < userList.size(); i++) {
                     if (i > (pageIndex - 1) * pageSize && i < pageIndex * pageSize) {
                         continue;
                     } else if (i < (pageIndex + 1) * pageSize && i >= pageIndex * pageSize) {
-                        User user2 = users.get(i);
-                        discoverUsers.add(user2);
+                        User user2 = userList.get(i);
+                        getsUsers.add(user2);
 
                     } else {
                         break;
                     }
                 }
 
-                return discoverUsers;
             }
         }
 
 
-        return new ArrayList<>();
+        Collections.sort(getsUsers, new Comparator<User>() {
+            @Override
+            public int compare(User o1, User o2) {
+                return o1.getIndex().compareTo(o2.getIndex());
+            }
+        });
+        for (User user2 : getsUsers) {
+            user2.setFocus(userUserRepo.findByUidAndUid2AndUserUserType(uid, user2.getId(), UserUser.UserUserType.FOCUS) != null);
+        }
+
+        return getsUsers;
+
     }
 
 
     @RequestMapping(value = "/user/focus", method = RequestMethod.POST)
     public void focus(@RequestParam("uid") long uid, @RequestParam("uid2") long uid2, boolean focus) {
         if (focus) {
-            UserUser userUser = new UserUser();
-            userUser.setUid(uid);
-            userUser.setUid2(uid2);
-            userUser.setUserUserType(UserUser.UserUserType.FOCUS);
-            userUserRepo.saveAndFlush(userUser);
+            if (userUserRepo.findByUidAndUid2AndUserUserType(uid, uid2, UserUser.UserUserType.FOCUS) == null) {
+                UserUser userUser = new UserUser();
+                userUser.setUid(uid);
+                userUser.setUid2(uid2);
+                userUser.setUserUserType(UserUser.UserUserType.FOCUS);
+                userUserRepo.saveAndFlush(userUser);
+
+                User user = userRepo.findOne(uid);
+                Message message = new Message();
+                message.setUid(uid);
+                message.setUid2(uid2);
+                message.setMessageType(Message.MessageType.FOCUS);
+                message.setTitle(user.getName());
+                message.setContent(user.getName());
+                message.setIcon(user.getAvatar());
+                message.setTime(Utils.getTime());
+                message.setDate(System.currentTimeMillis());
+                Utils.message(messageRepo.saveAndFlush(message));
+            } else {
+                return;
+            }
+
         } else {
-            userUserRepo.deleteByUid2s(uid, Arrays.asList(uid2), UserUser.UserUserType.FOCUS);
+            userUserRepo.deleteByUidAndUid2InAndUserUserType(uid, Arrays.asList(uid2), UserUser.UserUserType.FOCUS);
         }
 
     }
@@ -231,7 +274,7 @@ public class UserController {
             uid2List[i] = Long.parseLong(uid2Array[i]);
         }
 
-        userUserRepo.deleteByUid2s(uid, Arrays.asList(uid2List), UserUser.UserUserType.FOCUS);
+        userUserRepo.deleteByUidAndUid2InAndUserUserType(uid, Arrays.asList(uid2List), UserUser.UserUserType.FOCUS);
         for (long uid2 : uid2List) {
             UserUser userUser = new UserUser();
             userUser.setUid(uid);
