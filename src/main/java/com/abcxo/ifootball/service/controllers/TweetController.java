@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,7 +43,7 @@ public class TweetController {
         tweet.setSummary(content);
         tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, content).replace(Constants.TWEET_HTML_IMAGES_TAG, "")));
         tweet.setTime(Utils.getTime());
-        tweet.setDate(new Date().getTime());
+        tweet.setDate(System.currentTimeMillis());
         tweet = tweetRepo.saveAndFlush(tweet);
 
         //保持userTweet
@@ -137,7 +136,8 @@ public class TweetController {
         HOME(0),
         TEAM(1),
         NEWS(2),
-        USER(3);
+        USER(3),
+        SEARCH(4);
         private int index;
 
         GetsType(int index) {
@@ -155,8 +155,9 @@ public class TweetController {
 
 
     @RequestMapping(value = "/tweet/list", method = RequestMethod.GET)
-    public List<Tweet> gets(@RequestParam("uid") long uid,
-                            @RequestParam("getsType") GetsType getsType,
+    public List<Tweet> gets(@RequestParam("getsType") GetsType getsType,
+                            @RequestParam("uid") long uid,
+                            @RequestParam("keyword") String keyword,
                             @RequestParam("pageIndex") int pageIndex,
                             @RequestParam("pageSize") int pageSize) {
         List<Long> uids = new ArrayList<>();
@@ -191,19 +192,34 @@ public class TweetController {
             }
 
         }
-        List<Long> tids = userTweetRepo.findTidsByUidsAndUserTweetType(uids, UserTweet.UserTweetType.ADD);
+
         PageRequest pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.DESC, "date");
-        Page<Tweet> tweets = tweetRepo.findByIdIn(tids, pageRequest);
-        for (Tweet tweet : tweets) {
-            tweet.setStar(userTweetRepo.findByUidAndTidAndUserTweetType(uid, tweet.getId(), UserTweet.UserTweetType.STAR) != null);
-            TweetTweet tweetTweet = tweetTweetRepo.findByTidAndTweetTweetType(tweet.getId(), TweetTweet.TweetTweetType.REPEAT);
-            if (tweetTweet != null) {
-                Tweet originTweet = tweetRepo.findOne(tweetTweet.getTid2());
-                originTweet.setStar(userTweetRepo.findByUidAndTidAndUserTweetType(uid, originTweet.getId(), UserTweet.UserTweetType.STAR) != null);
-                tweet.setOriginTweet(originTweet);
-            }
+        Page<Tweet> tweets = null;
+        if (getsType != GetsType.SEARCH) {
+            List<Long> tids = userTweetRepo.findTidsByUidsAndUserTweetType(uids, UserTweet.UserTweetType.ADD);
+            tweets = tweetRepo.findByIdIn(tids, pageRequest);
+        } else if (!StringUtils.isEmpty(keyword)) {
+            keyword = "%" + keyword + "%";
+            tweets = tweetRepo.findByNameLikeIgnoreCaseOrTitleLikeIgnoreCaseOrSourceLikeIgnoreCaseOrSummaryLikeIgnoreCase(keyword, keyword, keyword, keyword, pageRequest);
+
         }
-        return tweets.getContent();
+
+        if (tweets != null) {
+            for (Tweet tweet : tweets) {
+                tweet.setStar(userTweetRepo.findByUidAndTidAndUserTweetType(uid, tweet.getId(), UserTweet.UserTweetType.STAR) != null);
+                TweetTweet tweetTweet = tweetTweetRepo.findByTidAndTweetTweetType(tweet.getId(), TweetTweet.TweetTweetType.REPEAT);
+                if (tweetTweet != null) {
+                    Tweet originTweet = tweetRepo.findOne(tweetTweet.getTid2());
+                    originTweet.setStar(userTweetRepo.findByUidAndTidAndUserTweetType(uid, originTweet.getId(), UserTweet.UserTweetType.STAR) != null);
+                    tweet.setOriginTweet(originTweet);
+                }
+            }
+            return tweets.getContent();
+        } else {
+
+            return new ArrayList<>();
+        }
+
     }
 
 

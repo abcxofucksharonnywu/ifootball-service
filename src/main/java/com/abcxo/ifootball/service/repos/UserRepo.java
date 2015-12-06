@@ -22,11 +22,13 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     List<User> findByGroupNameAndUserType(String groupName, User.UserType userType);
 
-    Page<User> findByIdInAndUserType(Collection<Long> ids,User.UserType userType, Pageable pageable);
+    Page<User> findByIdInAndUserType(Collection<Long> ids, User.UserType userType, Pageable pageable);
 
     @Modifying
     @Transactional
     void deleteByUserType(User.UserType userType);
 
     List<User> findByUserType(User.UserType userType);
+
+    Page<User> findByNameLikeIgnoreCaseOrSignLikeIgnoreCase(String name,String sign, Pageable pageable);
 }

@@ -59,12 +59,13 @@ public class MessageController {
     }
 
     @RequestMapping(value = "/message/list", method = RequestMethod.GET)
-    public List<Message> gets(@RequestParam("uid") long uid,
-                              @RequestParam("uid2") long uid2,
-                              @RequestParam("tid") long tid,
-                              @RequestParam("getsType") GetsType getsType,
-                              @RequestParam("pageIndex") int pageIndex,
-                              @RequestParam("pageSize") int pageSize) {
+    public List<Message> gets(
+            @RequestParam("getsType") GetsType getsType,
+            @RequestParam("uid") long uid,
+            @RequestParam("uid2") long uid2,
+            @RequestParam("tid") long tid,
+            @RequestParam("pageIndex") int pageIndex,
+            @RequestParam("pageSize") int pageSize) {
         PageRequest pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.DESC, "date");
         if (getsType == GetsType.ALL) {
             return messageRepo.findByUid2(uid2, pageRequest).getContent();

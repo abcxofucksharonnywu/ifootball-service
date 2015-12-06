@@ -16,6 +16,8 @@ import com.abcxo.ifootball.service.utils.Constants.UserValidateException;
 import com.abcxo.ifootball.service.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -133,7 +135,8 @@ public class UserController {
         FRIEND(1),
         FOCUS(2),
         FANS(3),
-        DISCOVER(4);
+        DISCOVER(4),
+        SEARCH(5);
 
         private int index;
 
@@ -151,30 +154,32 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/list", method = RequestMethod.GET)
-    public List<User> gets(@RequestParam("uid") long uid,
-                           @RequestParam("getsType") GetsType getsType,
+    public List<User> gets(@RequestParam("getsType") GetsType getsType,
+                           @RequestParam("uid") long uid,
+                           @RequestParam("keyword") String keyword,
                            @RequestParam("pageIndex") int pageIndex,
                            @RequestParam("pageSize") int pageSize) {
         List<User> getsUsers = new ArrayList<>();
+
         if (uid > 0) {
-            PageRequest pageRequest = new PageRequest(pageIndex, pageSize);
-            if (getsType == GetsType.FRIEND) {
-                List<Long> uids = userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
-                List<Long> uid2s = userUserRepo.findUidsByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
-                List<Long> uidSames = uid2s.stream().filter(id -> uids.contains(id)).collect(Collectors.toList());
-                getsUsers.addAll(userRepo.findByIdInAndUserType(uidSames, User.UserType.NORMAL, pageRequest).getContent());
-            } else if (getsType == GetsType.FOCUS) {
-                List<Long> uids = userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
-                getsUsers.addAll(userRepo.findByIdInAndUserType(uids, User.UserType.NORMAL, pageRequest).getContent());
-            } else if (getsType == GetsType.FANS) {
-                List<Long> uids = userUserRepo.findUidsByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
-                getsUsers.addAll(userRepo.findByIdInAndUserType(uids, User.UserType.NORMAL, pageRequest).getContent());
+            if (getsType == GetsType.FRIEND || getsType == GetsType.FOCUS || getsType == GetsType.FANS) {
+                PageRequest pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.ASC, "index");
+                if (getsType == GetsType.FRIEND) {
+                    List<Long> uids = userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
+                    List<Long> uid2s = userUserRepo.findUidsByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
+                    List<Long> uidSames = uid2s.stream().filter(id -> uids.contains(id)).collect(Collectors.toList());
+                    getsUsers.addAll(userRepo.findByIdInAndUserType(uidSames, User.UserType.NORMAL, pageRequest).getContent());
+                } else if (getsType == GetsType.FOCUS) {
+                    List<Long> uids = userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
+                    getsUsers.addAll(userRepo.findByIdInAndUserType(uids, User.UserType.NORMAL, pageRequest).getContent());
+                } else if (getsType == GetsType.FANS) {
+                    List<Long> uids = userUserRepo.findUidsByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
+                    getsUsers.addAll(userRepo.findByIdInAndUserType(uids, User.UserType.NORMAL, pageRequest).getContent());
+                }
             } else if (getsType == GetsType.DISCOVER) {
                 User user = userRepo.findOne(uid);
                 List<User> users = userRepo.findByUserType(User.UserType.NORMAL);
                 List<User> userList = new ArrayList<>();
-
-
                 for (int i = 0; i < users.size(); i++) {
                     User user2 = users.get(i);
                     if (user.getLat() != 0 && user.getLon() != 0 && user2.getLat() != 0 && user2.getLon() != 0) {
@@ -216,15 +221,16 @@ public class UserController {
                 }
 
             }
+
+        }
+
+        if (getsType == GetsType.SEARCH && !StringUtils.isEmpty(keyword)) {
+            PageRequest pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.ASC, "index");
+            keyword = "%" + keyword + "%";
+            getsUsers.addAll(userRepo.findByNameLikeIgnoreCaseOrSignLikeIgnoreCase(keyword, keyword, pageRequest).getContent());
         }
 
 
-        Collections.sort(getsUsers, new Comparator<User>() {
-            @Override
-            public int compare(User o1, User o2) {
-                return o1.getIndex().compareTo(o2.getIndex());
-            }
-        });
         for (User user2 : getsUsers) {
             user2.setFocus(userUserRepo.findByUidAndUid2AndUserUserType(uid, user2.getId(), UserUser.UserUserType.FOCUS) != null);
         }

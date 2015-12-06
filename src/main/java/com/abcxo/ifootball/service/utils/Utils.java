@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import push.android.AndroidUnicast;
 
 import java.security.MessageDigest;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -168,10 +169,36 @@ public class Utils {
     }
 
 
-    public static String getTime() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM月dd日 HH时mm分");//设置日期格式
-        return dateFormat.format(new Date());
+    public static long getDate(String time) {
+        try {
+            if (!StringUtils.isEmpty(time)) {
+                if (time.matches("\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}")) {
 
+                } else if (time.matches("\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}")) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");//设置日期格式
+                    String year = dateFormat.format(new Date());
+                    time = year + "-" + time;
+                } else if (time.matches("\\d{2}:\\d{2}")) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+                    String date = dateFormat.format(new Date());
+                    time = date + " " + time;
+                }
+                return new SimpleDateFormat(Constants.DATE_FORMAT).parse(time).getTime();
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return System.currentTimeMillis();
+    }
+
+    public static String getTime(long date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM月dd日 HH时mm分");//设置日期格式
+        return dateFormat.format(new Date(date));
+
+    }
+
+    public static String getTime() {
+        return getTime(new Date().getTime());
     }
 
     public static long distance(double long1, double lat1, double long2,
