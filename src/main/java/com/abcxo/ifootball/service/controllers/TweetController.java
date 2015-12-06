@@ -42,7 +42,7 @@ public class TweetController {
 
         String content = tweet.getContent();
         tweet.setSummary(content);
-        tweet.setContent(Utils.content(String.format(Constants.TWEET_ADD_HTML, content, "")));
+        tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, content).replace(Constants.TWEET_HTML_IMAGES_TAG, "")));
         tweet.setTime(Utils.getTime());
         tweet.setDate(new Date().getTime());
         tweet = tweetRepo.saveAndFlush(tweet);
@@ -112,7 +112,7 @@ public class TweetController {
             imageContent.append(String.format(Constants.TWEET_ADD_IMAGE_HTML, imageUrl));
         }
         String content = tweet.getSummary();
-        tweet.setContent(Utils.content(String.format(Constants.TWEET_ADD_HTML, content, imageContent)));
+        tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, content).replace(Constants.TWEET_HTML_IMAGES_TAG, imageContent)));
         tweet.setImages(String.join(";", imageUrls));
         tweet = tweetRepo.saveAndFlush(tweet);
         return tweet;

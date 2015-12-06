@@ -8,9 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by shadow on 15/11/15.
@@ -73,8 +71,10 @@ public class MessageController {
         } else if (getsType == GetsType.CHAT) {
             return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.CHAT, pageRequest).getContent();
         } else if (getsType == GetsType.CHAT_USER) {
-            pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.ASC, "date");
-            return messageRepo.findByUidInAndUid2InAndMessageType(Arrays.asList(uid, uid2), Arrays.asList(uid, uid2), Message.MessageType.CHAT, pageRequest).getContent();
+            List<Message> pageMessages = messageRepo.findByUidInAndUid2InAndMessageType(Arrays.asList(uid, uid2), Arrays.asList(uid, uid2), Message.MessageType.CHAT, pageRequest).getContent();
+            List<Message> messages = new ArrayList<Message>(pageMessages);
+            Collections.reverse(messages);
+            return messages;
         } else if (getsType == GetsType.COMMENT) {
             return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.COMMENT, pageRequest).getContent();
         } else if (getsType == GetsType.COMMENT_TWEET) {

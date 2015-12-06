@@ -61,8 +61,9 @@ public class Constants {
 
 
     public static final String TWEET_HTML_CONTENT_TAG="#content#";
-    public static final String TWEET_HTML = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no\"><title></title><style type=\"text/css\">img{width:100%}</style><script type=\"text/javascript\">function load(){for(var n=document.getElementsByTagName(\"img\"),o=0;o<n.length;o++)!function(o){var c=n[o];c.onclick=function(){window.open(c.src)}}(o)}</script></head><body onload=\"load()\">#content#</body></html>";
-    public static final String TWEET_ADD_HTML = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no\"><style type=\"text/css\">img{width:33%%}</style></head><body><div>%s</div><table width=\"100%%\">%s</table></body></html>";
+    public static final String TWEET_HTML_IMAGES_TAG="#images#";
+    public static final String TWEET_HTML = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no\"><title></title><style type=\"text/css\">img{width:100%}</style><script type=\"text/javascript\">function load(){for(var n=document.getElementsByTagName(\"img\"),c=0;c<n.length;c++)!function(c){var e=n[c];e.onclick=function(){handler.onImageClick(e.src)}}(c)}</script></head><body onload=\"load()\">#content#</body></html>";
+    public static final String TWEET_ADD_HTML = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no\"><title></title><style type=\"text/css\">img{width:100%}</style><script type=\"text/javascript\">function load(){for(var n=document.getElementsByTagName(\"img\"),e=0;e<n.length;e++)!function(e){var t=n[e];t.height=10*t.width/16,t.onclick=function(){handler.onImageClick(t.src)}}(e)}</script></head><body onload=\"load()\"><div style=\"margin-bottom:1rem\">#content#</div>#images#</body></html>";
     public static final String TWEET_ADD_IMAGE_HTML = "<img src=\"%s\" />";
 
 
