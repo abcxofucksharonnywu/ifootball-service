@@ -50,6 +50,43 @@ public class UserController {
     }
 
 
+    //注册
+    @RequestMapping(value = "/user/loginsso", method = RequestMethod.POST)
+    public User loginsso(@RequestParam(value = "email", defaultValue = "") String email,
+                         @RequestParam(value = "password", defaultValue = "") String password,
+                         @RequestParam(value = "name", defaultValue = "") String name,
+                         @RequestParam(value = "avatar", defaultValue = "") String avatar,
+                         @RequestParam(value = "gender") User.GenderType gender,
+                         @RequestParam(value = "deviceToken", defaultValue = "") String deviceToken) {
+
+        User user = userRepo.findByEmail(email);
+        if (user != null) {
+            throw new UserAlreadyExistException();
+        } else {
+            user = new User();
+            user.setName(name);
+            user.setSign("爱足球吧新人一枚,多多指教");
+            user.setEmail(email);
+            user.setPassword(password);
+            user.setAvatar(avatar);
+            user.setGender(gender);
+            user.setCover("http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg");
+            user.setDeviceToken(deviceToken);
+            user = userRepo.saveAndFlush(user);
+            focus(user.getId(), userRepo.findByName(Constants.NEWS_YINGCHAO).getId(), true);
+            focus(user.getId(), userRepo.findByName(Constants.NEWS_XIJIA).getId(), true);
+            focus(user.getId(), userRepo.findByName(Constants.NEWS_DEJIA).getId(), true);
+            focus(user.getId(), userRepo.findByName(Constants.NEWS_YIJIA).getId(), true);
+            focus(user.getId(), userRepo.findByName(Constants.NEWS_FAJIA).getId(), true);
+            focus(user.getId(), userRepo.findByName(Constants.NEWS_ZHONGCHAO).getId(), true);
+            focus(user.getId(), userRepo.findByName(Constants.NEWS_OUGUAN).getId(), true);
+            focus(user.getId(), userRepo.findByName(Constants.NEWS_HUABIAN).getId(), true);
+            focus(user.getId(), userRepo.findByName(Constants.SPECIAL_BREAK).getId(), true);
+            return user;
+        }
+    }
+
+
     @RequestMapping(value = "/user/logout", method = RequestMethod.GET)
     public void logout(@RequestParam(value = "uid") long uid) {
         User user = userRepo.findOne(uid);
@@ -83,7 +120,7 @@ public class UserController {
             focus(user.getId(), userRepo.findByName(Constants.NEWS_ZHONGCHAO).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.NEWS_OUGUAN).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.NEWS_HUABIAN).getId(), true);
-            focus(user.getId(), userRepo.findByName(Constants.PUBLIC_ZHONGDA).getId(), true);
+            focus(user.getId(), userRepo.findByName(Constants.SPECIAL_BREAK).getId(), true);
             return user;
         }
     }
@@ -244,6 +281,7 @@ public class UserController {
     public void focus(@RequestParam("uid") long uid, @RequestParam("uid2") long uid2, boolean focus) {
         if (focus) {
             if (userUserRepo.findByUidAndUid2AndUserUserType(uid, uid2, UserUser.UserUserType.FOCUS) == null) {
+
                 UserUser userUser = new UserUser();
                 userUser.setUid(uid);
                 userUser.setUid2(uid2);
@@ -251,6 +289,14 @@ public class UserController {
                 userUserRepo.saveAndFlush(userUser);
 
                 User user = userRepo.findOne(uid);
+                user.setFocusCount(user.getFocusCount() + 1);
+                userRepo.saveAndFlush(user);
+
+
+                User user2 = userRepo.findOne(uid2);
+                user2.setFansCount(user2.getFansCount() + 1);
+                userRepo.saveAndFlush(user2);
+
                 Message message = new Message();
                 message.setUid(uid);
                 message.setUid2(uid2);
@@ -261,12 +307,21 @@ public class UserController {
                 message.setTime(Utils.getTime());
                 message.setDate(System.currentTimeMillis());
                 Utils.message(messageRepo.saveAndFlush(message));
-            } else {
-                return;
             }
 
         } else {
-            userUserRepo.deleteByUidAndUid2InAndUserUserType(uid, Arrays.asList(uid2), UserUser.UserUserType.FOCUS);
+            if (userUserRepo.findByUidAndUid2AndUserUserType(uid, uid2, UserUser.UserUserType.FOCUS) != null) {
+                User user = userRepo.findOne(uid);
+                user.setFocusCount(user.getFocusCount() - 1);
+                userRepo.saveAndFlush(user);
+
+                User user2 = userRepo.findOne(uid2);
+                user2.setFansCount(user2.getFansCount() - 1);
+                userRepo.saveAndFlush(user2);
+
+                userUserRepo.deleteByUidAndUid2InAndUserUserType(uid, Arrays.asList(uid2), UserUser.UserUserType.FOCUS);
+            }
+
         }
 
     }

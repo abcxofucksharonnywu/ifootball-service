@@ -39,16 +39,38 @@ public class TweetController {
                      @RequestParam("originTid") long originTid,
                      @RequestBody Tweet tweet) {
 
-        String content = tweet.getContent();
-        tweet.setSummary(content);
-        tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, content).replace(Constants.TWEET_HTML_IMAGES_TAG, "")));
-        tweet.setTime(Utils.getTime());
-        tweet.setDate(System.currentTimeMillis());
-        tweet = tweetRepo.saveAndFlush(tweet);
-
         //保持userTweet
         long uid = tweet.getUid();
         User user = userRepo.findOne(uid);
+
+        if (user.getUserType() == User.UserType.SPECIAL && originTid > 0) {//超级用户
+            Tweet t = tweetRepo.findOne(originTid);
+            tweet = new Tweet();
+            tweet.setUid(uid);
+            tweet.setName(user.getName());
+            tweet.setIcon(user.getAvatar());
+            tweet.setTweetType(Tweet.TweetType.SPECIAL);
+            tweet.setTitle(t.getTitle());
+            tweet.setSummary(t.getSummary());
+            tweet.setImages(t.getImages());
+            tweet.setContent(t.getContent());
+            tweet.setLat(t.getLat());
+            tweet.setLon(t.getLon());
+            tweet.setDate(t.getDate());
+            tweet.setTime(t.getTime());
+            originTid = 0;
+            prompt = null;
+
+        } else {
+            String content = tweet.getContent();
+            tweet.setSummary(content);
+            tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, content).replace(Constants.TWEET_HTML_IMAGES_TAG, "")));
+            tweet.setTime(Utils.getTime());
+            tweet.setDate(System.currentTimeMillis());
+        }
+
+        tweet = tweetRepo.saveAndFlush(tweet);
+
         UserTweet userTweet = new UserTweet();
         userTweet.setUid(uid);
         userTweet.setTid(tweet.getId());
@@ -169,7 +191,7 @@ public class TweetController {
             if (uid > 0) {
                 users.addAll(userRepo.findAll(userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS)));
             } else {
-                users.add(userRepo.findByName(Constants.PUBLIC_ZHONGDA));
+                users.add(userRepo.findByName(Constants.SPECIAL_BREAK));
                 users.add(userRepo.findByName(Constants.NEWS_YINGCHAO));
                 users.add(userRepo.findByName(Constants.NEWS_XIJIA));
                 users.add(userRepo.findByName(Constants.NEWS_DEJIA));
@@ -182,7 +204,7 @@ public class TweetController {
             }
             for (User user : users) {
                 if (getsType == GetsType.HOME && (user.getUserType() == User.UserType.NORMAL ||
-                        user.getUserType() == User.UserType.PUBLIC)) {
+                        user.getUserType() == User.UserType.SPECIAL)) {
                     uids.add(user.getId());
                 } else if (getsType == GetsType.TEAM && user.getUserType() == User.UserType.TEAM) {
                     uids.add(user.getId());

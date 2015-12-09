@@ -30,56 +30,21 @@ public class TweetTask {
     @Autowired
     public UserTweetRepo userTweetRepo;
 
-    public TweetTask() {
-//        hupuUrls.put("切尔西", "/soccer/tag/344.html");
-//        hupuUrls.put("曼联", "/soccer/tag/342.html");
-//        hupuUrls.put("曼城", "/soccer/tag/120.html");
-//        hupuUrls.put("阿森纳", "/soccer/tag/287.html");
-//        hupuUrls.put("利物浦", "/soccer/tag/343.html");
-//        hupuUrls.put("热刺", "/soccer/tag/496.html");
-//
-//        hupuUrls.put("皇马", "/soccer/tag/396.html");
-//        hupuUrls.put("巴萨", "/soccer/tag/380.html");
-//        hupuUrls.put("马竞技", "/soccer/tag/603.html");
-//
-//        hupuUrls.put("AC米兰", "/soccer/tag/229.html");
-//        hupuUrls.put("国米", "/soccer/tag/969.html");
-//        hupuUrls.put("尤文", "/soccer/tag/261.html");
-//        hupuUrls.put("罗马", "/soccer/tag/495.html");
-//        hupuUrls.put("那不勒", "/soccer/tag/700.html");
-//
-//        hupuUrls.put("拜仁", "/soccer/tag/1341.html");
-//        hupuUrls.put("多特", "/soccer/tag/487.html");
-//
-//        hupuUrls.put("日尔曼", "/soccer/tag/465.html");
-//
-////        hupuUrls.put("埃因霍温", "/soccer/tag/16623.html");
-////        hupuUrls.put("本菲卡", "/soccer/tag/6502.html");
-////        hupuUrls.put("波尔图", "/soccer/tag/1388.html");
-////        hupuUrls.put("阿贾克斯", "/soccer/tag/1121.html");
-//
-//        hupuUrls.put("广州恒大淘宝", "/china/tag/11654.html");
-//        hupuUrls.put("上海上港", "/china/tag/12136.html");
-//        hupuUrls.put("北京国安", "/china/tag/11794.html");
-//        hupuUrls.put("山东鲁能", "/china/tag/11676.html");
-//        hupuUrls.put("上海绿地申花", "/china/tag/11633.html");
-
-    }
 
 
-    //重大新闻
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
-    public void runInitInDongqiudi() {
-        List<Tweet> tweets = runGrepPublicInDongqiudi(Constants.PUBLIC_ZHONGDA, "/?tab=1");
-        System.out.println("tweet runInitInDongqiudi " + tweets.size());
-    }
+//    //重大新闻
+//    @Scheduled(fixedDelay = 40 * 60 * 1000)
+//    public void runInitInDongqiudi() {
+//        List<Tweet> tweets = runGrepPublicInDongqiudi(Constants.SPECIAL_BREAK, "/?tab=1");
+//        System.out.println("tweet runInitInDongqiudi " + tweets.size());
+//    }
 
-    //球队新闻及花边新闻
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
-    public void runInitInZhiboba() {
-        List<Tweet> tweets = runGrepNewsInZhiboba();
-        System.out.println("tweet runInitInZhiboba " + tweets.size());
-    }
+//    //球队新闻及花边新闻
+//    @Scheduled(fixedDelay = 40 * 60 * 1000)
+//    public void runInitInZhiboba() {
+//        List<Tweet> tweets = runGrepNewsInZhiboba();
+//        System.out.println("tweet runInitInZhiboba " + tweets.size());
+//    }
 
 
     //切尔西
@@ -316,7 +281,7 @@ public class TweetTask {
                         tweet.setSource(source);
                         tweet.setDate(Utils.getDate(time));
                         tweet.setTime(Utils.getTime(tweet.getDate()));
-                        tweet.setTweetType(Tweet.TweetType.PUBLIC);
+                        tweet.setTweetType(Tweet.TweetType.SPECIAL);
                         tweet = tweetRepo.saveAndFlush(tweet);
 
                         UserTweet userTweet = new UserTweet();
@@ -436,6 +401,72 @@ public class TweetTask {
 
 
     public List<Tweet> runGrepTeamInHupu(String name, String url) {
+        List<Tweet> tweets = new ArrayList<>();
+        try {
+            User user = userRepo.findByName(name);
+            String host = "http://voice.hupu.com";
+            Document root = Utils.getDocument(String.format("%s%s", host, url));
+            Elements list = root.getElementsByClass("list");
+
+            int max = 30;
+            int i = 0;
+            for (Element element : list) {
+                if (i < max) {
+                    Element titleEl = element.getElementsByClass("txt").first().getElementsByClass("video").first();
+                    String link = titleEl.getElementsByTag("a").first().attr("href");
+                    Document article = Utils.getDocument(link);
+                    String title = article.getElementsByClass("headline").first().text();
+                    String source = article.getElementsByClass("comeFrom").first().getElementsByTag("a").first().text();
+                    String time = article.getElementById("pubtime_baidu").text();
+                    Element contentEl = article.getElementsByClass("artical-content").first();
+                    String text = contentEl.text();
+                    if (tweetRepo.findByTitle(title) == null) {
+                        Tweet tweet = new Tweet();
+                        tweet.setUid(user.getId());
+                        tweet.setIcon(user.getAvatar());
+                        tweet.setName(user.getName());
+
+                        tweet.setTitle(title);
+                        tweet.setSummary(text);
+                        Elements imgEls = contentEl.getElementsByTag("img");
+                        List<String> imgs = new ArrayList<>();
+                        for (Element imgEl : imgEls) {
+                            String img = imgEl.attr("src");
+                            imgs.add(img);
+                        }
+                        tweet.setImages(String.join(";", imgs));
+                        tweet.setContent(Utils.content(Constants.TWEET_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, contentEl.toString())));
+
+                        tweet.setSource(source);
+                        tweet.setDate(Utils.getDate(time));
+                        tweet.setTime(Utils.getTime(tweet.getDate()));
+                        tweet.setTweetType(Tweet.TweetType.TEAM);
+                        tweet = tweetRepo.saveAndFlush(tweet);
+
+                        UserTweet userTweet = new UserTweet();
+                        userTweet.setUid(user.getId());
+                        userTweet.setTid(tweet.getId());
+                        userTweet.setUserTweetType(UserTweet.UserTweetType.ADD);
+                        userTweetRepo.saveAndFlush(userTweet);
+                        tweets.add(tweet);
+                    }
+                    i++;
+                } else {
+                    break;
+                }
+
+            }
+
+
+        } catch (Exception e) {
+            System.out.println("grep team news " + name);
+            e.printStackTrace();
+        }
+        return tweets;
+    }
+
+
+    public List<Tweet> runGrepTeamInWeibo(String name, String url) {
         List<Tweet> tweets = new ArrayList<>();
         try {
             User user = userRepo.findByName(name);

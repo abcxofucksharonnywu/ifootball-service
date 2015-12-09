@@ -31,7 +31,8 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
 
     public void runInitUsers() {
         userRepo.deleteByUserType(User.UserType.TEAM);
-        userRepo.deleteByUserType(User.UserType.PUBLIC);
+        userRepo.deleteByUserType(User.UserType.SPECIAL);
+
         List<User> users = new ArrayList<>();
         //英超
         users.addAll(runGrepTeam(Constants.GROUP_YINGCHAO, "yingchao"));
@@ -101,8 +102,8 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
         );
 
         //特殊帐号
-        users.add(runInitPublic(
-                        Constants.PUBLIC_ZHONGDA,
+        users.add(runInitSpecial(
+                        Constants.SPECIAL_BREAK,
                         "最新最快最准确的足球快讯，欧洲足球新闻一手掌握。",
                         "http://h.hiphotos.baidu.com/zhidao/wh%3D450%2C600/sign=7e73edad9d22720e7b9beafe4efb2670/79f0f736afc379317dd1cee6eec4b74542a91147.jpg",
                         "http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg")
@@ -154,16 +155,17 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
         return user;
     }
 
-    private User runInitPublic(String name, String sign, String avatar, String cover) {
+    private User runInitSpecial(String name, String sign, String avatar, String cover) {
         User user = new User();
-        user.setEmail(String.format("%s@ifootball.com", name));
+        user.setEmail("iamthefootball@qq.com");
+        user.setPassword(Utils.md52("ifootball123"));
         user.setName(name);
         user.setSign(sign);
         user.setAvatar(avatar);
         user.setCover(cover);
         user.setGender(User.GenderType.MALE);
-        user.setUserType(User.UserType.PUBLIC);
-        user.setGroupName(Constants.GROUP_PUBLIC);
+        user.setUserType(User.UserType.SPECIAL);
+        user.setGroupName(Constants.GROUP_SPECIAL);
         userRepo.save(user);
         return user;
     }

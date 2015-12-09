@@ -59,7 +59,7 @@ public class Constants {
     public static final String NEWS_ZHONGCHAO = "中超新闻";
     public static final String NEWS_OUGUAN = "欧冠新闻";
     public static final String NEWS_HUABIAN = "花边新闻";
-    public static final String PUBLIC_ZHONGDA = "重大新闻";
+    public static final String SPECIAL_BREAK = "Break News";
 
 
     public static final String TWEET_HTML_CONTENT_TAG = "#content#";
