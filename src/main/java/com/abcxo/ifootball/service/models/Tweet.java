@@ -37,7 +37,7 @@ public class Tweet {
 
     private double lon;
     private double lat;
-
+    public String location;
     private TweetType tweetType = TweetType.NORMAL;
 
     @Transient
@@ -178,6 +178,14 @@ public class Tweet {
 
     public void setLat(double lat) {
         this.lat = lat;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public Tweet getOriginTweet() {

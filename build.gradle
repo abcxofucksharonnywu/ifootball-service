@@ -14,7 +14,7 @@ apply plugin: 'spring-boot'
 
 jar {
     baseName = 'ifootball-service'
-    version =  '1.0-SNAPSHOT'
+    version = '1.0-SNAPSHOT'
 }
 
 repositories {
@@ -38,6 +38,9 @@ dependencies {
     compile 'org.json:json:20151123'
     compile 'org.apache.httpcomponents:httpclient:4.3.5'
     compile 'com.belerweb:pinyin4j:2.5.0'
+    compile 'net.sourceforge.htmlunit:htmlunit:2.19'
+//    compile 'us.codecraft:webmagic-core:0.4.2'
+//    compile 'us.codecraft:webmagic-extension:0.4.2'
 
 
 }

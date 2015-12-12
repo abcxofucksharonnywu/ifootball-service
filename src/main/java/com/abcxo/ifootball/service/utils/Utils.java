@@ -25,6 +25,8 @@ import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by shadow on 15/11/15.
@@ -87,7 +89,6 @@ public class Utils {
     }
 
 
-
     public static String md52(String str) {
         return md5(md5(str));
     }
@@ -113,7 +114,6 @@ public class Utils {
         }
         return "";
     }
-
 
 
     public static void message(Message message) {
@@ -220,8 +220,14 @@ public class Utils {
     }
 
     public static Document getDocument(String url) {
+        return getDocument(url, new HashMap<>());
+    }
+
+
+    public static Document getDocument(String url, Map<String, String> cookies) {
         try {
             return Jsoup.connect(url)
+                    .cookies(cookies)
                     .timeout(30000)
                     .header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36").get();
         } catch (Exception e) {
