@@ -129,7 +129,7 @@ public class UserController {
     @RequestMapping(value = "/user", method = RequestMethod.PUT)
     public User edit(@RequestBody User user) {
         if (userRepo.findOne(user.getId()) != null) {
-            user.setIndex(Utils.getNameIndex(user.getName()));
+            user.setLetter(Utils.getNameIndex(user.getName()));
             user = userRepo.saveAndFlush(user);
         }
         return user;

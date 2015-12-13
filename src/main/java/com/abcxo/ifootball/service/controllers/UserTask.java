@@ -26,7 +26,7 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        runInitUsers();
+//        runInitUsers();
     }
 
     public void runInitUsers() {
@@ -131,7 +131,7 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
                 user.setCover("http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg");
                 user.setGender(User.GenderType.MALE);
                 user.setUserType(User.UserType.TEAM);
-                userRepo.save(user);
+                userRepo.saveAndFlush(user);
                 users.add(user);
             }
 
@@ -151,7 +151,7 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
         user.setGender(User.GenderType.MALE);
         user.setUserType(User.UserType.NEWS);
         user.setGroupName(Constants.GROUP_NEWS);
-        userRepo.save(user);
+        userRepo.saveAndFlush(user);
         return user;
     }
 
@@ -166,7 +166,7 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
         user.setGender(User.GenderType.MALE);
         user.setUserType(User.UserType.SPECIAL);
         user.setGroupName(Constants.GROUP_SPECIAL);
-        userRepo.save(user);
+        userRepo.saveAndFlush(user);
         return user;
     }
 

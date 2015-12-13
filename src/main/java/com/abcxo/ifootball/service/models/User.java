@@ -14,7 +14,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private String index;
+    private String letter;
     private String groupName;
     @NotNull
     private String email;
@@ -51,12 +51,12 @@ public class User {
         this.id = id;
     }
 
-    public String getIndex() {
-        return index;
+    public String getLetter() {
+        return letter;
     }
 
-    public void setIndex(String index) {
-        this.index = index;
+    public void setLetter(String letter) {
+        this.letter = letter;
     }
 
     public String getGroupName() {
@@ -81,7 +81,7 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-        setIndex(Utils.getNameIndex(name));
+        setLetter(Utils.getNameIndex(name));
     }
 
     public String getSign() {
