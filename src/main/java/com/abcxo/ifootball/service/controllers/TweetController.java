@@ -217,9 +217,12 @@ public class TweetController {
 
         PageRequest pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.DESC, "date");
         Page<Tweet> tweets = null;
+
         if (getsType != GetsType.SEARCH) {
-            List<Long> tids = userTweetRepo.findTidsByUidsAndUserTweetType(uids, UserTweet.UserTweetType.ADD);
-            tweets = tweetRepo.findByIdIn(tids, pageRequest);
+            if (uids.size() > 0) {
+                List<Long> tids = userTweetRepo.findTidsByUidsAndUserTweetType(uids, UserTweet.UserTweetType.ADD);
+                tweets = tweetRepo.findByIdIn(tids, pageRequest);
+            }
         } else if (!StringUtils.isEmpty(keyword)) {
             keyword = "%" + keyword + "%";
             tweets = tweetRepo.findByNameLikeIgnoreCaseOrTitleLikeIgnoreCaseOrSourceLikeIgnoreCaseOrSummaryLikeIgnoreCase(keyword, keyword, keyword, keyword, pageRequest);
