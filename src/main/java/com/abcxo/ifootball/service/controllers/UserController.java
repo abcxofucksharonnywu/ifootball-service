@@ -12,9 +12,10 @@ import com.abcxo.ifootball.service.repos.UserRepo;
 import com.abcxo.ifootball.service.repos.UserUserRepo;
 import com.abcxo.ifootball.service.utils.Constants;
 import com.abcxo.ifootball.service.utils.Constants.UserAlreadyExistException;
-import com.abcxo.ifootball.service.utils.Constants.UserValidateException;
 import com.abcxo.ifootball.service.utils.Constants.UserNotFoundException;
+import com.abcxo.ifootball.service.utils.Constants.UserValidateException;
 import com.abcxo.ifootball.service.utils.Utils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -45,7 +46,7 @@ public class UserController {
         if (user == null) {
             throw new UserNotFoundException();
         }
-        String password = "ifootball";
+        String password = RandomStringUtils.randomAlphanumeric(8);
         user.setPassword(Utils.md52(password));
         user = userRepo.saveAndFlush(user);
         Utils.email(email, password);
