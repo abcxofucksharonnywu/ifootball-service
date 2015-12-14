@@ -218,7 +218,7 @@ public class UserController {
 
         if (uid > 0) {
             if (getsType == GetsType.FRIEND || getsType == GetsType.FOCUS || getsType == GetsType.FANS) {
-                PageRequest pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.ASC, "index");
+                PageRequest pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.ASC, "letter");
                 if (getsType == GetsType.FRIEND) {
                     List<Long> uids = userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
                     List<Long> uid2s = userUserRepo.findUidsByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS);
@@ -280,7 +280,7 @@ public class UserController {
         }
 
         if (getsType == GetsType.SEARCH && !StringUtils.isEmpty(keyword)) {
-            PageRequest pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.ASC, "index");
+            PageRequest pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.ASC, "letter");
             keyword = "%" + keyword + "%";
             getsUsers.addAll(userRepo.findByNameLikeIgnoreCaseOrSignLikeIgnoreCase(keyword, keyword, pageRequest).getContent());
         }
