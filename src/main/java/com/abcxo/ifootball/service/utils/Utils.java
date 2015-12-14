@@ -174,6 +174,8 @@ public class Utils {
     public static void email(String email, String password) {
         JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
         // 设定mail server
+        senderImpl.setHost("smtp.qq.com");
+        senderImpl.setPort(465);
         // 建立邮件消息
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(email);
@@ -184,6 +186,10 @@ public class Utils {
         senderImpl.setUsername(Constants.EMAIL); // 根据自己的情况,设置username
         senderImpl.setPassword(Constants.EMAIL_PASSWORD); // 根据自己的情况, 设置password
         Properties prop = new Properties();
+        prop.setProperty("mail.transport.protocol", "smtp");
+        prop.setProperty("mail.smtp.auth", "false");
+        prop.setProperty("mail.smtp.starttls.enable", "false");
+        prop.setProperty("mail.debug", "false");
         senderImpl.setJavaMailProperties(prop);
         // 发送邮件
         senderImpl.send(mailMessage);
