@@ -39,7 +39,7 @@ proguard/
 .mtj.tmp/
 
 # Package Files #
-*.war
+#*.war
 *.ear
 *.iml
 
