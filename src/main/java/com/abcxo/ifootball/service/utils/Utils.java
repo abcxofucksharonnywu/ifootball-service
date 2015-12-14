@@ -16,6 +16,8 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by shadow on 15/11/15.
@@ -167,6 +170,29 @@ public class Utils {
 
     }
 
+
+    public static void email(String email, String password) {
+        JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
+        // 设定mail server
+        senderImpl.setHost("smtp.qq.com");
+        // 建立邮件消息
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(email);
+        mailMessage.setFrom(Constants.EMAIL);
+        mailMessage.setSubject("爱足球吧密码找回");
+        mailMessage.setText(String.format("%s重置密码：", email, password));
+
+        senderImpl.setUsername(Constants.EMAIL); // 根据自己的情况,设置username
+        senderImpl.setPassword(Constants.EMAIL_PASSWORD); // 根据自己的情况, 设置password
+        Properties prop = new Properties();
+        prop.put("mail.smtp.auth", "true"); // 将这个参数设为true，让服务器进行认证,认证用户名和密码是否正确
+        prop.put("mail.smtp.timeout", "25000");
+        senderImpl.setJavaMailProperties(prop);
+        // 发送邮件
+        senderImpl.send(mailMessage);
+
+        System.out.println(" 邮件发送成功.. ");
+    }
 
     public static long getDate(String time) {
         try {

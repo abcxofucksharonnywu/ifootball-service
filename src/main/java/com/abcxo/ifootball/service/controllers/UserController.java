@@ -35,6 +35,22 @@ public class UserController {
     @Autowired
     private MessageRepo messageRepo;
 
+
+    //注册
+    @RequestMapping(value = "/user/password", method = RequestMethod.GET)
+    public User password(@RequestParam(value = "email", defaultValue = "") String email) {
+
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new UserValidateException();
+        }
+        String password = "ifootball";
+        user.setPassword(Utils.md52(password));
+        user = userRepo.saveAndFlush(user);
+        Utils.email(email, password);
+        return user;
+    }
+
     //注册
     @RequestMapping(value = "/user/login", method = RequestMethod.GET)
     public User login(@RequestParam(value = "email", defaultValue = "") String email,

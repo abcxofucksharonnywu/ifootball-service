@@ -17,6 +17,9 @@ public class Constants {
 
     public static final String NAME = "爱足球吧";
 
+    public static final String EMAIL = "iamthefootball@qq.com";
+    public static final String EMAIL_PASSWORD = "ifootball123";
+
 
     public static final int MAX_SUMMARY = 70;
 
