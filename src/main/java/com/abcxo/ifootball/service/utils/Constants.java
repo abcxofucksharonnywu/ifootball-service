@@ -38,6 +38,11 @@ public class Constants {
     public static class UserValidateException extends RuntimeException {
     }
 
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "邮箱没有注册")
+    public static class UserNotFoundException extends RuntimeException {
+    }
+
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "邮箱已经被占用")
     public static class UserAlreadyExistException extends RuntimeException {
     }
