@@ -29,7 +29,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Created by shadow on 15/11/15.
@@ -174,24 +173,15 @@ public class Utils {
     public static void email(String email, String password) {
         JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
         // 设定mail server
-        senderImpl.setHost("smtp.qq.com");
-        senderImpl.setPort(465);
-        // 建立邮件消息
+        senderImpl.setHost("smtp.163.com");
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(email);
         mailMessage.setFrom(Constants.EMAIL);
         mailMessage.setSubject("爱足球吧密码找回");
-        mailMessage.setText(String.format("%s重置密码：", email, password));
+        mailMessage.setText(String.format("%s重置密码：%s", email, password));
 
-        senderImpl.setUsername(Constants.EMAIL); // 根据自己的情况,设置username
+        senderImpl.setUsername(Constants.EMAIL_NAME); // 根据自己的情况,设置username
         senderImpl.setPassword(Constants.EMAIL_PASSWORD); // 根据自己的情况, 设置password
-        Properties prop = new Properties();
-        prop.setProperty("mail.transport.protocol", "smtp");
-        prop.setProperty("mail.smtp.auth", "false");
-        prop.setProperty("mail.smtp.starttls.enable", "false");
-        prop.setProperty("mail.debug", "false");
-        senderImpl.setJavaMailProperties(prop);
-        // 发送邮件
         senderImpl.send(mailMessage);
 
         System.out.println(" 邮件发送成功.. ");
