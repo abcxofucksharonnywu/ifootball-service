@@ -8,11 +8,12 @@ buildscript {
 }
 
 apply plugin: 'java'
+apply plugin: 'war'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
-jar {
+war {
     baseName = 'ifootball-service'
     version = '1.0-SNAPSHOT'
 }
@@ -39,6 +40,7 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.3.5'
     compile 'com.belerweb:pinyin4j:2.5.0'
     compile 'net.sourceforge.htmlunit:htmlunit:2.19'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
 
 }
