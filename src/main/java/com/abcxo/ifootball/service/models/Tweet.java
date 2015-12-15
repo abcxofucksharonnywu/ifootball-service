@@ -127,7 +127,7 @@ public class Tweet {
     public void setSummary(String text) {
         String summary = "";
         if (!StringUtils.isEmpty(text)) {
-            summary = text.substring(0, text.length() > Constants.MAX_SUMMARY ? Constants.MAX_SUMMARY : text.length() - 1);
+            summary = text.substring(0, text.length() > Constants.MAX_SUMMARY ? Constants.MAX_SUMMARY : text.length());
         }
         this.summary = summary;
     }

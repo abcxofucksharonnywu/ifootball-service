@@ -248,6 +248,14 @@ public class TweetController {
     }
 
 
+    @RequestMapping(value = "/tweet", method = RequestMethod.DELETE)
+    public void delete(@RequestParam("tid") long tid) {
+        messageRepo.deleteByTid(tid);
+        tweetTweetRepo.deleteByTid(tid);
+        userTweetRepo.deleteByTid(tid);
+        tweetRepo.delete(tid);
+    }
+
     @RequestMapping(value = "/tweet/star", method = RequestMethod.POST)
     public void star(@RequestParam("uid") long uid,
                      @RequestParam("tid") long tid,
