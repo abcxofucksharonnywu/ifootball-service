@@ -58,7 +58,7 @@ public class TweetTask {
     @Scheduled(fixedDelay = 40 * 60 * 1000)
     public void runInitQieerxi() {
         List<Tweet> tweets = new ArrayList<>();
-//        tweets.addAll(runGrepTeamInHupu("切尔西", "/soccer/tag/344.html"));
+        tweets.addAll(runGrepTeamInHupu("切尔西", "/soccer/tag/344.html"));
         tweets.addAll(runGrepInWeibo("切尔西", "/chelseafc?is_all=1"));
         System.out.println("tweet runInitQieerxi " + tweets.size());
     }
