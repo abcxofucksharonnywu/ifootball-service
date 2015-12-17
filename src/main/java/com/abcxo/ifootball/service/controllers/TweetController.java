@@ -56,8 +56,9 @@ public class TweetController {
             tweet.setContent(t.getContent());
             tweet.setLat(t.getLat());
             tweet.setLon(t.getLon());
-            tweet.setDate(t.getDate());
-            tweet.setTime(t.getTime());
+            tweet.setLocation(t.location);
+            tweet.setTime(Utils.getTime());
+            tweet.setDate(System.currentTimeMillis());
             originTid = 0;
             prompt = null;
 
@@ -91,15 +92,15 @@ public class TweetController {
                 //保存@ message
                 Message message = new Message();
                 message.setUid(uid);
-                message.setUid2(Long.valueOf(id));
-                message.setTid(tweet.getId());
+                message.setUid2(tweet.getUid());
+                message.setTid(Long.valueOf(id));
                 message.setMessageType(Message.MessageType.PROMPT);
                 message.setTitle(user.getName());
+                message.setContent(user.getName());
                 message.setIcon(user.getAvatar());
                 message.setTime(Utils.getTime());
                 message.setDate(System.currentTimeMillis());
-                messageRepo.saveAndFlush(message);
-                Utils.message(message);
+                Utils.message(messageRepo.saveAndFlush(message));
             }
         }
 

@@ -20,6 +20,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +47,15 @@ public class TweetTask {
 //        System.out.println("tweet runInitInDongqiudi " + tweets.size());
 //    }
 
-        //球队新闻及花边新闻
+
+    //花边新闻
+    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    public void runInitInHuabian() {
+        List<Tweet> tweets = runGrepHuabianInTencent();
+        System.out.println("tweet runInitInHuabian " + tweets.size());
+    }
+
+    //球队新闻及花边新闻
     @Scheduled(fixedDelay = 40 * 60 * 1000)
     public void runInitInZhiboba() {
         List<Tweet> tweets = runGrepNewsInZhiboba();
@@ -54,7 +63,7 @@ public class TweetTask {
     }
 
 
-//    //切尔西
+    //    //切尔西
     @Scheduled(fixedDelay = 40 * 60 * 1000)
     public void runInitQieerxi() {
         List<Tweet> tweets = new ArrayList<>();
@@ -232,7 +241,6 @@ public class TweetTask {
     }
 
 
-
     //恒大
     @Scheduled(fixedDelay = 40 * 60 * 1000)
     public void runInitHengda() {
@@ -303,7 +311,7 @@ public class TweetTask {
                     String title = detailEl.getElementsByTag("h1").first().text();
                     String time = detailEl.getElementsByClass("time").first().text();
                     String source = detailEl.getElementsByClass("name").first().text();
-                    String text = contentEl.text();
+                    String text = contentEl.text().trim();
                     if (tweetRepo.findByTitle(title) == null) {
                         Tweet tweet = new Tweet();
                         tweet.setUid(user.getId());
@@ -350,6 +358,77 @@ public class TweetTask {
     }
 
 
+    public List<Tweet> runGrepHuabianInTencent() {
+        List<Tweet> tweets = new ArrayList<>();
+        try {
+            User user = userRepo.findByName(Constants.NEWS_HUABIAN);
+            String url = "http://sports.qq.com/l/isocce/interpics/list.htm";
+            Document root = Utils.getDocument(url);
+            Elements list = root.getElementById("piclist").children();
+            int max = 30;
+            int i = 0;
+            for (Element element : list) {
+                if (i < max) {
+                    String link = "http://xw.qq.com/sports/" + element.getElementsByTag("a").first().attr("href").replace("http://sports.qq.com/a/", "").replace("/", "").replace("htm", "");
+                    Document article = Utils.getDocument(link);
+                    String title = article.getElementsByClass("title").first().text().trim();
+                    String source = "腾讯体育";
+                    String time = article.getElementsByClass("time").text();
+                    Elements imgEls = article.getElementsByClass("image");
+                    Element contentEl = article.getElementsByClass("content").first();
+                    String text = contentEl.text().trim();
+                    if (tweetRepo.findByTitle(title) == null) {
+                        Tweet tweet = new Tweet();
+                        tweet.setUid(user.getId());
+                        tweet.setIcon(user.getAvatar());
+                        tweet.setName(user.getName());
+                        tweet.setTitle(title);
+
+                        List<String> imgs = new ArrayList<>();
+                        List<String> titles = new ArrayList<>();
+                        for (Element imgEl : imgEls) {
+                            String img = imgEl.getElementsByTag("img").first().attr("src");
+                            Element p = imgEl.nextElementSibling();
+                            String pText = null;
+                            if (p != null && !"img".equals(p.tag().getName())) {
+                                pText = p.text();
+                            }
+                            imgs.add(img);
+                            titles.add(!StringUtils.isEmpty(pText) ? pText.trim() : "_");
+                        }
+                        tweet.setImages(String.join(";", imgs));
+                        tweet.setImageTitles(String.join(";", titles));
+
+
+                        tweet.setSummary(text);
+                        tweet.setContent(Utils.content(Constants.TWEET_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, contentEl.toString())));
+                        tweet.setSource(source);
+                        tweet.setDate(Utils.getDate(time));
+                        tweet.setTime(Utils.getTime(tweet.getDate()));
+                        tweet.setTweetType(Tweet.TweetType.NEWS);
+                        tweet = tweetRepo.saveAndFlush(tweet);
+
+                        UserTweet userTweet = new UserTweet();
+                        userTweet.setUid(user.getId());
+                        userTweet.setTid(tweet.getId());
+                        userTweet.setUserTweetType(UserTweet.UserTweetType.ADD);
+                        userTweetRepo.saveAndFlush(userTweet);
+                        tweets.add(tweet);
+                    }
+                    i++;
+                } else {
+                    break;
+                }
+
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tweets;
+    }
+
     public List<Tweet> runGrepNewsInZhiboba() {
         List<Tweet> tweets = new ArrayList<>();
         try {
@@ -371,7 +450,7 @@ public class TweetTask {
                         String time = child.getElementsByClass("postTime").first().text();
                         Document article = Utils.getDocument(link);
                         Element contentEl = article.getElementsByClass("content").first();
-                        String text = contentEl.text();
+                        String text = contentEl.text().trim();
                         if (tweetRepo.findByTitle(title) == null) {
                             String name;
                             if (tag.contains(Constants.GROUP_YINGCHAO)) {
@@ -461,7 +540,7 @@ public class TweetTask {
                     String source = article.getElementsByClass("comeFrom").first().getElementsByTag("a").first().text();
                     String time = article.getElementById("pubtime_baidu").text();
                     Element contentEl = article.getElementsByClass("artical-content").first();
-                    String text = contentEl.text();
+                    String text = contentEl.text().trim();
                     if (tweetRepo.findByTitle(title) == null) {
                         Tweet tweet = new Tweet();
                         tweet.setUid(user.getId());
@@ -548,7 +627,7 @@ public class TweetTask {
                     Element detail = element.getElementsByClass("WB_detail").first();
                     if (detail != null) {
                         Element content = detail.getElementsByAttributeValue("node-type", "feed_list_content").first();
-                        String text = content.text();
+                        String text = content.text().trim();
                         String source = "新浪微博";
                         String date = detail.getElementsByAttributeValue("node-type", "feed_list_item_date").first().attr("date");
                         if (tweetRepo.findByDate(Long.valueOf(date)) == null) {

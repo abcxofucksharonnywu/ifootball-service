@@ -31,8 +31,10 @@ public class Tweet {
     private String summary;
     private String content;
 
-    @Column(length = 3000)
+    @Column(length = 10000)
     private String images;
+    @Column(length = 10000)
+    private String imageTitles;
     private String time;
 
     private double lon;
@@ -146,6 +148,14 @@ public class Tweet {
 
     public void setImages(String images) {
         this.images = images;
+    }
+
+    public String getImageTitles() {
+        return imageTitles;
+    }
+
+    public void setImageTitles(String imageTitles) {
+        this.imageTitles = imageTitles;
     }
 
     public String getTime() {
