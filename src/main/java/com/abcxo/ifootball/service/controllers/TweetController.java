@@ -92,8 +92,8 @@ public class TweetController {
                 //保存@ message
                 Message message = new Message();
                 message.setUid(uid);
-                message.setUid2(tweet.getUid());
-                message.setTid(Long.valueOf(id));
+                message.setUid2(Long.valueOf(id));
+                message.setTid(tweet.getId());
                 message.setMessageType(Message.MessageType.PROMPT);
                 message.setTitle(user.getName());
                 message.setContent(user.getName());
