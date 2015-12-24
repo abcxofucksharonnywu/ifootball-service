@@ -618,7 +618,6 @@ public class TweetTask {
             HtmlPage page = webClient.getPage(webUrl);
             webClient.waitForBackgroundJavaScript(5000);
             Document root = Jsoup.parse(page.asXml());
-            webClient.close();
             Elements list = root.getElementsByAttributeValue("node-type", "feed_list").first().children();
 
             int max = 30;
@@ -681,10 +680,10 @@ public class TweetTask {
 
 
         } catch (Exception e) {
-            webClient.close();
             System.out.println("grep webo  " + name);
             e.printStackTrace();
-
+        }finally {
+            webClient.close();
         }
 
         return tweets;
