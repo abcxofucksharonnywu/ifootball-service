@@ -589,6 +589,7 @@ public class TweetTask {
 
     public List<Tweet> runGrepInWeibo(String name, String url) {
         List<Tweet> tweets = new ArrayList<>();
+        WebClient webClient = new WebClient(BrowserVersion.CHROME);
         try {
             User user = userRepo.findByName(name);
             String host = "http://weibo.com";
@@ -604,7 +605,7 @@ public class TweetTask {
             map.put("_s_tentry", "passport.weibo.com");
             map.put("login_sid_t", "1e9f2f8194194ee5b0daf420316de0cb");
 
-            WebClient webClient = new WebClient(BrowserVersion.CHROME);
+
             webClient.getOptions().setJavaScriptEnabled(true);
             webClient.getOptions().setCssEnabled(false);
             webClient.getCookieManager().setCookiesEnabled(true);
@@ -680,8 +681,10 @@ public class TweetTask {
 
 
         } catch (Exception e) {
+            webClient.close();
             System.out.println("grep webo  " + name);
             e.printStackTrace();
+
         }
 
         return tweets;
