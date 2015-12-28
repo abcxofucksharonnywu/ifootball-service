@@ -1,7 +1,11 @@
 package com.abcxo.ifootball.service.controllers;
 
+import com.abcxo.ifootball.service.models.Message;
 import com.abcxo.ifootball.service.models.User;
+import com.abcxo.ifootball.service.models.UserUser;
+import com.abcxo.ifootball.service.repos.MessageRepo;
 import com.abcxo.ifootball.service.repos.UserRepo;
+import com.abcxo.ifootball.service.repos.UserUserRepo;
 import com.abcxo.ifootball.service.utils.Constants;
 import com.abcxo.ifootball.service.utils.Utils;
 import org.jsoup.nodes.Document;
@@ -13,6 +17,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,10 +28,17 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired
     public UserRepo userRepo;
 
+    @Autowired
+    public MessageRepo messageRepo;
+
+    @Autowired
+    public UserUserRepo userUserRepo;
+
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
 //        runInitUsers();
+        runFocusSpecial();
     }
 
     public void runInitUsers() {
@@ -167,7 +179,72 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
         user.setUserType(User.UserType.SPECIAL);
         user.setGroupName(Constants.GROUP_SPECIAL);
         userRepo.saveAndFlush(user);
+
+
         return user;
+    }
+
+    public void runFocusSpecial() {
+        User user = userRepo.findByEmail("iamthefootball@qq.com");
+        user.setName(Constants.SPECIAL_BREAK);
+        userRepo.saveAndFlush(user);
+        focus(user.getId(), userRepo.findByName(Constants.NEWS_YINGCHAO).getId(), true);
+        focus(user.getId(), userRepo.findByName(Constants.NEWS_XIJIA).getId(), true);
+        focus(user.getId(), userRepo.findByName(Constants.NEWS_DEJIA).getId(), true);
+        focus(user.getId(), userRepo.findByName(Constants.NEWS_YIJIA).getId(), true);
+        focus(user.getId(), userRepo.findByName(Constants.NEWS_FAJIA).getId(), true);
+        focus(user.getId(), userRepo.findByName(Constants.NEWS_ZHONGCHAO).getId(), true);
+        focus(user.getId(), userRepo.findByName(Constants.NEWS_OUGUAN).getId(), true);
+        focus(user.getId(), userRepo.findByName(Constants.NEWS_HUABIAN).getId(), true);
+    }
+
+
+    public void focus(long uid, long uid2, boolean focus) {
+        if (focus) {
+            if (userUserRepo.findByUidAndUid2AndUserUserType(uid, uid2, UserUser.UserUserType.FOCUS) == null) {
+
+                UserUser userUser = new UserUser();
+                userUser.setUid(uid);
+                userUser.setUid2(uid2);
+                userUser.setUserUserType(UserUser.UserUserType.FOCUS);
+                userUserRepo.saveAndFlush(userUser);
+
+                User user = userRepo.findOne(uid);
+                user.setFocusCount(user.getFocusCount() + 1);
+                userRepo.saveAndFlush(user);
+
+
+                User user2 = userRepo.findOne(uid2);
+                user2.setFansCount(user2.getFansCount() + 1);
+                userRepo.saveAndFlush(user2);
+
+                Message message = new Message();
+                message.setUid(uid);
+                message.setUid2(uid2);
+                message.setMessageType(Message.MessageType.FOCUS);
+                message.setTitle(user.getName());
+                message.setContent(user.getName());
+                message.setIcon(user.getAvatar());
+                message.setTime(Utils.getTime());
+                message.setDate(System.currentTimeMillis());
+                Utils.message(messageRepo.saveAndFlush(message));
+            }
+
+        } else {
+            if (userUserRepo.findByUidAndUid2AndUserUserType(uid, uid2, UserUser.UserUserType.FOCUS) != null) {
+                User user = userRepo.findOne(uid);
+                user.setFocusCount(user.getFocusCount() - 1);
+                userRepo.saveAndFlush(user);
+
+                User user2 = userRepo.findOne(uid2);
+                user2.setFansCount(user2.getFansCount() - 1);
+                userRepo.saveAndFlush(user2);
+
+                userUserRepo.deleteByUidAndUid2InAndUserUserType(uid, Arrays.asList(uid2), UserUser.UserUserType.FOCUS);
+            }
+
+        }
+
     }
 
 

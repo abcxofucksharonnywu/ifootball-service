@@ -6,13 +6,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by shadow on 15/10/30.
  */
 public interface TweetRepo extends JpaRepository<Tweet, Long> {
 
-    Tweet findByTitle(String title);
+    List<Tweet> findByTitle(String title);
 
     Tweet findByDate(long date);
 

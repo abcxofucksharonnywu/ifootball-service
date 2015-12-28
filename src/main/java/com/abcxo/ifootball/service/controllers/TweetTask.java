@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by shadow on 15/11/30.
@@ -40,8 +42,10 @@ public class TweetTask {
     public UserTweetRepo userTweetRepo;
 
 
+    public ExecutorService pool = Executors.newFixedThreadPool(200);
+
 //    //重大新闻
-//    @Scheduled(fixedDelay = 40 * 60 * 1000)
+//    @Scheduled(fixedDelay = 5 * 60 * 1000)
 //    public void runInitInDongqiudi() {
 //        List<Tweet> tweets = runGrepPublicInDongqiudi(Constants.SPECIAL_BREAK, "/?tab=1");
 //        System.out.println("tweet runInitInDongqiudi " + tweets.size());
@@ -49,245 +53,428 @@ public class TweetTask {
 
 
     //花边新闻
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitInHuabian() {
-        List<Tweet> tweets = runGrepHuabianInTencent();
-        System.out.println("tweet runInitInHuabian " + tweets.size());
+        System.out.println("tweet runInitInHuabian " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = runGrepHuabianInTencent();
+                System.out.println("tweet runInitInHuabian " + tweets.size());
+            }
+        });
+
     }
 
     //球队新闻及花边新闻
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitInZhiboba() {
-        List<Tweet> tweets = runGrepNewsInZhiboba();
-        System.out.println("tweet runInitInZhiboba " + tweets.size());
+        System.out.println("tweet runInitInZhiboba " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = runGrepNewsInZhiboba();
+                System.out.println("tweet runInitInZhiboba " + tweets.size());
+            }
+        });
+
     }
 
 
     //    //切尔西
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitQieerxi() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("切尔西", "/soccer/tag/344.html"));
-        tweets.addAll(runGrepInWeibo("切尔西", "/chelseafc?is_all=1"));
-        System.out.println("tweet runInitQieerxi " + tweets.size());
+        System.out.println("tweet runInitQieerxi " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("切尔西", "/soccer/tag/344.html"));
+                tweets.addAll(runGrepInWeibo("切尔西", "/chelseafc?is_all=1"));
+                System.out.println("tweet runInitQieerxi " + tweets.size());
+            }
+        });
+
+
     }
 
 
     //曼联
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitManlian() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("曼联", "/soccer/tag/342.html"));
-        tweets.addAll(runGrepInWeibo("曼联", "/manchesterunited?profile_ftype=1&is_all=1&noscale_head=1"));
-        System.out.println("tweet runInitManlian " + tweets.size());
+        System.out.println("tweet runInitManlian " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("曼联", "/soccer/tag/342.html"));
+                tweets.addAll(runGrepInWeibo("曼联", "/manchesterunited?profile_ftype=1&is_all=1&noscale_head=1"));
+                System.out.println("tweet runInitManlian " + tweets.size());
+            }
+        });
+
     }
 
     //曼城
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitMancheng() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("曼城", "/soccer/tag/120.html"));
-        tweets.addAll(runGrepInWeibo("曼城", "/mcfcofficial?profile_ftype=1&is_all=1"));
-        System.out.println("tweet runInitMancheng " + tweets.size());
+        System.out.println("tweet runInitMancheng " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("曼城", "/soccer/tag/120.html"));
+                tweets.addAll(runGrepInWeibo("曼城", "/mcfcofficial?profile_ftype=1&is_all=1"));
+                System.out.println("tweet runInitMancheng " + tweets.size());
+            }
+        });
+
     }
 
     //阿森纳
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitAsengna() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("阿森纳", "/soccer/tag/287.html"));
-        tweets.addAll(runGrepInWeibo("阿森纳", "/OfficialArsenal?profile_ftype=1&is_all=1"));
-        System.out.println("tweet runInitAsengna " + tweets.size());
+        System.out.println("tweet runInitAsengna " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("阿森纳", "/soccer/tag/287.html"));
+                tweets.addAll(runGrepInWeibo("阿森纳", "/OfficialArsenal?profile_ftype=1&is_all=1"));
+                System.out.println("tweet runInitAsengna " + tweets.size());
+            }
+        });
+
     }
 
     //利物浦
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitLiwupu() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("利物浦", "/soccer/tag/343.html"));
-        tweets.addAll(runGrepInWeibo("利物浦", "/liverpoolfc?profile_ftype=1&is_all=1"));
-        System.out.println("tweet runInitLiwopu " + tweets.size());
+        System.out.println("tweet runInitLiwupu " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("利物浦", "/soccer/tag/343.html"));
+                tweets.addAll(runGrepInWeibo("利物浦", "/liverpoolfc?profile_ftype=1&is_all=1"));
+                System.out.println("tweet runInitLiwopu " + tweets.size());
+            }
+        });
+
     }
 
     //热刺
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitReci() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("热刺", "/soccer/tag/496.html"));
-        tweets.addAll(runGrepInWeibo("热刺", "/tottenhamhotspur?profile_ftype=1&is_all=1"));
-        System.out.println("tweet runInitReci " + tweets.size());
+        System.out.println("tweet runInitReci " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("热刺", "/soccer/tag/496.html"));
+                tweets.addAll(runGrepInWeibo("热刺", "/tottenhamhotspur?profile_ftype=1&is_all=1"));
+                System.out.println("tweet runInitReci " + tweets.size());
+            }
+        });
+
     }
 
 
     //皇马
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitHuangma() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("皇马", "/soccer/tag/396.html"));
-        tweets.addAll(runGrepInWeibo("皇马", "/realmadridcf?profile_ftype=1&amp;is_all=1"));
-        System.out.println("tweet runInitHuangma " + tweets.size());
+        System.out.println("tweet runInitHuangma " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("皇马", "/soccer/tag/396.html"));
+                tweets.addAll(runGrepInWeibo("皇马", "/realmadridcf?profile_ftype=1&amp;is_all=1"));
+                System.out.println("tweet runInitHuangma " + tweets.size());
+            }
+        });
+
     }
 
     //巴萨
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitBasa() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("巴萨", "/soccer/tag/380.html"));
-        tweets.addAll(runGrepInWeibo("巴萨", "/u/3296530723?topnav=1&wvr=6&topsug=1&is_hot=1"));
-        System.out.println("tweet runInitBasa " + tweets.size());
+        System.out.println("tweet runInitBasa " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("巴萨", "/soccer/tag/380.html"));
+                tweets.addAll(runGrepInWeibo("巴萨", "/u/3296530723?topnav=1&wvr=6&topsug=1&is_hot=1"));
+                System.out.println("tweet runInitBasa " + tweets.size());
+            }
+        });
+
     }
 
     //马竞技
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitMajingji() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("马竞技", "/soccer/tag/603.html"));
-        tweets.addAll(runGrepInWeibo("马竞技", "/atleticodemadrid?profile_ftype=1&is_all=1"));
-        System.out.println("tweet runInitMajingji " + tweets.size());
+        System.out.println("tweet runInitMajingji " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("马竞技", "/soccer/tag/603.html"));
+                tweets.addAll(runGrepInWeibo("马竞技", "/atleticodemadrid?profile_ftype=1&is_all=1"));
+                System.out.println("tweet runInitMajingji " + tweets.size());
+            }
+        });
+
     }
 
 
     //AC米兰
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitAC() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("AC米兰", "/soccer/tag/229.html"));
-        tweets.addAll(runGrepInWeibo("AC米兰", "/acmilanofficial?profile_ftype=1&is_all=1"));
-        System.out.println("tweet runInitAC " + tweets.size());
+        System.out.println("tweet runInitAC " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("AC米兰", "/soccer/tag/229.html"));
+                tweets.addAll(runGrepInWeibo("AC米兰", "/acmilanofficial?profile_ftype=1&is_all=1"));
+                System.out.println("tweet runInitAC " + tweets.size());
+            }
+        });
+
     }
 
 
     //国米
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitGuomi() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("国米", "/soccer/tag/969.html"));
-        tweets.addAll(runGrepInWeibo("国米", "/fcinternazionale?profile_ftype=1&is_all=1"));
-        System.out.println("tweet runInitGuomi " + tweets.size());
+        System.out.println("tweet runInitGuomi " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("国米", "/soccer/tag/969.html"));
+                tweets.addAll(runGrepInWeibo("国米", "/fcinternazionale?profile_ftype=1&is_all=1"));
+                System.out.println("tweet runInitGuomi " + tweets.size());
+            }
+        });
+
     }
 
 
     //尤文
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitYouwen() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("尤文", "/soccer/tag/261.html"));
-        tweets.addAll(runGrepInWeibo("尤文", "/u/2796878611?topnav=1&wvr=6&topsug=1&is_hot=1"));
-        System.out.println("tweet runInitYouwen " + tweets.size());
+        System.out.println("tweet runInitYouwen " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("尤文", "/soccer/tag/261.html"));
+                tweets.addAll(runGrepInWeibo("尤文", "/u/2796878611?topnav=1&wvr=6&topsug=1&is_hot=1"));
+                System.out.println("tweet runInitYouwen " + tweets.size());
+            }
+        });
+
     }
 
 
     //罗马
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitLuoma() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("罗马", "/soccer/tag/495.html"));
-        tweets.addAll(runGrepInWeibo("罗马", "/officialasroma?profile_ftype=1&amp;is_all=1"));
-        System.out.println("tweet runInitLuoma " + tweets.size());
+        System.out.println("tweet runInitLuoma " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("罗马", "/soccer/tag/495.html"));
+                tweets.addAll(runGrepInWeibo("罗马", "/officialasroma?profile_ftype=1&amp;is_all=1"));
+                System.out.println("tweet runInitLuoma " + tweets.size());
+            }
+        });
+
     }
 
 
     //那不勒
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitNabule() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("那不勒", "/soccer/tag/700.html"));
-        tweets.addAll(runGrepInWeibo("那不勒", "/u/2869364232"));
-        System.out.println("tweet runInitNabule " + tweets.size());
+        System.out.println("tweet runInitNabule " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("那不勒", "/soccer/tag/700.html"));
+                tweets.addAll(runGrepInWeibo("那不勒", "/u/2869364232"));
+                System.out.println("tweet runInitNabule " + tweets.size());
+            }
+        });
+
     }
 
 
     //拜仁
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitBairen() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("拜仁", "/soccer/tag/1341.html"));
-        tweets.addAll(runGrepInWeibo("拜仁", "/fcbayern?profile_ftype=1&is_all=1"));
-        System.out.println("tweet runInitBairen " + tweets.size());
+        System.out.println("tweet runInitBairen " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("拜仁", "/soccer/tag/1341.html"));
+                tweets.addAll(runGrepInWeibo("拜仁", "/fcbayern?profile_ftype=1&is_all=1"));
+                System.out.println("tweet runInitBairen " + tweets.size());
+            }
+        });
+
     }
 
     //多特
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitDuote() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("多特", "/soccer/tag/487.html"));
-        tweets.addAll(runGrepInWeibo("多特", "/BVBorussiaDortmund09?profile_ftype=1&is_all=1"));
-        System.out.println("tweet runInitDuote " + tweets.size());
+        System.out.println("tweet runInitDuote " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("多特", "/soccer/tag/487.html"));
+                tweets.addAll(runGrepInWeibo("多特", "/BVBorussiaDortmund09?profile_ftype=1&is_all=1"));
+                System.out.println("tweet runInitDuote " + tweets.size());
+            }
+        });
+
     }
 
     //沃尔夫
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitWoerfu() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepInWeibo("沃尔夫", "/vflwolfsburg?profile_ftype=1&amp;is_all=1"));
-        System.out.println("tweet runInitWoerfu " + tweets.size());
+        System.out.println("tweet runInitWoerfu " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepInWeibo("沃尔夫", "/vflwolfsburg?profile_ftype=1&amp;is_all=1"));
+                System.out.println("tweet runInitWoerfu " + tweets.size());
+            }
+        });
+
     }
 
     //日尔曼
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitRierman() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("日尔曼", "/soccer/tag/465.html"));
-        tweets.addAll(runGrepInWeibo("日尔曼", "/ParisSaintGermainFC?profile_ftype=1&is_all=1"));
-        System.out.println("tweet runInitRierman " + tweets.size());
+        System.out.println("tweet runInitRierman " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("日尔曼", "/soccer/tag/465.html"));
+                tweets.addAll(runGrepInWeibo("日尔曼", "/ParisSaintGermainFC?profile_ftype=1&is_all=1"));
+                System.out.println("tweet runInitRierman " + tweets.size());
+            }
+        });
+
     }
 
     //里昂
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitLiang() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepInWeibo("里昂", "/oltitan24?profile_ftype=1&is_all=1"));
-        System.out.println("tweet runInitLiang " + tweets.size());
+        System.out.println("tweet runInitLiang " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepInWeibo("里昂", "/oltitan24?profile_ftype=1&is_all=1"));
+                System.out.println("tweet runInitLiang " + tweets.size());
+            }
+        });
+
     }
 
 
     //恒大
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitHengda() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("广州恒大淘宝", "/soccer/tag/11654.html"));
-        tweets.addAll(runGrepInWeibo("广州恒大淘宝", "/gzevergrandefc?is_all=1"));
-        System.out.println("tweet runInitHengda " + tweets.size());
+        System.out.println("tweet runInitHengda " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("广州恒大淘宝", "/soccer/tag/11654.html"));
+                tweets.addAll(runGrepInWeibo("广州恒大淘宝", "/gzevergrandefc?is_all=1"));
+                System.out.println("tweet runInitHengda " + tweets.size());
+            }
+        });
+
     }
 
 
     //上港
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitShanggang() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("上海上港", "/soccer/tag/12136.html"));
-        tweets.addAll(runGrepInWeibo("上海上港", "/u/3593916900?profile_ftype=1&is_all=1"));
-        System.out.println("tweet runInitShanggang " + tweets.size());
+        System.out.println("tweet runInitShanggang " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("上海上港", "/soccer/tag/12136.html"));
+                tweets.addAll(runGrepInWeibo("上海上港", "/u/3593916900?profile_ftype=1&is_all=1"));
+                System.out.println("tweet runInitShanggang " + tweets.size());
+            }
+        });
+
     }
 
 
     //国安
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitGuoan() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("北京国安", "/soccer/tag/11794.html"));
-        tweets.addAll(runGrepInWeibo("北京国安", "/guoanfootballclub?profile_ftype=1&is_all=1"));
-        System.out.println("tweet runInitGuoan " + tweets.size());
+        System.out.println("tweet runInitGuoan " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("北京国安", "/soccer/tag/11794.html"));
+                tweets.addAll(runGrepInWeibo("北京国安", "/guoanfootballclub?profile_ftype=1&is_all=1"));
+                System.out.println("tweet runInitGuoan " + tweets.size());
+            }
+        });
+
     }
 
 
     //鲁能
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitLuneng() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("山东鲁能", "/soccer/tag/11676.html"));
-        tweets.addAll(runGrepInWeibo("山东鲁能", "/lntsfc?profile_ftype=1&is_all=1\n"));
-        System.out.println("tweet runInitLuneng " + tweets.size());
+        System.out.println("tweet runInitLuneng " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("山东鲁能", "/soccer/tag/11676.html"));
+                tweets.addAll(runGrepInWeibo("山东鲁能", "/lntsfc?profile_ftype=1&is_all=1\n"));
+                System.out.println("tweet runInitLuneng " + tweets.size());
+            }
+        });
+
     }
 
 
     //申花
-    @Scheduled(fixedDelay = 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void runInitShenghua() {
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.addAll(runGrepTeamInHupu("上海绿地申花", "/soccer/tag/11633.html"));
-        tweets.addAll(runGrepInWeibo("上海绿地申花", "/shenhuafc?profile_ftype=1&is_all=1"));
-        System.out.println("tweet runInitShenghua " + tweets.size());
+        System.out.println("tweet runInitShenghua " + " begin");
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweets = new ArrayList<>();
+                tweets.addAll(runGrepTeamInHupu("上海绿地申花", "/soccer/tag/11633.html"));
+                tweets.addAll(runGrepInWeibo("上海绿地申花", "/shenhuafc?profile_ftype=1&is_all=1"));
+                System.out.println("tweet runInitShenghua " + tweets.size());
+            }
+        });
+
     }
 
 
@@ -312,7 +499,7 @@ public class TweetTask {
                     String time = detailEl.getElementsByClass("time").first().text();
                     String source = detailEl.getElementsByClass("name").first().text();
                     String text = contentEl.text().trim();
-                    if (tweetRepo.findByTitle(title) == null) {
+                    if (tweetRepo.findByTitle(title).size() == 0) {
                         Tweet tweet = new Tweet();
                         tweet.setUid(user.getId());
                         tweet.setIcon(user.getAvatar());
@@ -377,7 +564,7 @@ public class TweetTask {
                     Elements imgEls = article.getElementsByClass("image");
                     Element contentEl = article.getElementsByClass("content").first();
                     String text = contentEl.text().trim();
-                    if (tweetRepo.findByTitle(title) == null) {
+                    if (tweetRepo.findByTitle(title).size() == 0) {
                         Tweet tweet = new Tweet();
                         tweet.setUid(user.getId());
                         tweet.setIcon(user.getAvatar());
@@ -451,7 +638,7 @@ public class TweetTask {
                         Document article = Utils.getDocument(link);
                         Element contentEl = article.getElementsByClass("content").first();
                         String text = contentEl.text().trim();
-                        if (tweetRepo.findByTitle(title) == null) {
+                        if (tweetRepo.findByTitle(title).size() == 0) {
                             String name;
                             if (tag.contains(Constants.GROUP_YINGCHAO)) {
                                 name = Constants.NEWS_YINGCHAO;
@@ -541,7 +728,7 @@ public class TweetTask {
                     String time = article.getElementById("pubtime_baidu").text();
                     Element contentEl = article.getElementsByClass("artical-content").first();
                     String text = contentEl.text().trim();
-                    if (tweetRepo.findByTitle(title) == null) {
+                    if (tweetRepo.findByTitle(title).size() == 0) {
                         Tweet tweet = new Tweet();
                         tweet.setUid(user.getId());
                         tweet.setIcon(user.getAvatar());
@@ -682,7 +869,7 @@ public class TweetTask {
         } catch (Exception e) {
             System.out.println("grep webo  " + name);
             e.printStackTrace();
-        }finally {
+        } finally {
             webClient.close();
         }
 
