@@ -24,6 +24,7 @@ public class User {
     private String password;
     private String avatar;
     private String cover;
+    private String position;
 
     private double lon;
     private double lat;
@@ -114,6 +115,14 @@ public class User {
 
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public double getLon() {
