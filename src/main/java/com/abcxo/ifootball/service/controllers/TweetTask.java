@@ -42,7 +42,7 @@ public class TweetTask {
     public UserTweetRepo userTweetRepo;
 
 
-    public ExecutorService pool = Executors.newFixedThreadPool(200);
+    public ExecutorService pool = Executors.newFixedThreadPool(50);
 
 //    //重大新闻
 //    @Scheduled(fixedDelay = 5 * 60 * 1000)

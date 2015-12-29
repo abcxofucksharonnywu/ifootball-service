@@ -13,6 +13,7 @@ public class UserUser {
     private long id;
     private long uid;
     private long uid2;
+    private boolean team;
     private UserUserType userUserType = UserUserType.FOCUS;
 
 
@@ -38,6 +39,14 @@ public class UserUser {
 
     public void setUid2(long uid2) {
         this.uid2 = uid2;
+    }
+
+    public boolean isTeam() {
+        return team;
+    }
+
+    public void setTeam(boolean team) {
+        this.team = team;
     }
 
     public UserUserType getUserUserType() {

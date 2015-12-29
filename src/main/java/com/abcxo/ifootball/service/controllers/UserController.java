@@ -353,20 +353,21 @@ public class UserController {
             uid2List[i] = Long.parseLong(uid2Array[i]);
         }
 
-        userUserRepo.deleteByUidAndUid2InAndUserUserType(uid, Arrays.asList(uid2List), UserUser.UserUserType.FOCUS);
+        userUserRepo.deleteByUidAndUid2InAndTeamAndUserUserType(uid, Arrays.asList(uid2List), true, UserUser.UserUserType.FOCUS);
 
         long teamUid = 0;
         for (long uid2 : uid2List) {
-            if (teamUid==0){
-                teamUid  = uid2;
+            if (teamUid == 0) {
+                teamUid = uid2;
             }
             UserUser userUser = new UserUser();
             userUser.setUid(uid);
             userUser.setUid2(uid2);
+            userUser.setTeam(true);
             userUser.setUserUserType(UserUser.UserUserType.FOCUS);
             userUserRepo.saveAndFlush(userUser);
         }
-        if (teamUid>0){
+        if (teamUid > 0) {
             User user = userRepo.findOne(uid);
             User teamUser = userRepo.findOne(teamUid);
             user.setTeamIcon(teamUser.getAvatar());
