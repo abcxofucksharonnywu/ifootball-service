@@ -1,7 +1,6 @@
 package com.abcxo.ifootball.service.models;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 /**
  * Created by shadow on 15/11/15.
@@ -14,7 +13,7 @@ public class UserUser {
     private long id;
     private long uid;
     private long uid2;
-    @NotNull
+    @Column(nullable=false, columnDefinition="boolean default false")
     private boolean team;
     private UserUserType userUserType = UserUserType.FOCUS;
 
