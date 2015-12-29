@@ -38,7 +38,7 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
 //        runInitUsers();
-//        runFocusSpecial();
+        runFocusSpecial();
     }
 
     public void runInitUsers() {
@@ -186,8 +186,6 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
 
     public void runFocusSpecial() {
         User user = userRepo.findByEmail("iamthefootball@qq.com");
-        user.setName(Constants.SPECIAL_BREAK);
-        userRepo.saveAndFlush(user);
         focus(user.getId(), userRepo.findByName(Constants.NEWS_YINGCHAO).getId(), true);
         focus(user.getId(), userRepo.findByName(Constants.NEWS_XIJIA).getId(), true);
         focus(user.getId(), userRepo.findByName(Constants.NEWS_DEJIA).getId(), true);
