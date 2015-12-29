@@ -353,7 +353,7 @@ public class UserController {
             uid2List[i] = Long.parseLong(uid2Array[i]);
         }
 
-        userUserRepo.deleteByUidAndTeamAndUserUserType(uid, 1, UserUser.UserUserType.FOCUS);
+        userUserRepo.deleteByUidAndTeamAndUserUserType(uid,true, UserUser.UserUserType.FOCUS);
 
         long teamUid = 0;
         for (long uid2 : uid2List) {

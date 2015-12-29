@@ -1,18 +1,20 @@
 package com.abcxo.ifootball.service.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by shadow on 15/11/15.
  */
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"uid", "uid2", "team", "userUserType"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"uid", "uid2", "userUserType"})})
 public class UserUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private long uid;
     private long uid2;
+    @NotNull
     private boolean team;
     private UserUserType userUserType = UserUserType.FOCUS;
 

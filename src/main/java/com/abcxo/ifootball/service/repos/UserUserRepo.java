@@ -27,5 +27,5 @@ public interface UserUserRepo extends JpaRepository<UserUser, Long> {
 
     @Modifying
     @Transactional
-    void deleteByUidAndTeamAndUserUserType(long uid, int team, UserUser.UserUserType userUserType);
+    void deleteByUidAndTeamAndUserUserType(long uid, boolean team, UserUser.UserUserType userUserType);
 }
