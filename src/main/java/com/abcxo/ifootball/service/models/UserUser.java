@@ -13,7 +13,6 @@ public class UserUser {
     private long id;
     private long uid;
     private long uid2;
-    @Column(nullable=false, columnDefinition="boolean default false")
     private int team;
     private UserUserType userUserType = UserUserType.FOCUS;
 
