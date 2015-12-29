@@ -353,7 +353,7 @@ public class UserController {
             uid2List[i] = Long.parseLong(uid2Array[i]);
         }
 
-        userUserRepo.deleteByUidAndTeamAndUserUserType(uid,true, UserUser.UserUserType.FOCUS);
+        userUserRepo.deleteByUidAndTeamAndUserUserType(uid, 1, UserUser.UserUserType.FOCUS);
 
         long teamUid = 0;
         for (long uid2 : uid2List) {
@@ -363,7 +363,7 @@ public class UserController {
             UserUser userUser = new UserUser();
             userUser.setUid(uid);
             userUser.setUid2(uid2);
-            userUser.setTeam(true);
+            userUser.setTeam(1);
             userUser.setUserUserType(UserUser.UserUserType.FOCUS);
             userUserRepo.saveAndFlush(userUser);
         }

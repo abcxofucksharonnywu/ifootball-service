@@ -14,7 +14,7 @@ public class UserUser {
     private long uid;
     private long uid2;
     @Column(nullable=false, columnDefinition="boolean default false")
-    private boolean team;
+    private int team;
     private UserUserType userUserType = UserUserType.FOCUS;
 
 
@@ -42,11 +42,12 @@ public class UserUser {
         this.uid2 = uid2;
     }
 
-    public boolean isTeam() {
+
+    public int getTeam() {
         return team;
     }
 
-    public void setTeam(boolean team) {
+    public void setTeam(int team) {
         this.team = team;
     }
 
