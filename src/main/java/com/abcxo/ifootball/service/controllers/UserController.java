@@ -354,13 +354,25 @@ public class UserController {
         }
 
         userUserRepo.deleteByUidAndUid2InAndUserUserType(uid, Arrays.asList(uid2List), UserUser.UserUserType.FOCUS);
+
+        long teamUid = 0;
         for (long uid2 : uid2List) {
+            if (teamUid==0){
+                teamUid  = uid2;
+            }
             UserUser userUser = new UserUser();
             userUser.setUid(uid);
             userUser.setUid2(uid2);
             userUser.setUserUserType(UserUser.UserUserType.FOCUS);
             userUserRepo.saveAndFlush(userUser);
         }
+        if (teamUid>0){
+            User user = userRepo.findOne(uid);
+            User teamUser = userRepo.findOne(teamUid);
+            user.setTeamIcon(teamUser.getAvatar());
+            userRepo.saveAndFlush(user);
+        }
+
     }
 
     @RequestMapping(value = "/user/team/list", method = RequestMethod.GET)

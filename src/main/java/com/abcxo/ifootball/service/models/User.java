@@ -25,6 +25,7 @@ public class User {
     private String avatar;
     private String cover;
     private String position;
+    private String teamIcon;
 
     private double lon;
     private double lat;
@@ -123,6 +124,14 @@ public class User {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getTeamIcon() {
+        return teamIcon;
+    }
+
+    public void setTeamIcon(String teamIcon) {
+        this.teamIcon = teamIcon;
     }
 
     public double getLon() {
