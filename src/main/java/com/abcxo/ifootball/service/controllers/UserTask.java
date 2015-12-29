@@ -39,6 +39,9 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
     public void onApplicationEvent(ContextRefreshedEvent event) {
 //        runInitUsers();
 //        runFocusSpecial();
+        User user = userRepo.findByEmail("iamthefootball@qq.com");
+        user.setName(Constants.SPECIAL_BREAK);
+        userRepo.saveAndFlush(user);
     }
 
     public void runInitUsers() {
