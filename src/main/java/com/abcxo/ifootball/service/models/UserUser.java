@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Created by shadow on 15/11/15.
  */
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"uid", "uid2", "userUserType"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"uid", "uid2", "team", "userUserType"})})
 public class UserUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
