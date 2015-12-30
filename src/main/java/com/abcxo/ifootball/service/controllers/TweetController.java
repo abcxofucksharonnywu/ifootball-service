@@ -143,7 +143,7 @@ public class TweetController {
 
     @RequestMapping(value = "/tweet", method = RequestMethod.GET)
     public Tweet get(@RequestParam("uid") long uid, @RequestParam("tid") long tid) {
-        Tweet tweet = tweetRepo.findOne(uid);
+        Tweet tweet = tweetRepo.findOne(tid);
         tweet.setStar(userTweetRepo.findByUidAndTidAndUserTweetType(uid, tweet.getId(), UserTweet.UserTweetType.STAR) != null);
         TweetTweet tweetTweet = tweetTweetRepo.findByTidAndTweetTweetType(tweet.getId(), TweetTweet.TweetTweetType.REPEAT);
         if (tweetTweet != null) {
