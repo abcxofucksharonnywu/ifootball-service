@@ -84,9 +84,9 @@ public class TweetController {
             for (String id : uids) {
                 //保存@
                 UserTweet ut = new UserTweet();
-                userTweet.setUid(Long.valueOf(id));
-                userTweet.setTid(tweet.getId());
-                userTweet.setUserTweetType(UserTweet.UserTweetType.PROMPT);
+                ut.setUid(Long.valueOf(id));
+                ut.setTid(tweet.getId());
+                ut.setUserTweetType(UserTweet.UserTweetType.PROMPT);
                 userTweetRepo.saveAndFlush(ut);
 
                 //保存@ message
