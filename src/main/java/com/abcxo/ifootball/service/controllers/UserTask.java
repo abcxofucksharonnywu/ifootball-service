@@ -37,8 +37,7 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-//        runInitUsers();
-//        runFocusSpecial();
+        runInitUsers();
     }
 
     public void runInitUsers() {
@@ -179,13 +178,6 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
         user.setUserType(User.UserType.SPECIAL);
         user.setGroupName(Constants.GROUP_SPECIAL);
         userRepo.saveAndFlush(user);
-
-
-        return user;
-    }
-
-    public void runFocusSpecial() {
-        User user = userRepo.findByEmail("iamthefootball@qq.com");
         focus(user.getId(), userRepo.findByName(Constants.NEWS_YINGCHAO).getId(), true);
         focus(user.getId(), userRepo.findByName(Constants.NEWS_XIJIA).getId(), true);
         focus(user.getId(), userRepo.findByName(Constants.NEWS_DEJIA).getId(), true);
@@ -194,13 +186,14 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
         focus(user.getId(), userRepo.findByName(Constants.NEWS_ZHONGCHAO).getId(), true);
         focus(user.getId(), userRepo.findByName(Constants.NEWS_OUGUAN).getId(), true);
         focus(user.getId(), userRepo.findByName(Constants.NEWS_HUABIAN).getId(), true);
+
+        return user;
     }
 
 
     public void focus(long uid, long uid2, boolean focus) {
         if (focus) {
             if (userUserRepo.findByUidAndUid2AndUserUserType(uid, uid2, UserUser.UserUserType.FOCUS) == null) {
-
                 UserUser userUser = new UserUser();
                 userUser.setUid(uid);
                 userUser.setUid2(uid2);
