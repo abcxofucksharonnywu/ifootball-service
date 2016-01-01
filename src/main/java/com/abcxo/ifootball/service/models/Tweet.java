@@ -31,9 +31,9 @@ public class Tweet {
     private String summary;
     private String content;
 
-    @Column(length = 10000)
+    @Column(length = 5000)
     private String images;
-    @Column(length = 10000)
+    @Column(length = 5000)
     private String imageTitles;
     private String time;
 
