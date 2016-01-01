@@ -37,7 +37,7 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        runInitUsers();
+//        runInitUsers();
     }
 
     public void runInitUsers() {
