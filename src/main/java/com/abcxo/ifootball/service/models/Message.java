@@ -17,6 +17,7 @@ public class Message {
     private long tid;
 
     private String icon;
+    private String icon2;
     private String title;
     private String content;
     private String time;
@@ -63,6 +64,14 @@ public class Message {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public String getIcon2() {
+        return icon2;
+    }
+
+    public void setIcon2(String icon2) {
+        this.icon2 = icon2;
     }
 
     public String getTitle() {
@@ -127,7 +136,8 @@ public class Message {
         PROMPT(3),
         STAR(4),
         CHAT(5),
-        SPECIAL(6);
+        CHAT_GROUP(6),
+        SPECIAL(7);
 
         private int index;
 

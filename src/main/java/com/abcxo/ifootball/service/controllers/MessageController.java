@@ -1,6 +1,7 @@
 package com.abcxo.ifootball.service.controllers;
 
 import com.abcxo.ifootball.service.models.Message;
+import com.abcxo.ifootball.service.models.User;
 import com.abcxo.ifootball.service.repos.*;
 import com.abcxo.ifootball.service.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,9 +69,9 @@ public class MessageController {
             @RequestParam("pageSize") int pageSize) {
         PageRequest pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.DESC, "date");
         if (getsType == GetsType.ALL) {
-            return messageRepo.findByUid2(uid2, pageRequest).getContent();
+            return messageRepo.findByAll(uid2, Arrays.asList(Message.MessageType.CHAT, Message.MessageType.CHAT_GROUP), Message.MessageType.CHAT_GROUP, Arrays.asList(uid, uid2), pageRequest).getContent();
         } else if (getsType == GetsType.CHAT) {
-            return messageRepo.findByUid2AndMessageType(uid2, Message.MessageType.CHAT, pageRequest).getContent();
+            return messageRepo.findByMessageTypeAndUidInOrUid2In(Message.MessageType.CHAT_GROUP, Arrays.asList(uid, uid2), pageRequest).getContent();
         } else if (getsType == GetsType.CHAT_USER) {
             List<Message> pageMessages = messageRepo.findByUidInAndUid2InAndMessageType(Arrays.asList(uid, uid2), Arrays.asList(uid, uid2), Message.MessageType.CHAT, pageRequest).getContent();
             List<Message> messages = new ArrayList<Message>(pageMessages);
@@ -98,6 +99,27 @@ public class MessageController {
         message.setTime(Utils.getTime());
         message.setDate(System.currentTimeMillis());
         Utils.message(messageRepo.saveAndFlush(message));
+
+        List<Long> uids = Arrays.asList(message.getUid(), message.getUid2());
+        PageRequest pageRequest = new PageRequest(0, 1, Sort.Direction.DESC, "date");
+        List<Message> pageMessages = messageRepo.findByUidInAndUid2InAndMessageType(uids, uids, Message.MessageType.CHAT_GROUP, pageRequest).getContent();
+        Message group = new Message();
+        if (pageMessages != null && pageMessages.size() > 0) {
+            group = pageMessages.get(0);
+        }
+        group.setUid(message.getUid());
+        group.setUid2(message.getUid2());
+        group.setTid(message.getTid());
+        group.setIcon(message.getIcon());
+        User user2 = userRepo.findOne(message.getUid2());
+        group.setIcon2(user2.getAvatar());
+        group.setContent(message.getContent());
+        group.setDate(message.getDate());
+        group.setTitle(message.getTitle());
+        group.setMessageType(Message.MessageType.CHAT_GROUP);
+        group.setTime(message.getTime());
+        messageRepo.saveAndFlush(group);
+
     }
 
 
