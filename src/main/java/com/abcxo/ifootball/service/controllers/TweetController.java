@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by shadow on 15/11/15.
@@ -65,6 +67,15 @@ public class TweetController {
         } else {
             String content = tweet.getContent();
             tweet.setSummary(content);
+            Pattern pattern = Pattern.compile("@[^\\s]*");
+            Matcher matcher = pattern.matcher(content);
+            while (matcher.find()) {
+                int start = matcher.start();
+                int end = matcher.end();
+                String p = content.substring(start, end);
+                content = content.replace(p, Constants.TWEET_ADD_PROMPT_HTML.replace(Constants.TWEET_HTML_PROMPT_TAG, p));
+            }
+
             tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, content).replace(Constants.TWEET_HTML_IMAGES_TAG, "")));
             tweet.setTime(Utils.getTime());
             tweet.setDate(System.currentTimeMillis());
@@ -131,7 +142,7 @@ public class TweetController {
         for (MultipartFile image : images) {
             String imageUrl = Utils.image(image);
             imageUrls.add(imageUrl);
-            imageContent.append(String.format(Constants.TWEET_ADD_IMAGE_HTML, imageUrl));
+            imageContent.append(Constants.TWEET_ADD_IMAGE_HTML.replace(Constants.TWEET_HTML_IMAGE_TAG, imageUrl));
         }
         String content = tweet.getSummary();
         tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, content).replace(Constants.TWEET_HTML_IMAGES_TAG, imageContent)));

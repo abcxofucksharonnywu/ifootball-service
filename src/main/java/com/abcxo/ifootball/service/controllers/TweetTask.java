@@ -832,7 +832,8 @@ public class TweetTask {
                                 if (!"face".equals(imgEl.attr("type"))) {
                                     img = img.replace("thumbnail", "bmiddle").replace("square", "bmiddle");
                                     imgs.add(img);
-                                    imageContent.append(String.format(Constants.TWEET_ADD_IMAGE_HTML, img));
+                                    imageContent.append(Constants.TWEET_ADD_IMAGE_HTML.replace(Constants.TWEET_HTML_IMAGE_TAG,img));
+
                                 } else {
                                     text = text + imgEl.attr("title");
                                 }

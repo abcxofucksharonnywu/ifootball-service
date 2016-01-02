@@ -184,6 +184,13 @@ public class UserController {
         return user;
     }
 
+    @RequestMapping(value = "/user/name", method = RequestMethod.GET)
+    public User get(@RequestParam("uid") long uid, @RequestParam("name") String name) {
+        User user = userRepo.findByName(name);
+        user.setFocus(userUserRepo.findByUidAndUid2AndUserUserType(uid, user.getId(), UserUser.UserUserType.FOCUS) != null);
+        return user;
+    }
+
 
     public enum GetsType {
         NORMAL(0),
