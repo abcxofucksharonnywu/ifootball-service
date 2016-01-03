@@ -4,6 +4,7 @@ import com.abcxo.ifootball.service.models.*;
 import com.abcxo.ifootball.service.repos.*;
 import com.abcxo.ifootball.service.utils.Constants;
 import com.abcxo.ifootball.service.utils.Utils;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +13,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -39,9 +42,11 @@ public class TweetController {
     @RequestMapping(value = "/tweet", method = RequestMethod.POST)
     public Tweet add(@RequestParam("prompt") String prompt,
                      @RequestParam("originTid") long originTid,
-                     @RequestBody Tweet tweet) {
+                     @RequestParam("tweet") String tweetJSON,
+                     @RequestParam("image") MultipartFile[] images) throws UnsupportedEncodingException {
 
         //保持userTweet
+        Tweet tweet = new Gson().fromJson(URLDecoder.decode(tweetJSON, "UTF8"), Tweet.class);
         long uid = tweet.getUid();
         User user = userRepo.findOne(uid);
 
@@ -76,7 +81,19 @@ public class TweetController {
                 content = content.replace(p, Constants.TWEET_ADD_PROMPT_HTML.replace(Constants.TWEET_HTML_PROMPT_TAG, p));
             }
 
-            tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, content).replace(Constants.TWEET_HTML_IMAGES_TAG, "")));
+            List<String> imageUrls = new ArrayList<>();
+            StringBuffer imageContent = new StringBuffer();
+            if (images != null) {
+                for (MultipartFile image : images) {
+                    String imageUrl = Utils.image(image);
+                    if (!StringUtils.isEmpty(imageUrl)) {
+                        imageUrls.add(imageUrl);
+                        imageContent.append(Constants.TWEET_ADD_IMAGE_HTML.replace(Constants.TWEET_HTML_IMAGE_TAG, imageUrl));
+                    }
+                }
+                tweet.setImages(String.join(";", imageUrls));
+            }
+            tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, content).replace(Constants.TWEET_HTML_IMAGES_TAG, imageContent)));
             tweet.setTime(Utils.getTime());
             tweet.setDate(System.currentTimeMillis());
         }
@@ -129,25 +146,6 @@ public class TweetController {
             tweetRepo.saveAndFlush(originTweet);
         }
 
-        return tweet;
-    }
-
-
-    @RequestMapping(value = "/tweet/photo", method = RequestMethod.POST)
-    public Tweet photo(@RequestParam("tid") long tid,
-                       @RequestParam("image") MultipartFile[] images) {
-        Tweet tweet = tweetRepo.findOne(tid);
-        List<String> imageUrls = new ArrayList<>();
-        StringBuffer imageContent = new StringBuffer();
-        for (MultipartFile image : images) {
-            String imageUrl = Utils.image(image);
-            imageUrls.add(imageUrl);
-            imageContent.append(Constants.TWEET_ADD_IMAGE_HTML.replace(Constants.TWEET_HTML_IMAGE_TAG, imageUrl));
-        }
-        String content = tweet.getSummary();
-        tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, content).replace(Constants.TWEET_HTML_IMAGES_TAG, imageContent)));
-        tweet.setImages(String.join(";", imageUrls));
-        tweet = tweetRepo.saveAndFlush(tweet);
         return tweet;
     }
 

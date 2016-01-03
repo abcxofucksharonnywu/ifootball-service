@@ -71,23 +71,27 @@ public class Utils {
 
 
     public static String upload(byte[] bytes) {
-        try {
+        if (bytes != null && bytes.length > 0) {
+            try {
 
-            Auth auth = Auth.create(Constants.UPLOAD_APP_KEY, Constants.UPLOAD_SECRET_KEY);
-            UploadManager uploadManager = new UploadManager();
-            String token = auth.uploadToken(Constants.UPLOAD_NAME);
-            Response response = uploadManager.put(bytes, null, token);
-            if (response.isOK()) {
-                UploadRet ret = response.jsonToObject(UploadRet.class);
-                String url = Constants.UPLOAD_HOST + "/" + ret.key;
-                return url;
-            } else {
+                Auth auth = Auth.create(Constants.UPLOAD_APP_KEY, Constants.UPLOAD_SECRET_KEY);
+                UploadManager uploadManager = new UploadManager();
+                String token = auth.uploadToken(Constants.UPLOAD_NAME);
+                Response response = uploadManager.put(bytes, null, token);
+                if (response.isOK()) {
+                    UploadRet ret = response.jsonToObject(UploadRet.class);
+                    String url = Constants.UPLOAD_HOST + "/" + ret.key;
+                    return url;
+                } else {
+                    throw new UploadException();
+                }
+
+            } catch (Exception e) {
                 throw new UploadException();
             }
-
-        } catch (Exception e) {
-            throw new UploadException();
         }
+        return null;
+
     }
 
 
