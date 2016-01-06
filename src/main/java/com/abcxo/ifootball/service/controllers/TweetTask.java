@@ -822,7 +822,7 @@ public class TweetTask {
                             tweet.setUid(user.getId());
                             tweet.setIcon(user.getAvatar());
                             tweet.setName(user.getName());
-
+                            tweet.setSummary(text);
 
                             Elements imgEls = detail.getElementsByTag("img");
                             List<String> imgs = new ArrayList<>();
@@ -834,15 +834,13 @@ public class TweetTask {
                                     imgs.add(img);
                                     imageContent.append(Constants.TWEET_ADD_IMAGE_HTML.replace(Constants.TWEET_HTML_IMAGE_TAG, img));
 
-                                } else {
-                                    text = text + imgEl.attr("title");
                                 }
 
                             }
                             tweet.setImages(String.join(";", imgs));
 
-                            tweet.setSummary(text);
-                            tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, text).replace(Constants.TWEET_HTML_IMAGES_TAG, imageContent)));
+
+                            tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, content.toString()).replace(Constants.TWEET_HTML_IMAGES_TAG, imageContent)));
 
                             tweet.setSource(source);
                             tweet.setDate(Long.valueOf(date));

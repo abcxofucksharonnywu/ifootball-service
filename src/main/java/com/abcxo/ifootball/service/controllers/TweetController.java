@@ -74,7 +74,7 @@ public class TweetController {
             String content = tweet.getContent();
             tweet.setSummary(content);
             content = content.replace(" ", "&nbsp;").replace("\n", "<br>");
-            Pattern pattern = Pattern.compile("@[^\\pP|\\pS]*");
+            Pattern pattern = Pattern.compile("@[^\\p{P}|\\p{S}|\\p{Z}|\\p{M}]*");
             String mContent = content;
             Matcher matcher = pattern.matcher(mContent);
             while (matcher.find()) {
