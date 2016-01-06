@@ -48,6 +48,10 @@ public class Constants {
     public static class UserAlreadyExistException extends RuntimeException {
     }
 
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "昵称已经被占用")
+    public static class UserNameAlreadyExistException extends RuntimeException {
+    }
+
 
     public static final String GROUP_YINGCHAO = "英超";
     public static final String GROUP_XIJIA = "西甲";
