@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +42,11 @@ public class TweetController {
     @RequestMapping(value = "/tweet", method = RequestMethod.POST)
     public Tweet add(@RequestParam("prompt") String prompt,
                      @RequestParam("originTid") long originTid,
-                     @RequestParam("tweet") String tweetJSON,
-                     @RequestParam("image") MultipartFile[] images) throws UnsupportedEncodingException {
+                     @RequestParam("tweet") MultipartFile tweetFile,
+                     @RequestParam("image") MultipartFile[] images) throws IOException {
 
         //保持userTweet
+        String tweetJSON = new String(tweetFile.getBytes());
         Tweet tweet = new Gson().fromJson(URLDecoder.decode(tweetJSON, "UTF8"), Tweet.class);
         long uid = tweet.getUid();
         User user = userRepo.findOne(uid);
@@ -72,12 +73,14 @@ public class TweetController {
         } else {
             String content = tweet.getContent();
             tweet.setSummary(content);
-            Pattern pattern = Pattern.compile("@[^\\s]*");
-            Matcher matcher = pattern.matcher(content);
+            content = content.replace(" ", "&nbsp;").replace("\n", "<br>");
+            Pattern pattern = Pattern.compile("@[^\\pP|\\pS]*");
+            String mContent = content;
+            Matcher matcher = pattern.matcher(mContent);
             while (matcher.find()) {
                 int start = matcher.start();
                 int end = matcher.end();
-                String p = content.substring(start, end);
+                String p = mContent.substring(start, end);
                 content = content.replace(p, Constants.TWEET_ADD_PROMPT_HTML.replace(Constants.TWEET_HTML_PROMPT_TAG, p));
             }
 

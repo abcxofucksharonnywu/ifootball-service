@@ -147,7 +147,7 @@ public class UserController {
     @RequestMapping(value = "/user", method = RequestMethod.PUT)
     public User edit(@RequestBody User user) {
         User user1 = userRepo.findByName(user.getName());
-        if (user1 != null && user1.getId() != user1.getId()) {
+        if (user1 != null && user1.getId() != user.getId()) {
             throw new Constants.UserNameAlreadyExistException();
         }
         if (userRepo.findOne(user.getId()) != null) {
