@@ -78,9 +78,7 @@ public class UserController {
                          @RequestParam(value = "deviceToken", defaultValue = "") String deviceToken) {
 
         User user = userRepo.findByEmail(email);
-        if (user != null) {
-            throw new UserAlreadyExistException();
-        } else {
+        if (user == null) {
             user = new User();
             user.setName(name);
             user.setSign("爱足球吧新人一枚,多多指教");
@@ -100,8 +98,8 @@ public class UserController {
             focus(user.getId(), userRepo.findByName(Constants.NEWS_OUGUAN).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.NEWS_HUABIAN).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.SPECIAL_BREAK).getId(), true);
-            return user;
         }
+        return user;
     }
 
 
