@@ -180,7 +180,7 @@ public class Utils {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(email);
         mailMessage.setFrom(Constants.EMAIL);
-        mailMessage.setSubject("爱足球吧密码找回");
+        mailMessage.setSubject("足球狗密码找回");
         mailMessage.setText(String.format("%s重置密码：%s", email, password));
 
         Properties props = new Properties();

@@ -15,11 +15,11 @@ public class Constants {
     public static final String MESSAGE_APP_KEY = "565465fce0f55a849e003de9";
     public static final String MESSAGE_SECRET_KEY = "uiy1rgsggqfkst4cyspplfzchmt3jzsn";
 
-    public static final String NAME = "爱足球吧";
+    public static final String NAME = "足球狗";
 
     public static final String EMAIL = "iamthefootball@qq.com";
-    public static final String EMAIL_NAME = "iamtherfootball";
-    public static final String EMAIL_PASSWORD = "ifootball123";
+    public static final String EMAIL_NAME = "2957543823";
+    public static final String EMAIL_PASSWORD = "srnrtunumukwdccd";
 
 
     public static final int MAX_SUMMARY = 70;
