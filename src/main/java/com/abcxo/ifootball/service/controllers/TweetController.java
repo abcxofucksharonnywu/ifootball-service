@@ -213,6 +213,7 @@ public class TweetController {
                 users.add(userRepo.findByName(Constants.NEWS_ZHONGCHAO));
                 users.add(userRepo.findByName(Constants.NEWS_OUGUAN));
                 users.add(userRepo.findByName(Constants.NEWS_HUABIAN));
+                users.add(userRepo.findByName(Constants.NEWS_VIDEO));
 
             }
             for (User user : users) {

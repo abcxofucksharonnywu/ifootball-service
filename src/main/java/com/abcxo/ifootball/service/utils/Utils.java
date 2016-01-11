@@ -226,6 +226,11 @@ public class Utils {
 
     }
 
+    public static String getDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+        return dateFormat.format(System.currentTimeMillis());
+    }
+
     public static String getTime() {
         return getTime(new Date().getTime());
     }

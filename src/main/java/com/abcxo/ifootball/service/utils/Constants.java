@@ -72,6 +72,7 @@ public class Constants {
     public static final String NEWS_ZHONGCHAO = "中超新闻";
     public static final String NEWS_OUGUAN = "欧冠新闻";
     public static final String NEWS_HUABIAN = "花边新闻";
+    public static final String NEWS_VIDEO = "精彩视频";
     public static final String SPECIAL_BREAK = "Breaking News";
 
 
@@ -79,7 +80,7 @@ public class Constants {
     public static final String TWEET_HTML_IMAGES_TAG = "#images#";
     public static final String TWEET_HTML_IMAGE_TAG = "#image#";
     public static final String TWEET_HTML_PROMPT_TAG = "#prompt#";
-
+    public static final String TWEET_HTML_VIDEO = "<html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui\"><style>.video_holder{width:100%;margin:0;padding:0;background-size:cover}.video_icon{height:100%;width:100%;background:url(https://dqdfiles.b0.upaiyun.com/app/video.png) center center no-repeat;background-size:60px 60px}iframe{width:100%;margin:0;padding:0;height:100%}</style><script type=\"text/javascript\" src=\"https://dqdfiles.b0.upaiyun.com/assets/js/zepto.min.js\"></script><script type=\"text/javascript\">function load(){for(var n=document.getElementsByTagName(\"img\"),c=0;c<n.length;c++)!function(c){var e=n[c];e.onclick=function(){handler.onImageClick(e.src)}}(c)}</script></head><body>#content#<script>$(function(){$(\".video_holder\").each(function(){var i=$(this).width();$(this).height(i/1.5)}),$(\".video_holder\").click(function(){var i=$(this).attr(\"src\"),e=' <iframe allowfullscreen=\"\" src=\"'+i+'\" frameborder=\"0\" ></iframe>';$(this).append(e),$(this).find(\".video_icon\").hide()})});</script></body></html>";
     public static final String TWEET_HTML = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no\"><title></title><style type=\"text/css\">img{width:100%}</style><script type=\"text/javascript\">function load(){for(var n=document.getElementsByTagName(\"img\"),c=0;c<n.length;c++)!function(c){var e=n[c];e.onclick=function(){handler.onImageClick(e.src)}}(c)}</script></head><body onload=\"load()\">#content#</body></html>";
     public static final String TWEET_ADD_HTML = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no\"><title></title><style type=\"text/css\">.image{width:100%;object-fit:cover}.prompt{color:#009688}</style><script type=\"text/javascript\">function load(){for(var n=document.getElementsByTagName(\"img\"),t=0;t<n.length;t++)!function(t){var e=n[t];e.onclick=function(){handler.onImageClick(e.src)}}(t);for(var e=document.getElementsByClassName(\"prompt\"),o=0;o<e.length;o++)!function(n){var t=e[n];t.onclick=function(){handler.onPromptClick(t.textContent)}}(o)}</script></head><body onload=\"load()\"><div class=\"content\" style=\"margin-bottom:1rem\">#content#</div>#images#</body></html>";
     public static final String TWEET_ADD_IMAGE_HTML = "<img class=\"image\" src=\"#image#\" />";

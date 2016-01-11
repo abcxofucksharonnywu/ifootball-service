@@ -1,6 +1,7 @@
 package com.abcxo.ifootball.service.controllers;
 
 import com.abcxo.ifootball.service.models.Game;
+import com.abcxo.ifootball.service.models.User;
 import com.abcxo.ifootball.service.repos.GameRepo;
 import com.abcxo.ifootball.service.repos.TweetRepo;
 import com.abcxo.ifootball.service.repos.UserRepo;
@@ -9,16 +10,23 @@ import com.abcxo.ifootball.service.utils.Utils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,20 +54,20 @@ public class GameTask {
     @Scheduled(fixedDelay = 4 * 60 * 60 * 1000)
     public void runInit() {
         gameRepo.deleteAll();
-        runInitInZhiboba();
+        runInitInDongqiudi();
 
     }
 
-    public void runInitInZhiboba() {
-        List<Game> games = runGrepGamesInZhiboba();
-        System.out.println("game runInitInZhiboba " + games.size());
+    public void runInitInDongqiudi() {
+        List<Game> games = runGrepGamesInDongqiudi();
+        System.out.println("game runInitInDongqiudi " + games.size());
     }
 
 
-    public List<Game> runGrepGamesInZhiboba() {
+    public List<Game> runGrepGamesInDongqiudi() {
         List<Game> games = new ArrayList<>();
         try {
-            String host = String.format("http://m.zhibo8.cc/json/zhibo/saishi.json?aabbccddeeff=%d", System.currentTimeMillis());
+            String host = String.format("http://www.dongqiudi.com/match/fetch?tab=null&date=%s&scroll_times=0&tz=-8", Utils.getDate());
             HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
             CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
             HttpGet httpGet = new HttpGet(host);
@@ -68,63 +76,70 @@ public class GameTask {
             //响应状态
             System.out.println("status:" + httpResponse.getStatusLine());
             if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-
-                JSONArray array = new JSONArray(EntityUtils.toString(entity));
-                for (int o = 0; o < array.length(); o++) {
-                    JSONObject json = array.optJSONObject(o);
-                    JSONArray list = json.getJSONArray("list");
-                    for (int i = 0; i < list.length(); i++) {
-                        JSONObject object = list.optJSONObject(i);
-                        Game game = new Game();
-                        String date = object.optString("start");
-                        String name = object.optString("home_team");
-                        String name2 = object.optString("visit_team");
-                        if (!StringUtils.isEmpty(name) && !StringUtils.isEmpty(name2) && (TEAMS.contains(name) || TEAMS.contains(name2))) {
-                            HttpGet contentGet = new HttpGet(String.format("http://m.zhibo8.cc/m/android/json/%s?aabbccddeeff=%d", object.optString("url").replace(".htm", ".json"), System.currentTimeMillis()));
-                            HttpResponse contentResponse = closeableHttpClient.execute(contentGet);
-                            HttpEntity contentEntity = contentResponse.getEntity();
-                            if (contentResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                                JSONObject contentJson = new JSONObject(EntityUtils.toString(contentEntity));
-                                String title = contentJson.optString("match_type");
-                                String content = contentJson.optString("content");
-                                JSONArray channelArray = contentJson.getJSONArray("channel");
-                                ArrayList<Game.Live> lives = new ArrayList<>();
-                                for (int j = 0; j < channelArray.length(); j++) {
-                                    JSONObject channel = channelArray.optJSONObject(j);
-                                    Game.Live live = new Game.Live();
-                                    live.setTitle(channel.optString("name"));
-                                    live.setUrl(channel.optString("url"));
-                                    lives.add(live);
-                                }
-
-                                game.setTitle(title);
-                                game.setContent(content);
-                                game.setName(name);
-                                game.setName2(name2);
-                                game.setLives(lives);
-//                    String icon = content.getElementsByClass("t1_logo").first().attr("src");
-//                    String score = content.getElementsByClass("host_score").first().text();
-//                    String name2 = content.getElementsByClass("team_guest").first().text();
-//                    String icon2 = content.getElementsByAttributeValue("alt", name).first().attr("src");
-//                    String score2 = content.getElementsByClass("visit_score").first().text();
-                                game.setDate(Utils.getDate(date));
-                                game.setTime(Utils.getTime(game.getDate()));
-                                gameRepo.saveAndFlush(game);
-                                games.add(game);
+                JSONObject jsonObject = new JSONObject(EntityUtils.toString(entity));
+                Document root = Jsoup.parse(jsonObject.optString("html"));
+                Elements list = root.getElementsByClass("matchItem");
+                HttpPost contentPost = new HttpPost("http://www.dongqiudi.com/match/query");
+                List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+                for (Element element : list) {
+                    nvps.add(new BasicNameValuePair("ids[]", element.attr("rel")));
+                }
+                contentPost.setEntity(new UrlEncodedFormEntity(nvps));
+                HttpResponse contentResponse = closeableHttpClient.execute(contentPost);
+                HttpEntity contentEntity = contentResponse.getEntity();
+                if (contentResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                    JSONArray contents = new JSONArray(EntityUtils.toString(contentEntity));
+                    for (int i = 0; i < contents.length(); i++) {
+                        try {
+                            JSONObject object = contents.optJSONObject(i);
+                            Game game = new Game();
+                            game.setTitle(object.optString("competition_name"));
+                            game.setName(object.optString("team_A_name"));
+                            game.setIcon(object.optString("team_A_logo"));
+                            String[] result = object.optString("result").split("-");
+                            game.setScore(result.length > 1 ? result[0] : "0");
+                            game.setName2(object.optString("team_B_name"));
+                            game.setIcon2(object.optString("team_B_logo"));
+                            game.setScore2(result.length > 1 ? result[1] : "0");
+                            game.setDate(Utils.getDate(object.optString("start_play")));
+                            game.setTime(Utils.getTime(game.getDate()));
+                            if (game.getDate() < System.currentTimeMillis()) {
+                                game.setStateType(Game.StateType.PREPARE);
+                            } else if (game.getDate() >= System.currentTimeMillis() && game.getDate() < System.currentTimeMillis() - 3 * 60 * 60 * 1000) {
+                                game.setStateType(Game.StateType.ING);
+                            } else {
+                                game.setStateType(Game.StateType.END);
                             }
-                        }
+                            JSONArray videos = object.optJSONArray("video");
+                            ArrayList<Game.Live> lives = new ArrayList<>();
+                            for (int j = 0; j < videos.length(); j++) {
+                                JSONObject videoObject = videos.optJSONObject(j);
+                                Game.Live live = new Game.Live();
+                                live.setTitle(videoObject.optString("title"));
+                                live.setUrl(videoObject.optString("url"));
+                                lives.add(live);
+                            }
+                            game.setLives(lives);
 
+                            User user = userRepo.findByName(game.getName());
+                            User user2 = userRepo.findByName(game.getName2());
+                            game.setUid(user != null ? user.getId() : 0);
+                            game.setUid2(user2 != null ? user2.getId() : 0);
+
+                            gameRepo.saveAndFlush(game);
+                            games.add(game);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                     }
                 }
 
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return games;
     }
-
-
 }

@@ -11,6 +11,6 @@ import java.util.List;
  * Created by shadow on 15/10/30.
  */
 public interface GameRepo extends JpaRepository<Game, Long> {
-    Page<Game> findByUidInAndUid2In(List<Long> uids, List<Long> uid2s, Pageable pageable);
-
+    Page<Game> findByUidInOrUid2In(List<Long> uids, List<Long> uid2s, Pageable pageable);
+    Page<Game> findByUidNotInAndUid2NotIn(List<Long> uids, List<Long> uid2s, Pageable pageable);
 }

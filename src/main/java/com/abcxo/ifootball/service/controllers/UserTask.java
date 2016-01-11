@@ -37,7 +37,10 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-//        runInitUsers();
+        if (userRepo.findByName(Constants.SPECIAL_BREAK) == null) {
+            runInitUsers();
+        }
+
     }
 
     public void runInitUsers() {
@@ -46,7 +49,7 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
 
         List<User> users = new ArrayList<>();
         //英超
-        users.addAll(runGrepTeam(Constants.GROUP_YINGCHAO, "yingchao"));
+        users.addAll(runGrepTeam(Constants.GROUP_YINGCHAO, "139"));
         users.add(runInitNews(
                         Constants.NEWS_YINGCHAO,
                         "英格兰足球超级联赛（Premier League），通常简称“英超，是英格兰足球总会属下的职业足球联赛，欧洲五大联赛之一，由20支球队组成。由超级联盟负责具体运作。",
@@ -56,7 +59,7 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
 
 
         //西甲
-        users.addAll(runGrepTeam(Constants.GROUP_XIJIA, "xijia"));
+        users.addAll(runGrepTeam(Constants.GROUP_XIJIA, "140"));
         users.add(runInitNews(
                         Constants.NEWS_XIJIA,
                         "西班牙足球甲级联赛（Primera división de Liga，简称 La Liga）在中国则一般简称为“西甲”，是西班牙最高等级的职业足球联赛，也是欧洲及世界最高水平的职业足球联赛之一。",
@@ -65,7 +68,7 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
         );
 
 
-        users.addAll(runGrepTeam(Constants.GROUP_DEJIA, "dejia"));
+        users.addAll(runGrepTeam(Constants.GROUP_DEJIA, "88"));
         users.add(runInitNews(
                         Constants.NEWS_DEJIA,
                         "德国足球甲级联赛（德语：Bundesliga）简称德甲，是德国足球最高等级的赛事类别，由德国足球协会于1962年7月28日在多特蒙德确立，自1963-64赛季面世。",
@@ -73,7 +76,7 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
                         "http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg")
         );
 
-        users.addAll(runGrepTeam(Constants.GROUP_YIJIA, "yijia"));
+        users.addAll(runGrepTeam(Constants.GROUP_YIJIA, "89"));
         users.add(runInitNews(
                         Constants.NEWS_YIJIA,
                         "意大利足球甲级联赛（意大利语：Serie A），简称“意甲”，是意大利最高等级的职业足球联赛，由意大利足球协会（Federazione Italiana Giuoco Calcio，FIGC）管理。",
@@ -81,7 +84,7 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
                         "http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg")
         );
 
-        users.addAll(runGrepTeam(Constants.GROUP_FAJIA, "fajia"));
+        users.addAll(runGrepTeam(Constants.GROUP_FAJIA, "92"));
         users.add(runInitNews(
                         Constants.NEWS_FAJIA,
                         "法国足球甲级联赛（Championnat de France de football Ligue 1）法语通常简写为 Ligue 1或者是 L1，中文通常简称“法甲”）是法国最高级别的职业足球联赛，是由法国足球协会所组织。",
@@ -89,7 +92,7 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
                         "http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg")
         );
 
-        users.addAll(runGrepTeam(Constants.GROUP_ZHONGCHAO, "zhongchao"));
+        users.addAll(runGrepTeam(Constants.GROUP_ZHONGCHAO, "151"));
         users.add(runInitNews(
                         Constants.NEWS_ZHONGCHAO,
                         "中国足球协会超级联赛（Chinese Football Association Super League），简称“中超”。由中国足球协会组织，是中国大陆地区最高级别的职业足球联赛（中国港澳台有各自的联赛）。",
@@ -111,6 +114,12 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
                         "http://bigtu.eastday.com/img/201205/08/75/11869850579652320175.jpg",
                         "http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg")
         );
+        users.add(runInitNews(
+                        Constants.NEWS_VIDEO,
+                        "留住最精彩，最惊心动魄的精彩瞬间。",
+                        "http://img5.imgtn.bdimg.com/it/u=405637972,2671952875&fm=11&gp=0.jpg",
+                        "http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg")
+        );
 
         //特殊帐号
         users.add(runInitSpecial(
@@ -123,21 +132,22 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
         System.out.println("user init complete " + users.size());
     }
 
+
     private List<User> runGrepTeam(String groupName, String url) {
         List<User> users = new ArrayList<>();
         try {
-            String host = "http://www.uhchina.com";
-            Document doc = Utils.getDocument(String.format("%s/%sqiudui/", host, url));
-            Elements pics = doc.getElementsByClass("picframelist").first().children();
-            for (Element element : pics) {
-                Element link = element.getElementsByTag("a").first();
-                String img = host + link.getElementsByTag("img").first().attr("src");
-                String title = link.getElementsByTag("span").first().text();
+            String host = String.format("http://www.dongqiudi.com/data?competition=%s&type=trank", url);
+            Document root = Utils.getDocument(host);
+            Elements list = root.select("td.team");
+            for (Element element : list) {
+                Element imgEL = element.getElementsByTag("img").first();
+                String name = imgEL.attr("alt");
+                String img = imgEL.attr("src");
                 User user = new User();
                 user.setGroupName(groupName);
-                user.setEmail(String.format("%s@ifootball.com", title));
-                user.setName(title);
-                user.setSign("西甲一个人过21个人的那个门将就是我...");
+                user.setEmail(String.format("%s@ifootball.com", name));
+                user.setName(name);
+                user.setSign("官方球队帐号");
                 user.setAvatar(img);
                 user.setCover("http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg");
                 user.setGender(User.GenderType.MALE);
@@ -186,6 +196,7 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
         focus(user.getId(), userRepo.findByName(Constants.NEWS_ZHONGCHAO).getId(), true);
         focus(user.getId(), userRepo.findByName(Constants.NEWS_OUGUAN).getId(), true);
         focus(user.getId(), userRepo.findByName(Constants.NEWS_HUABIAN).getId(), true);
+        focus(user.getId(), userRepo.findByName(Constants.NEWS_VIDEO).getId(), true);
 
         return user;
     }

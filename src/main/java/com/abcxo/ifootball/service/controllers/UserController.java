@@ -97,6 +97,7 @@ public class UserController {
             focus(user.getId(), userRepo.findByName(Constants.NEWS_ZHONGCHAO).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.NEWS_OUGUAN).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.NEWS_HUABIAN).getId(), true);
+            focus(user.getId(), userRepo.findByName(Constants.NEWS_VIDEO).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.SPECIAL_BREAK).getId(), true);
         }
         return user;
@@ -136,6 +137,7 @@ public class UserController {
             focus(user.getId(), userRepo.findByName(Constants.NEWS_ZHONGCHAO).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.NEWS_OUGUAN).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.NEWS_HUABIAN).getId(), true);
+            focus(user.getId(), userRepo.findByName(Constants.NEWS_VIDEO).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.SPECIAL_BREAK).getId(), true);
             return user;
         }
