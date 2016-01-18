@@ -31,6 +31,7 @@ public class Tweet {
     private String summary;
     private String content;
 
+
     @Column(length = 5000)
     private String images;
     @Column(length = 5000)
@@ -41,6 +42,7 @@ public class Tweet {
     private double lat;
     public String location;
     private TweetType tweetType = TweetType.NORMAL;
+    private TweetContentType tweetContentType = TweetContentType.NORMAL;
 
     @Transient
     private Tweet originTweet;
@@ -222,6 +224,14 @@ public class Tweet {
         this.tweetType = tweetType;
     }
 
+    public TweetContentType getTweetContentType() {
+        return tweetContentType;
+    }
+
+    public void setTweetContentType(TweetContentType tweetContentType) {
+        this.tweetContentType = tweetContentType;
+    }
+
     public enum TweetType {
 
         NORMAL(0),
@@ -232,6 +242,26 @@ public class Tweet {
         private int index;
 
         TweetType(int index) {
+            this.index = index;
+        }
+
+        public static int size() {
+            return TweetType.values().length;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+    }
+
+    public enum TweetContentType {
+
+        NORMAL(0),
+        IMAGES(1),
+        VIDEO(2);
+        private int index;
+
+        TweetContentType(int index) {
             this.index = index;
         }
 

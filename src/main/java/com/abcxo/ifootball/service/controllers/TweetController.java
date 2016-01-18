@@ -58,6 +58,7 @@ public class TweetController {
             tweet.setName(user.getName());
             tweet.setIcon(user.getAvatar());
             tweet.setTweetType(Tweet.TweetType.SPECIAL);
+            tweet.setTweetContentType(tweet.getTweetContentType());
             tweet.setTitle(t.getTitle());
             tweet.setSummary(t.getSummary());
             tweet.setImages(t.getImages());

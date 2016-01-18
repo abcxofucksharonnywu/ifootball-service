@@ -453,6 +453,7 @@ public class TweetTask {
                             tweet.setTime(Utils.getTime(tweet.getDate()));
                             tweet.setImages(image);
                             tweet.setTweetType(Tweet.TweetType.NEWS);
+                            tweet.setTweetContentType(Tweet.TweetContentType.VIDEO);
                             tweet = tweetRepo.saveAndFlush(tweet);
 
                             UserTweet userTweet = new UserTweet();
@@ -627,6 +628,7 @@ public class TweetTask {
                                 tweet.setDate(Utils.getDate(time));
                                 tweet.setTime(Utils.getTime(tweet.getDate()));
                                 tweet.setTweetType(Tweet.TweetType.NEWS);
+                                tweet.setTweetContentType(imgs.size() >= 3 ? Tweet.TweetContentType.IMAGES : Tweet.TweetContentType.NORMAL);
                                 tweet = tweetRepo.saveAndFlush(tweet);
 
                                 UserTweet userTweet = new UserTweet();
