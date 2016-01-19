@@ -28,9 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by shadow on 15/11/30.
@@ -88,6 +86,9 @@ public class GameTask {
                 HttpResponse contentResponse = closeableHttpClient.execute(contentPost);
                 HttpEntity contentEntity = contentResponse.getEntity();
                 if (contentResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+
+                    Document document = Utils.getDocument("http://www.tiantian.tv/zuqiuzhibo/");
+
                     JSONArray contents = new JSONArray(EntityUtils.toString(contentEntity));
                     for (int i = 0; i < contents.length(); i++) {
                         try {
@@ -101,7 +102,7 @@ public class GameTask {
                             game.setName2(object.optString("team_B_name"));
                             game.setIcon2(object.optString("team_B_logo"));
                             game.setScore2(result.length > 1 ? result[1] : "0");
-                            game.setDate(Utils.getDate(object.optString("start_play")));
+                            game.setDate(object.optLong("timestamp") * 1000);
                             game.setTime(Utils.getTime(game.getDate()));
                             if (game.getDate() < System.currentTimeMillis()) {
                                 game.setStateType(Game.StateType.PREPARE);
@@ -112,13 +113,38 @@ public class GameTask {
                             }
                             JSONArray videos = object.optJSONArray("video");
                             ArrayList<Game.Live> lives = new ArrayList<>();
+                            Map<String, Game.Live> liveMap = new HashMap<>();
                             for (int j = 0; j < videos.length(); j++) {
                                 JSONObject videoObject = videos.optJSONObject(j);
                                 Game.Live live = new Game.Live();
                                 live.setTitle(videoObject.optString("title"));
                                 live.setUrl(videoObject.optString("url"));
                                 lives.add(live);
+                                liveMap.put(live.getUrl(), live);
                             }
+
+                            try {
+                                Element element = document.select(String.format("ul:matches(%s)", String.format("(.*%s.*%s.*)|(.*%s.*%s.*)", game.getName(), game.getName2(), game.getName2(), game.getName()))).first();
+                                if (element != null) {
+                                    Element li = element.getElementsByClass("t5").first();
+                                    Elements as = li.getElementsByTag("a");
+                                    for (Element a : as) {
+                                        String title = a.text();
+                                        String url = "http://www.tiantian.tv/" + a.attr("href");
+                                        if (!liveMap.containsKey(url)) {
+                                            Game.Live live = new Game.Live();
+                                            live.setTitle(title);
+                                            live.setUrl(url);
+                                            lives.add(live);
+                                            liveMap.put(live.getUrl(), live);
+                                        }
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+
                             game.setLives(lives);
 
                             User user = userRepo.findByName(game.getName());
@@ -128,6 +154,8 @@ public class GameTask {
 
                             gameRepo.saveAndFlush(game);
                             games.add(game);
+
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

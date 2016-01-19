@@ -17,6 +17,8 @@ public interface TweetRepo extends JpaRepository<Tweet, Long> {
 
     Tweet findByDate(long date);
 
+    Page<Tweet> findByTweetContentType(Tweet.TweetContentType tweetContentType, Pageable pageable);
+
     Page<Tweet> findByIdIn(Collection<Long> tids, Pageable pageable);
 
     Page<Tweet> findByNameLikeIgnoreCaseOrTitleLikeIgnoreCaseOrSourceLikeIgnoreCaseOrSummaryLikeIgnoreCase(String name, String title, String source, String summary, Pageable pageable);

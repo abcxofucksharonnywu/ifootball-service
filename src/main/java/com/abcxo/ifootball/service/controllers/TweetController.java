@@ -171,9 +171,10 @@ public class TweetController {
 
         HOME(0),
         TEAM(1),
-        NEWS(2),
-        USER(3),
-        SEARCH(4);
+        VIDEO(2),
+        NEWS(3),
+        USER(4),
+        SEARCH(5);
         private int index;
 
         GetsType(int index) {
@@ -196,52 +197,57 @@ public class TweetController {
                             @RequestParam("keyword") String keyword,
                             @RequestParam("pageIndex") int pageIndex,
                             @RequestParam("pageSize") int pageSize) {
-        List<Long> uids = new ArrayList<>();
-        if (uid > 0 && (getsType == GetsType.HOME || getsType == GetsType.USER)) {
-            uids.add(uid);
-        }
-        if (getsType != GetsType.USER) {
-            List<User> users = new ArrayList<>();
-            if (uid > 0) {
-                users.addAll(userRepo.findAll(userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS)));
-            } else {
-                users.add(userRepo.findByName(Constants.SPECIAL_BREAK));
-                users.add(userRepo.findByName(Constants.NEWS_YINGCHAO));
-                users.add(userRepo.findByName(Constants.NEWS_XIJIA));
-                users.add(userRepo.findByName(Constants.NEWS_DEJIA));
-                users.add(userRepo.findByName(Constants.NEWS_YIJIA));
-                users.add(userRepo.findByName(Constants.NEWS_FAJIA));
-                users.add(userRepo.findByName(Constants.NEWS_ZHONGCHAO));
-                users.add(userRepo.findByName(Constants.NEWS_OUGUAN));
-                users.add(userRepo.findByName(Constants.NEWS_HUABIAN));
-                users.add(userRepo.findByName(Constants.NEWS_VIDEO));
-
-            }
-            for (User user : users) {
-                if (getsType == GetsType.HOME && (user.getUserType() == User.UserType.NORMAL ||
-                        user.getUserType() == User.UserType.SPECIAL)) {
-                    uids.add(user.getId());
-                } else if (getsType == GetsType.TEAM && user.getUserType() == User.UserType.TEAM) {
-                    uids.add(user.getId());
-                } else if (getsType == GetsType.NEWS && user.getUserType() == User.UserType.NEWS) {
-                    uids.add(user.getId());
-                }
-            }
-
-        }
-
         PageRequest pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.DESC, "date");
         Page<Tweet> tweets = null;
+        if (getsType != GetsType.VIDEO) {
+            List<Long> uids = new ArrayList<>();
 
-        if (getsType != GetsType.SEARCH) {
-            if (uids.size() > 0) {
-                List<Long> tids = userTweetRepo.findTidsByUidsAndUserTweetType(uids, UserTweet.UserTweetType.ADD);
-                tweets = tweetRepo.findByIdIn(tids, pageRequest);
+            if (uid > 0 && (getsType == GetsType.HOME || getsType == GetsType.USER)) {
+                uids.add(uid);
             }
-        } else if (!StringUtils.isEmpty(keyword)) {
-            keyword = "%" + keyword + "%";
-            tweets = tweetRepo.findByNameLikeIgnoreCaseOrTitleLikeIgnoreCaseOrSourceLikeIgnoreCaseOrSummaryLikeIgnoreCase(keyword, keyword, keyword, keyword, pageRequest);
+            if (getsType != GetsType.USER) {
+                List<User> users = new ArrayList<>();
+                if (uid > 0) {
+                    users.addAll(userRepo.findAll(userUserRepo.findUid2sByUidAndUserUserType(uid, UserUser.UserUserType.FOCUS)));
+                } else {
+                    users.add(userRepo.findByName(Constants.SPECIAL_BREAK));
+                    users.add(userRepo.findByName(Constants.NEWS_YINGCHAO));
+                    users.add(userRepo.findByName(Constants.NEWS_XIJIA));
+                    users.add(userRepo.findByName(Constants.NEWS_DEJIA));
+                    users.add(userRepo.findByName(Constants.NEWS_YIJIA));
+                    users.add(userRepo.findByName(Constants.NEWS_FAJIA));
+                    users.add(userRepo.findByName(Constants.NEWS_ZHONGCHAO));
+                    users.add(userRepo.findByName(Constants.NEWS_OUGUAN));
+                    users.add(userRepo.findByName(Constants.NEWS_HUABIAN));
+                    users.add(userRepo.findByName(Constants.NEWS_VIDEO));
 
+                }
+                for (User user : users) {
+                    if (getsType == GetsType.HOME && (user.getUserType() == User.UserType.NORMAL ||
+                            user.getUserType() == User.UserType.SPECIAL)) {
+                        uids.add(user.getId());
+                    } else if (getsType == GetsType.TEAM && user.getUserType() == User.UserType.TEAM) {
+                        uids.add(user.getId());
+                    } else if (getsType == GetsType.NEWS && user.getUserType() == User.UserType.NEWS) {
+                        uids.add(user.getId());
+                    }
+                }
+
+            }
+
+
+            if (getsType != GetsType.SEARCH) {
+                if (uids.size() > 0) {
+                    List<Long> tids = userTweetRepo.findTidsByUidsAndUserTweetType(uids, UserTweet.UserTweetType.ADD);
+                    tweets = tweetRepo.findByIdIn(tids, pageRequest);
+                }
+            } else if (!StringUtils.isEmpty(keyword)) {
+                keyword = "%" + keyword + "%";
+                tweets = tweetRepo.findByNameLikeIgnoreCaseOrTitleLikeIgnoreCaseOrSourceLikeIgnoreCaseOrSummaryLikeIgnoreCase(keyword, keyword, keyword, keyword, pageRequest);
+
+            }
+        } else {
+            tweets = tweetRepo.findByTweetContentType(Tweet.TweetContentType.VIDEO, pageRequest);
         }
 
         if (tweets != null) {
@@ -256,7 +262,6 @@ public class TweetController {
             }
             return tweets.getContent();
         } else {
-
             return new ArrayList<>();
         }
 
