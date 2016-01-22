@@ -178,10 +178,11 @@ public class Utils {
     public static void email(String email, String password) {
         JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
         SimpleMailMessage mailMessage = new SimpleMailMessage();
+        senderImpl.setDefaultEncoding("UTF-8");
         mailMessage.setTo(email);
         mailMessage.setFrom(Constants.EMAIL);
         mailMessage.setSubject("足球狗密码找回");
-        mailMessage.setText(String.format("%s重置密码：%s", email, password));
+        mailMessage.setText(String.format("%s 重置密码：%s", email, password));
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");

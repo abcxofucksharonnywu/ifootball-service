@@ -81,7 +81,7 @@ public class UserController {
         if (user == null) {
             user = new User();
             user.setName(name);
-            user.setSign("爱足球吧新人一枚,多多指教");
+            user.setSign("足球狗新人一枚,多多指教");
             user.setEmail(email);
             user.setPassword(password);
             user.setAvatar(avatar);
@@ -122,10 +122,10 @@ public class UserController {
         } else {
             user = new User();
             user.setName(email.split("@")[0]);
-            user.setSign("爱足球吧新人一枚,多多指教");
+            user.setSign("足球狗一只，多多指教");
             user.setEmail(email);
             user.setPassword(password);
-            user.setAvatar("http://tse1.mm.bing.net/th?&id=OIP.Me12f5a011ec53760dd2ab88e4d24e115o0&w=300&h=300&c=0&pid=1.9&rs=0&p=0");
+            user.setAvatar("http://7xosf3.com1.z0.glb.clouddn.com/2A1A28C6-1777-4193-8968-A1AD0234DA41.png");
             user.setCover("http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg");
             user.setDeviceToken(deviceToken);
             user = userRepo.saveAndFlush(user);

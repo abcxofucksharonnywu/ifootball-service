@@ -41,7 +41,7 @@ public class TweetTask {
 
 
     //视频新闻
-    @Scheduled(fixedDelay = 4 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 4 * 60 * 60 * 1000, initialDelay = 8 * 60 * 1000)
     public void runInitInVideo() {
         List<Tweet> tweets = new ArrayList<>();
         System.out.println("tweet runInitInVideo " + " begin");
@@ -52,7 +52,7 @@ public class TweetTask {
 
 
     //花边新闻
-    @Scheduled(fixedDelay = 4 * 40 * 60 * 1000)
+    @Scheduled(fixedDelay = 4 * 40 * 60 * 1000, initialDelay = 10 * 60 * 1000)
     public void runInitInHuabian() {
         List<Tweet> tweets = new ArrayList<>();
         System.out.println("tweet runInitInHuabian " + " begin");
@@ -63,7 +63,7 @@ public class TweetTask {
     }
 
     //球队新闻及花边新闻
-    @Scheduled(fixedDelay = 10 * 60 * 1000)
+    @Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 12 * 60 * 1000)
     public void runInitInZhiboba() {
         System.out.println("tweet runInitInZhiboba " + " begin");
         List<Tweet> tweets = runGrepNewsInZhiboba();
@@ -73,7 +73,7 @@ public class TweetTask {
 
 
     //    //切尔西
-    @Scheduled(fixedDelay = 10 * 60 * 1000)
+    @Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 14 * 60 * 1000)
     public void runInitQieerxi() {
         System.out.println("tweet runInitQieerxi " + " begin");
         List<Tweet> tweets = new ArrayList<>();
@@ -86,7 +86,7 @@ public class TweetTask {
 
 
     //曼联
-    @Scheduled(fixedDelay = 10 * 60 * 1000)
+    @Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 16 * 60 * 1000)
     public void runInitManlian() {
         System.out.println("tweet runInitManlian " + " begin");
 
@@ -100,7 +100,7 @@ public class TweetTask {
     }
 
     //曼城
-    @Scheduled(fixedDelay = 10 * 60 * 1000)
+    @Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 18 * 60 * 1000)
     public void runInitMancheng() {
         System.out.println("tweet runInitMancheng " + " begin");
 
@@ -114,7 +114,7 @@ public class TweetTask {
     }
 
     //阿森纳
-    @Scheduled(fixedDelay = 10 * 60 * 1000)
+    @Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 20 * 60 * 1000)
     public void runInitAsengna() {
         System.out.println("tweet runInitAsengna " + " begin");
 
@@ -128,7 +128,7 @@ public class TweetTask {
     }
 
     //利物浦
-    @Scheduled(fixedDelay = 10 * 60 * 1000)
+    @Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 22 * 60 * 1000)
     public void runInitLiwupu() {
         System.out.println("tweet runInitLiwupu " + " begin");
 
@@ -142,7 +142,7 @@ public class TweetTask {
     }
 
     //热刺
-    @Scheduled(fixedDelay = 1 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 1 * 60 * 60 * 1000, initialDelay = 24 * 60 * 1000)
     public void runInitReci() {
         System.out.println("tweet runInitReci " + " begin");
 
@@ -157,7 +157,7 @@ public class TweetTask {
 
 
     //皇马
-    @Scheduled(fixedDelay = 10 * 60 * 1000)
+    @Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 26 * 60 * 1000)
     public void runInitHuangma() {
         System.out.println("tweet runInitHuangma " + " begin");
 
@@ -171,7 +171,7 @@ public class TweetTask {
     }
 
     //巴萨
-    @Scheduled(fixedDelay = 10 * 60 * 1000)
+    @Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 28 * 60 * 1000)
     public void runInitBasa() {
         System.out.println("tweet runInitBasa " + " begin");
 
@@ -185,7 +185,7 @@ public class TweetTask {
     }
 
     //马竞技
-    @Scheduled(fixedDelay = 1 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 1 * 60 * 60 * 1000, initialDelay = 30 * 60 * 1000)
     public void runInitMajingji() {
         System.out.println("tweet runInitMajingji " + " begin");
 
@@ -200,7 +200,7 @@ public class TweetTask {
 
 
     //AC米兰
-    @Scheduled(fixedDelay = 1 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 1 * 60 * 60 * 1000, initialDelay = 32 * 60 * 1000)
     public void runInitAC() {
         System.out.println("tweet runInitAC " + " begin");
 
@@ -215,7 +215,7 @@ public class TweetTask {
 
 
     //国米
-    @Scheduled(fixedDelay = 1 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 1 * 60 * 60 * 1000, initialDelay = 34 * 60 * 1000)
     public void runInitGuomi() {
         System.out.println("tweet runInitGuomi " + " begin");
 
@@ -230,7 +230,7 @@ public class TweetTask {
 
 
     //尤文
-    @Scheduled(fixedDelay = 1 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 1 * 60 * 60 * 1000, initialDelay = 36 * 60 * 1000)
     public void runInitYouwen() {
         System.out.println("tweet runInitYouwen " + " begin");
 
@@ -245,7 +245,7 @@ public class TweetTask {
 
 
     //罗马
-    @Scheduled(fixedDelay = 2 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 2 * 60 * 60 * 1000, initialDelay = 38 * 60 * 1000)
     public void runInitLuoma() {
         System.out.println("tweet runInitLuoma " + " begin");
 
@@ -260,7 +260,7 @@ public class TweetTask {
 
 
     //那不勒
-    @Scheduled(fixedDelay = 2 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 2 * 60 * 60 * 1000, initialDelay = 40 * 60 * 1000)
     public void runInitNabule() {
         System.out.println("tweet runInitNabule " + " begin");
 
@@ -275,7 +275,7 @@ public class TweetTask {
 
 
     //拜仁
-    @Scheduled(fixedDelay = 10 * 60 * 1000)
+    @Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 42 * 60 * 1000)
     public void runInitBairen() {
         System.out.println("tweet runInitBairen " + " begin");
 
@@ -289,7 +289,7 @@ public class TweetTask {
     }
 
     //多特
-    @Scheduled(fixedDelay = 1 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 1 * 60 * 60 * 1000, initialDelay = 44 * 60 * 1000)
     public void runInitDuote() {
         System.out.println("tweet runInitDuote " + " begin");
 
@@ -303,7 +303,7 @@ public class TweetTask {
     }
 
     //沃尔夫
-    @Scheduled(fixedDelay = 2 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 2 * 60 * 60 * 1000, initialDelay = 46 * 60 * 1000)
     public void runInitWoerfu() {
         System.out.println("tweet runInitWoerfu " + " begin");
 
@@ -316,7 +316,7 @@ public class TweetTask {
     }
 
     //日尔曼
-    @Scheduled(fixedDelay = 1 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 1 * 60 * 60 * 1000, initialDelay = 48 * 60 * 1000)
     public void runInitRierman() {
         System.out.println("tweet runInitRierman " + " begin");
 
@@ -330,7 +330,7 @@ public class TweetTask {
     }
 
     //里昂
-    @Scheduled(fixedDelay = 2 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 2 * 60 * 60 * 1000, initialDelay = 50 * 60 * 1000)
     public void runInitLiang() {
         System.out.println("tweet runInitLiang " + " begin");
 
@@ -344,7 +344,7 @@ public class TweetTask {
 
 
     //恒大
-    @Scheduled(fixedDelay = 12 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 12 * 60 * 60 * 1000, initialDelay = 52 * 60 * 1000)
     public void runInitHengda() {
         System.out.println("tweet runInitHengda " + " begin");
 
@@ -359,7 +359,7 @@ public class TweetTask {
 
 
     //上港
-    @Scheduled(fixedDelay = 12 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 12 * 60 * 60 * 1000, initialDelay = 54 * 60 * 1000)
     public void runInitShanggang() {
         System.out.println("tweet runInitShanggang " + " begin");
 
@@ -374,7 +374,7 @@ public class TweetTask {
 
 
     //国安
-    @Scheduled(fixedDelay = 12 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 12 * 60 * 60 * 1000, initialDelay = 56 * 60 * 1000)
     public void runInitGuoan() {
         System.out.println("tweet runInitGuoan " + " begin");
 
@@ -389,7 +389,7 @@ public class TweetTask {
 
 
     //鲁能
-    @Scheduled(fixedDelay = 12 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 12 * 60 * 60 * 1000, initialDelay = 58 * 60 * 1000)
     public void runInitLuneng() {
         System.out.println("tweet runInitLuneng " + " begin");
 
@@ -404,7 +404,7 @@ public class TweetTask {
 
 
     //申花
-    @Scheduled(fixedDelay = 12 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 12 * 60 * 60 * 1000, initialDelay = 60 * 60 * 1000)
     public void runInitShenghua() {
         System.out.println("tweet runInitShenghua " + " begin");
 
