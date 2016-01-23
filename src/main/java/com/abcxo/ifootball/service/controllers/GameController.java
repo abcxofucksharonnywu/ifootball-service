@@ -53,14 +53,15 @@ public class GameController {
             List<Game> games = new ArrayList<>();
             List<Game> focusGames = gameRepo.findByUidInOrUid2In(uids, uids, pageRequest).getContent();
             for (Game game : focusGames) {
-                game.setSection("关注");
+                game.setFocus(true);
+                game.setSection("关注的赛事");
             }
 
             games.addAll(focusGames);
 
             List<Game> hotGames = gameRepo.findByUidNotInAndUid2NotIn(uids, uids, pageRequest).getContent();
             for (Game game : hotGames) {
-                game.setSection("热门");
+                game.setSection("热门的赛事");
             }
 
             games.addAll(hotGames);
@@ -69,7 +70,7 @@ public class GameController {
         } else {
             List<Game> games = gameRepo.findAll(pageRequest).getContent();
             for (Game game : games) {
-                game.setSection("热门");
+                game.setSection("热门的赛事");
             }
             return games;
         }

@@ -14,7 +14,12 @@ public class Game {
     private long id;
     private String title;
     private String content;
+    @Transient
     private String section;
+    @Transient
+    private boolean focus;
+
+
     private long uid;
     private String icon;
     private String name;
@@ -60,6 +65,14 @@ public class Game {
 
     public void setSection(String section) {
         this.section = section;
+    }
+
+    public boolean isFocus() {
+        return focus;
+    }
+
+    public void setFocus(boolean focus) {
+        this.focus = focus;
     }
 
     public long getUid() {
