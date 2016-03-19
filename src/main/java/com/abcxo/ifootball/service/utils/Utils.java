@@ -278,7 +278,9 @@ public class Utils {
 
     public static String getGrepString() {
         try {
-            InputStream is = new FileInputStream(new File("").getCanonicalPath()+grepPath);
+            String path = new File("").getCanonicalPath() + grepPath;
+            System.out.println("grep path" + path);
+            InputStream is = new FileInputStream(path);
             String result = IOUtils.toString(is);
             return result;
 
@@ -290,7 +292,7 @@ public class Utils {
 
     public static boolean saveGrepString(String grepString) {
         try {
-            File file = new File(new File("").getCanonicalPath()+grepPath);
+            File file = new File(new File("").getCanonicalPath() + grepPath);
             if (!file.exists()) {
                 file.createNewFile();
             }
