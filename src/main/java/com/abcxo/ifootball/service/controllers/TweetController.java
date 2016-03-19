@@ -333,5 +333,13 @@ public class TweetController {
         Utils.message(messageRepo.saveAndFlush(message));
     }
 
+    @RequestMapping(value = "/tweet/grep", method = RequestMethod.POST)
+    public void grep(@RequestParam("grepString") String grepString) {
+        boolean isSuc = Utils.saveGrepString(grepString);
+        if (!isSuc) {
+            throw new Constants.SaveException();
+        }
+    }
+
 
 }

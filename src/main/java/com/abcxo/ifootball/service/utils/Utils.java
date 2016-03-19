@@ -13,6 +13,7 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import push.android.AndroidUnicast;
 
+import java.io.*;
 import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,6 +40,8 @@ import java.util.Properties;
 public class Utils {
 
     private static UserRepo userRepo;
+
+    private static String grepPath = "src/main/webapp/grep.json";
 
     @Autowired
     public void setUserRepo(UserRepo userRepo) {
@@ -270,6 +274,37 @@ public class Utils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String getGrepString() {
+        try {
+            InputStream is = new FileInputStream(grepPath);
+            String result = IOUtils.toString(is);
+            return result;
+
+        } catch (Exception e) {
+
+        }
+        return null;
+    }
+
+    public static boolean saveGrepString(String grepString) {
+        try {
+            File file = new File(grepPath);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(grepString);
+            bw.close();
+            System.out.println("Done");
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>
+		<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+		<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+		<style>
+			.content {
+				padding: 44px;
+				width: 70%;
+			}
+			
+			.list {
+				width: 100%;
+				margin-top: 20px;
+				margin-bottom: 20px;
+			}
+			
+			.item {}
+		</style>
+	</head>
+
+	<body>
+		<div class="content">
+			<h3>添加抓取的微博地址 <span class="label label-default">New</span></h3>
+			<div class="input-group group">
+				<input id='input' type="text" class="form-control" placeholder="http://weibo.com/chelseafc">
+				<span class="input-group-btn"><button  id="add" class="btn btn-default" type="button">新增</button>
+					<button id ='save' type="button" class="btn btn-primary">
+				同步到服务器
+			</button>
+      			</span>
+				<!-- Button trigger modal -->
+
+			</div>
+
+			<table class="list">
+				<tbody id='body'>
+					<tr>
+						<th style="width: 80%;">
+						</th>
+						<th style="width: 20%;">
+						</th>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<script>
+			function add(text) {
+				var tpl = '<tr>\
+						<td class="text" style="word-break: break-all;">$text</td>\
+						<td style="text-align: right;"><a class="del">删除</a></td>\
+					</tr>'
+				if (text.indexOf("http://") > -1 || text.indexOf("https://") > -1) {
+					var result = tpl.replace('$text', text)
+					var tag = $(result);
+					$(body).append(tag)
+					tag.click(function() {
+						tag.remove()
+					})
+				} else {
+					alert('请输入有效链接');
+				}
+			}
+			var data = [
+				'http://weibo.com/chelseafc?refer_flag=aa',
+				'http://weibo.com/chelseafc?refer_flag=333',
+				'http://weibo.com/chelseafc?refer_flag=66',
+				'http://weibo.com/chelseafc?refer_flag=eeee',
+				'http://weibo.com/chelseafc?refer_flag=ergeg'
+			]
+			for (var i = 0; i < data.length; i++) {
+				add(data[i])
+			}
+			$('#add').click(function() {
+				add($('#input').val())
+			})
+			$('#add').click(function() {
+				add($('#input').val())
+			})
+			$('#save').click(function() {
+				var list = $('.text')
+				var saveData = [];
+				for (var i = 0; i < list.length; i++) {
+					var val = $.text(list[i])
+					if (val.length > 0) {
+						saveData.push(val)
+					}
+				}
+				alert(saveData)
+				var aj = $.ajax({
+					url: 'http://localhost:8080/tweet/grep', // 跳转到 action    
+					data: {
+						'grepString':JSON.stringify(saveData)
+					},
+					type: 'post',
+					cache: false,
+					dataType: 'json',
+					success: function(data) {
+						alert("同步成功！");
+					},
+					error: function() {
+						// view("异常！");    
+						alert("同步失败！");
+					}
+				});
+			})
+		</script>
+	</body>
+
+</html>

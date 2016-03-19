@@ -52,6 +52,11 @@ public class Constants {
     public static class UserNameAlreadyExistException extends RuntimeException {
     }
 
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "保存失败")
+    public static class SaveException extends RuntimeException {
+    }
+
+
 
     public static final String GROUP_YINGCHAO = "英超";
     public static final String GROUP_XIJIA = "西甲";

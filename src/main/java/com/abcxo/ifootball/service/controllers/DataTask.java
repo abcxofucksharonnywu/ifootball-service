@@ -35,13 +35,13 @@ public class DataTask {
     public DataRepo dataRepo;
 
 
-    //直播
-    @Scheduled(fixedDelay = 24 * 60 * 60 * 1000, initialDelay = 2 * 60 * 1000)
-    public void runInit() {
-        dataRepo.deleteAll();
-        runInitInDongqiudi();
-
-    }
+//    //直播
+//    @Scheduled(fixedDelay = 24 * 60 * 60 * 1000, initialDelay = 2 * 60 * 1000)
+//    public void runInit() {
+//        dataRepo.deleteAll();
+//        runInitInDongqiudi();
+//
+//    }
 
     public void runInitInDongqiudi() {
         List<Data> datas = runGrepDatasInDongqiudi();
