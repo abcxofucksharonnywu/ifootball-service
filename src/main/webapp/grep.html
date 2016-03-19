@@ -50,7 +50,7 @@
 		</div>
 
 		<script>
-			var ajaxUrl = '/ifootball/tweet/grep'
+			var ajaxUrl = 'http://localhost:8080/tweet/grep'
 			function add(text) {
 				var tpl = '<tr>\
 						<td class="text" style="word-break: break-all;">$text</td>\
@@ -72,17 +72,7 @@
 				type: 'get',
 				cache: false,
 				success: function(data) {
-					$("#input").attr("disabled","false")
-					$("#add").attr("disabled","false")
-					$("#save").attr("disabled","false")
-					alert(data);
-//					var data = [
-//						'http://weibo.com/chelseafc?refer_flag=aa',
-//						'http://weibo.com/chelseafc?refer_flag=333',
-//						'http://weibo.com/chelseafc?refer_flag=66',
-//						'http://weibo.com/chelseafc?refer_flag=eeee',
-//						'http://weibo.com/chelseafc?refer_flag=ergeg'
-//					]
+					console.log(data);
 //					for (var i = 0; i < data.length; i++) {
 //						add(data[i])
 //					}
