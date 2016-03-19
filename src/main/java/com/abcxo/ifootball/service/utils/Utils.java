@@ -41,7 +41,7 @@ public class Utils {
 
     private static UserRepo userRepo;
 
-    private static String grepPath = "src/main/webapp/grep.json";
+    private static String grepPath = "/src/main/webapp/grep.json";
 
     @Autowired
     public void setUserRepo(UserRepo userRepo) {
@@ -278,19 +278,19 @@ public class Utils {
 
     public static String getGrepString() {
         try {
-            InputStream is = new FileInputStream(grepPath);
+            InputStream is = new FileInputStream(new File("").getCanonicalPath()+grepPath);
             String result = IOUtils.toString(is);
             return result;
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         return null;
     }
 
     public static boolean saveGrepString(String grepString) {
         try {
-            File file = new File(grepPath);
+            File file = new File(new File("").getCanonicalPath()+grepPath);
             if (!file.exists()) {
                 file.createNewFile();
             }
