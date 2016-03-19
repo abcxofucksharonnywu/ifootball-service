@@ -423,15 +423,20 @@ public class TweetTask {
     public void runInitCustom() {
         System.out.println("tweet runInitCustom " + " begin");
         List<Tweet> tweets = new ArrayList<>();
-        JSONArray json = new JSONArray(Utils.getGrepString());
-        if (json != null) {
-            for (int i = 0; i < json.length(); i++) {
-                String url = json.getString(i);
-                if (!StringUtils.isEmpty(url)) {
-                    tweets.addAll(runGrepInWeibo(Constants.NEWS_HUABIAN, url));
+        try {
+            JSONArray json = new JSONArray(Utils.getGrepString());
+            if (json != null) {
+                for (int i = 0; i < json.length(); i++) {
+                    String url = json.getString(i);
+                    if (!StringUtils.isEmpty(url)) {
+                        tweets.addAll(runGrepInWeibo(Constants.NEWS_HUABIAN, url));
+                    }
                 }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         System.out.println("tweet runInitCustom " + tweets.size());
 
 
