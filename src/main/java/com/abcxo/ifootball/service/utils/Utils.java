@@ -41,7 +41,7 @@ public class Utils {
 
     private static UserRepo userRepo;
 
-    private static String grepPath = "grep.json";
+    private static String grepPath = "/opt/tomcat/webapp/ifootball/grep.json";
 
     @Autowired
     public void setUserRepo(UserRepo userRepo) {
