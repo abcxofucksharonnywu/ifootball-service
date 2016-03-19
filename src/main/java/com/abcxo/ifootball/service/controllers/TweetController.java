@@ -341,5 +341,10 @@ public class TweetController {
         }
     }
 
+    @RequestMapping(value = "/tweet/grep", method = RequestMethod.GET)
+    public String getGrep() {
+        return Utils.getGrepString();
+    }
+
 
 }

@@ -50,6 +50,7 @@
 		</div>
 
 		<script>
+			var ajaxUrl = 'http://127.0.0.1:8080/ifootball/tweet/grep'
 			function add(text) {
 				var tpl = '<tr>\
 						<td class="text" style="word-break: break-all;">$text</td>\
@@ -66,19 +67,36 @@
 					alert('请输入有效链接');
 				}
 			}
-			var data = [
-				'http://weibo.com/chelseafc?refer_flag=aa',
-				'http://weibo.com/chelseafc?refer_flag=333',
-				'http://weibo.com/chelseafc?refer_flag=66',
-				'http://weibo.com/chelseafc?refer_flag=eeee',
-				'http://weibo.com/chelseafc?refer_flag=ergeg'
-			]
-			for (var i = 0; i < data.length; i++) {
-				add(data[i])
-			}
-			$('#add').click(function() {
-				add($('#input').val())
-			})
+			$.ajax({
+				url: ajaxUrl, // 跳转到 action    
+				type: 'get',
+				cache: false,
+				success: function(data) {
+					$("#input").attr("disabled","false")
+					$("#add").attr("disabled","false")
+					$("#save").attr("disabled","false")
+					alert(data);
+//					var data = [
+//						'http://weibo.com/chelseafc?refer_flag=aa',
+//						'http://weibo.com/chelseafc?refer_flag=333',
+//						'http://weibo.com/chelseafc?refer_flag=66',
+//						'http://weibo.com/chelseafc?refer_flag=eeee',
+//						'http://weibo.com/chelseafc?refer_flag=ergeg'
+//					]
+//					for (var i = 0; i < data.length; i++) {
+//						add(data[i])
+//					}
+				},
+				error: function() {
+					// view("异常！");    
+					$("#input").attr("disabled","true")
+					$("#add").attr("disabled","true")
+					$("#save").attr("disabled","true")
+					alert("无法获取抓取配置，请刷新！");
+					
+				}
+			});
+			
 			$('#add').click(function() {
 				add($('#input').val())
 			})
@@ -92,10 +110,10 @@
 					}
 				}
 				alert(saveData)
-				var aj = $.ajax({
-					url: 'http://localhost:8080/ifootball/tweet/grep', // 跳转到 action    
+				$.ajax({
+					url: ajaxUrl, // 跳转到 action    
 					data: {
-						'grepString':JSON.stringify(saveData)
+						'grepString': JSON.stringify(saveData)
 					},
 					type: 'post',
 					cache: false,
