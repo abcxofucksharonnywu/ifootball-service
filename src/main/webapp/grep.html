@@ -73,9 +73,10 @@
 				cache: false,
 				success: function(data) {
 					console.log(data);
-//					for (var i = 0; i < data.length; i++) {
-//						add(data[i])
-//					}
+					var urls = eval(data);
+					for (var i = 0; i < urls.length; i++) {
+						add(data[i])
+					}
 				},
 				error: function() {
 					// view("异常！");    
@@ -99,7 +100,7 @@
 						saveData.push(val)
 					}
 				}
-				alert(saveData)
+				console.log(saveData)
 				$.ajax({
 					url: ajaxUrl, // 跳转到 action    
 					data: {
