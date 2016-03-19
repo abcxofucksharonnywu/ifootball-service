@@ -334,11 +334,12 @@ public class TweetController {
     }
 
     @RequestMapping(value = "/tweet/grep", method = RequestMethod.POST)
-    public void grep(@RequestParam("grepString") String grepString) {
+    public String grep(@RequestParam("grepString") String grepString) {
         boolean isSuc = Utils.saveGrepString(grepString);
         if (!isSuc) {
             throw new Constants.SaveException();
         }
+        return grepString;
     }
 
     @RequestMapping(value = "/tweet/grep", method = RequestMethod.GET)
