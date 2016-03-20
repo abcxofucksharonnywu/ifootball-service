@@ -170,7 +170,7 @@
 				$.ajax({
 					url: ajaxUrl, // 跳转到 action    
 					data: {
-						'grepString': encodeURI(encodeURI(JSON.stringify(saveData)))
+						'grepString': escape(JSON.stringify(saveData))
 					},
 					type: 'post',
 					cache: false,
