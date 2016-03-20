@@ -123,7 +123,6 @@
 					alert("无法获取抓取配置，请刷新！");
 				}
 			});
-
 			//获取绑定用户userNames
 			$.ajax({
 				url: userUrl, // 跳转到 action    
@@ -161,16 +160,16 @@
 					var user = $(list[i]).children(".user").text()
 					var url = $(list[i]).children(".url").text()
 					var obj = {
-						"name": name,
-						"user": user,
-						"url": url
+						"name": encodeURI(name),
+						"user": encodeURI(user),
+						"url": encodeURI(url)
 					}
 					saveData.push(obj)
 				}
 				$.ajax({
 					url: ajaxUrl, // 跳转到 action    
 					data: {
-						'grepString': escape(JSON.stringify(saveData))
+						'grepString': JSON.stringify(saveData)
 					},
 					type: 'post',
 					cache: false,
