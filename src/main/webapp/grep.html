@@ -160,9 +160,9 @@
 					var user = $(list[i]).children(".user").text()
 					var url = $(list[i]).children(".url").text()
 					var obj = {
-						"name": encodeURI(name),
-						"user": encodeURI(user),
-						"url": encodeURI(url)
+						"name": encodeURI(encodeURI(name)),
+						"user": encodeURI(encodeURI(user)),
+						"url": encodeURI(encodeURI(url))
 					}
 					saveData.push(obj)
 				}
