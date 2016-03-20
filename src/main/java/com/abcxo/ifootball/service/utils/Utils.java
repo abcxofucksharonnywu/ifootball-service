@@ -13,7 +13,6 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
-import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -277,11 +276,18 @@ public class Utils {
     }
 
     public static String getGrepString() {
-        try {
-            InputStream is = new FileInputStream(grepPath);
-            String result = IOUtils.toString(is);
-            return result;
 
+        try {
+            String result = ""; // 文件很长的话建议使用StringBuffer
+            FileInputStream fis = new FileInputStream(grepPath);
+            InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+            BufferedReader br = new BufferedReader(isr);
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                result += line;
+                result += "\r\n"; // 补上换行符
+            }
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
         }
