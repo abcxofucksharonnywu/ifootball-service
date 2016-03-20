@@ -14,6 +14,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.util.Cookie;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -427,9 +428,10 @@ public class TweetTask {
             JSONArray json = new JSONArray(Utils.getGrepString());
             if (json != null) {
                 for (int i = 0; i < json.length(); i++) {
-                    String url = json.getString(i);
+                    JSONObject object = json.optJSONObject(i);
+                    String url = object.optString("url");
                     if (!StringUtils.isEmpty(url)) {
-                        tweets.addAll(runGrepInWeibo(Constants.NEWS_HUABIAN, url));
+                        tweets.addAll(runGrepInWeibo(object.optString("user"), url));
                     }
                 }
             }

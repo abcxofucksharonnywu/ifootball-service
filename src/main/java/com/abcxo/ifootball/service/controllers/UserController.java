@@ -16,6 +16,7 @@ import com.abcxo.ifootball.service.utils.Constants.UserNotFoundException;
 import com.abcxo.ifootball.service.utils.Constants.UserValidateException;
 import com.abcxo.ifootball.service.utils.Utils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -396,6 +397,13 @@ public class UserController {
         return users;
     }
 
+
+    @RequestMapping(value = "/user/open/list", method = RequestMethod.GET)
+    public String getOpenUserNames() {
+        List<User> users = userRepo.findByUserTypeNot(User.UserType.NORMAL);
+        List<String> names = users.stream().map(User::getName).collect(Collectors.toList());
+        return new JSONArray(names).toString();
+    }
 
 }
 

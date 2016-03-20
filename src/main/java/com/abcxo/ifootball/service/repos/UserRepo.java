@@ -30,5 +30,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     List<User> findByUserType(User.UserType userType);
 
+    List<User> findByUserTypeNot(User.UserType userType);
+
     Page<User> findByNameLikeIgnoreCaseOrSignLikeIgnoreCase(String name,String sign, Pageable pageable);
 }

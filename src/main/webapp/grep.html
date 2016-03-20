@@ -26,8 +26,21 @@
 	<body>
 		<div class="content">
 			<h3>添加抓取的微博地址 <span class="label label-default">New</span></h3>
-			<div class="input-group group">
-				<input id='input' type="text" class="form-control" placeholder="http://weibo.com/chelseafc">
+			<input id='name' type="text" class="form-control" placeholder="输入地址昵称" style="margin-top: 20px;">
+			<div class="input-group" style="margin-top: 20px;">
+				<input id='user' type="text" class="form-control" placeholder="输入绑定的帐号用户名">
+				<div class="input-group-btn">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">选择绑定帐号 <span class="caret"></span></button>
+					<ul id='users' class="dropdown-menu dropdown-menu-right">
+
+					</ul>
+				</div>
+				<!-- /btn-group -->
+			</div>
+			<!-- /input-group -->
+
+			<div class="input-group group" style="margin-top: 20px;">
+				<input id='url' type="text" class="form-control" placeholder="http://weibo.com/chelseafc">
 				<span class="input-group-btn"><button  id="add" class="btn btn-default" type="button">新增</button>
 					<button id ='save' type="button" class="btn btn-primary">
 				同步到服务器
@@ -37,36 +50,59 @@
 
 			</div>
 
-			<table class="list">
+			<table class="list" style="margin-top: 44px;">
 				<tbody id='body'>
 					<tr>
-						<th style="width: 80%;">
+						<th style="width: 100px;">
+							地址昵称
 						</th>
-						<th style="width: 20%;">
+						<th style="width: 100px;">
+							绑定帐号
+						</th>
+						<th>
+							抓取url
+						</th>
+						<th style="width: 60px;">
 						</th>
 					</tr>
+
 				</tbody>
 			</table>
 		</div>
 
 		<script>
 			var ajaxUrl = '/ifootball/tweet/grep'
-			function add(text) {
-				var tpl = '<tr>\
-						<td class="text" style="word-break: break-all;">$text</td>\
-						<td style="text-align: right;"><a class="del">删除</a></td>\
+			var userUrl = '/ifootball/user/open/list'
+
+			function add(name, user, url) {
+				var tpl = '<tr class="item">\
+						<td class="name" style="word-break: break-all;">$name</td>\
+						<td class="user" style="word-break: break-all;">$user</td>\
+						<td class="url" style="word-break: break-all;">$url</td>\
+						<td class="del" style="text-align: right;"><a>删除</a></td>\
 					</tr>'
-				if (text.indexOf("http://") > -1 || text.indexOf("https://") > -1) {
-					var result = tpl.replace('$text', text)
+				if (name.length > 0 && user.length > 0 && url.length > 0 && (url.indexOf("http://") > -1 || url.indexOf("https://") > -1)) {
+					var result = tpl.replace('$name', name).replace('$user', user).replace('$url', url)
 					var tag = $(result);
-					$(body).append(tag)
-					tag.click(function() {
+					$("#body").append(tag)
+					$(tag).children(".del").click(function() {
 						tag.remove()
 					})
-				} else {
-					alert('请输入有效链接');
 				}
 			}
+
+			function addName(name) {
+				var tpl = '<li><a href="#">$name</a></li>'
+				if (name.length > -1) {
+					var result = tpl.replace('$name', name)
+					var tag = $(result);
+					$('#users').append(tag)
+					tag.click(function() {
+						$('#user').attr('value', tag.text());
+					})
+				}
+			}
+			//获取地址列表
 			$.ajax({
 				url: ajaxUrl, // 跳转到 action    
 				type: 'get',
@@ -75,30 +111,61 @@
 					console.log(data);
 					var urls = eval(data);
 					for (var i = 0; i < urls.length; i++) {
-						add(urls[i])
+						var obj = urls[i];
+						add(obj.name, obj.user, obj.url)
 					}
 				},
 				error: function() {
 					// view("异常！");    
-					$("#input").attr("disabled","true")
-					$("#add").attr("disabled","true")
-					$("#save").attr("disabled","true")
+					$("#input").attr("disabled", "true")
+					$("#add").attr("disabled", "true")
+					$("#save").attr("disabled", "true")
 					alert("无法获取抓取配置，请刷新！");
-					
 				}
 			});
-			
+
+			//获取绑定用户userNames
+			$.ajax({
+				url: userUrl, // 跳转到 action    
+				type: 'get',
+				cache: false,
+				success: function(data) {
+					console.log(data);
+					var names = eval(data);
+					for (var i = 0; i < names.length; i++) {
+						addName(names[i])
+					}
+				},
+				error: function() {
+					alert("无法获取绑定帐号列表");
+				}
+			});
+			//新增url
 			$('#add').click(function() {
-				add($('#input').val())
-			})
+					var name = $('#name').val()
+					var user = $('#user').val()
+					var url = $('#url').val()
+					if (name.length > 0 && user.length > 0 && url.length > 0) {
+						add(name, user, url)
+					} else {
+						alert('请确认输入了地址昵称，绑定帐号和合法的url')
+					}
+				})
+				//上传配置
 			$('#save').click(function() {
-				var list = $('.text')
+				var list = $('.item')
 				var saveData = [];
 				for (var i = 0; i < list.length; i++) {
-					var val = $.text(list[i])
-					if (val.length > 0) {
-						saveData.push(val)
+					var item = list[i]
+					var name = $(list[i]).children(".name").text()
+					var user = $(list[i]).children(".user").text()
+					var url = $(list[i]).children(".url").text()
+					var obj = {
+						"name": name,
+						"user": user,
+						"url": url
 					}
+					saveData.push(obj)
 				}
 				$.ajax({
 					url: ajaxUrl, // 跳转到 action    
