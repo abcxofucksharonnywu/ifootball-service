@@ -294,11 +294,10 @@ public class Utils {
             if (!file.exists()) {
                 file.createNewFile();
             }
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(grepString);
-            bw.close();
-            System.out.println("Done");
+            FileOutputStream fos = new FileOutputStream(grepPath);
+            OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
+            osw.write(grepString);
+            osw.flush();
             return true;
 
         } catch (IOException e) {
