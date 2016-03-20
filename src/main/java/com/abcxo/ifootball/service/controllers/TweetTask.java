@@ -429,13 +429,14 @@ public class TweetTask {
             if (json != null) {
                 for (int i = 0; i < json.length(); i++) {
                     JSONObject object = json.optJSONObject(i);
+                    String user = object.optString("user");
                     String url = object.optString("url");
                     if (!StringUtils.isEmpty(url)) {
-                        tweets.addAll(runGrepInWeibo(object.optString("user"), url));
+                        tweets.addAll(runGrepInWeibo(user, url));
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -831,7 +832,8 @@ public class TweetTask {
                                 tweet.setSource(source);
                                 tweet.setDate(Long.valueOf(date));
                                 tweet.setTime(Utils.getTime(tweet.getDate()));
-                                tweet.setTweetType(Tweet.TweetType.TEAM);
+                                tweet.setTweetType(Tweet.TweetType.valueOf(user.getUserType().name()));
+
                                 tweet = tweetRepo.saveAndFlush(tweet);
 
                                 UserTweet userTweet = new UserTweet();
