@@ -36,4 +36,9 @@ public interface MessageRepo extends JpaRepository<Message, Long> {
     @Modifying
     @Transactional
     void deleteByTid(long tid);
+
+
+    @Modifying
+    @Transactional
+    void deleteByUidInAndUid2InAndMessageType(List<Long> uids, List<Long> uid2s, Message.MessageType messageType);
 }

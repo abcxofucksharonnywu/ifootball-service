@@ -123,4 +123,18 @@ public class MessageController {
     }
 
 
+    @RequestMapping(value = "/message", method = RequestMethod.DELETE)
+    public void delete(@RequestParam("mid") long mid) {
+        Message message = messageRepo.findOne(mid);
+        if (message != null) {
+            List<Long> uids = Arrays.asList(message.getUid(), message.getUid2());
+            if (message.getMessageType() == Message.MessageType.CHAT_GROUP) {
+                messageRepo.deleteByUidInAndUid2InAndMessageType(uids, uids, Message.MessageType.CHAT);
+            }
+            messageRepo.delete(mid);
+        }
+
+    }
+
+
 }
