@@ -84,7 +84,7 @@ public class DataTask {
                         element.select("th[class=top_2]").remove();
                         element.select("th[class=prev]").remove();
                         element.select("th[class=next]").remove();
-                        element.select("th[id=newShduleTitle]").attr("colspan", "10");
+                        element.select("th[id=schedule_title]").attr("colspan", "10");
 
                         Data data = new Data();
                         data.setName(key);
