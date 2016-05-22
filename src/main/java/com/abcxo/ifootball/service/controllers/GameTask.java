@@ -49,7 +49,7 @@ public class GameTask {
     public static List<String> TEAMS = Arrays.asList("巴塞罗那", "曼城", "阿森纳", "曼联", "皇家马德里", "罗马", "AC米兰", "巴列卡诺", "国际米兰", "那不勒斯", "切尔西", "热刺", "马德里竞技", "尤文图斯", "本菲卡", "利物浦", "拜仁慕尼黑", "多特蒙德", "巴黎圣日耳曼", "北京国安", "广州恒大", "上海上港", "山东鲁能");
 
     //直播
-    @Scheduled(fixedDelay = 4 * 60 * 60 * 1000, initialDelay = 6 * 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 60 * 1000, initialDelay = 6 * 60 * 1000)
     public void runInit() {
         gameRepo.deleteAll();
         runInitInDongqiudi();
