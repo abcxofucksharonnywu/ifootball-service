@@ -65,7 +65,7 @@ public class DataTask {
             Map<String, String> categories = new HashMap<>();
             categories.put("积分榜", "team_rank");
             categories.put("射手榜", "goal_rank");
-            categories.put("助攻版", "assist_rank");
+            categories.put("助攻榜", "assist_rank");
             categories.put("赛程表", "schedule");
             for (Map.Entry<String, String> entry : leagues.entrySet()) {
                 String key = entry.getKey();
