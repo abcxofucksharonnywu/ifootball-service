@@ -43,7 +43,7 @@ public class TweetTask {
 
 
     //视频新闻
-    @Scheduled(fixedDelay = 4 * 60 * 60 * 1000, initialDelay = 8 * 60 * 1000)
+    @Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 8 * 60 * 1000)
     public void runInitInVideo() {
         System.out.println("tweet runInitInVideo " + " begin");
         runGrepPublicInDongqiudi();
@@ -53,7 +53,7 @@ public class TweetTask {
 
 
     //花边新闻
-    @Scheduled(fixedDelay = 4 * 40 * 60 * 1000, initialDelay = 10 * 60 * 1000)
+    @Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 10 * 60 * 1000)
     public void runInitInHuabian() {
         System.out.println("tweet runInitInHuabian " + " begin");
         runGrepHuabianInTencent();
