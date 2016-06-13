@@ -411,7 +411,7 @@ public class TweetTask {
                         Element imgEL = element.getElementsByTag("img").first();
                         String image = imgEL.attr("src");
                         String title = imgEL.attr("alt");
-                        String url = "http://www.dongqiudi.com/share" + imgEL.parent().attr("href");
+                        String url = "http://www.dongqiudi.com" + imgEL.parent().attr("href");
                         Document content = Utils.getDocument(url);
                         Element contentEL = content.getElementsByClass("con").get(0);
                         String time = content.getElementsByClass("time").first().text();
