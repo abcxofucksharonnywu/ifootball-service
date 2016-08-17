@@ -413,7 +413,7 @@ public class TweetTask {
                         String title = imgEL.attr("alt");
                         String url = "http://www.dongqiudi.com" + imgEL.parent().attr("href");
                         Document content = Utils.getDocument(url);
-                        Element contentEL = content.getElementsByClass("detail").get(0).getElementsByTag("div").first();
+                        Element contentEL = content.select("div.detail > div").get(0);
                         String time = content.getElementsByClass("time").first().text();
                         String text = contentEL.text().trim();
                         if (tweetRepo.findByTitle(title).size() == 0) {
