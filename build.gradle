@@ -32,7 +32,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-mail")
-    compile("mysql:mysql-connector-java")
+//    compile("mysql:mysql-connector-java")
     compile("com.h2database:h2")
     compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile 'com.qiniu:qiniu-java-sdk:7.0.+'
@@ -41,7 +41,7 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.3.5'
     compile 'com.belerweb:pinyin4j:2.5.0'
     compile 'net.sourceforge.htmlunit:htmlunit:2.19'
-    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+//    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
 
 

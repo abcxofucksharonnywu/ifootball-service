@@ -12,13 +12,13 @@
 				padding: 44px;
 				width: 70%;
 			}
-			
+
 			.list {
 				width: 100%;
 				margin-top: 20px;
 				margin-bottom: 20px;
 			}
-			
+
 			.item {}
 		</style>
 	</head>
@@ -104,7 +104,7 @@
 			}
 			//获取地址列表
 			$.ajax({
-				url: ajaxUrl, // 跳转到 action    
+				url: ajaxUrl, // 跳转到 action
 				type: 'get',
 				cache: false,
 				success: function(data) {
@@ -116,7 +116,7 @@
 					}
 				},
 				error: function() {
-					// view("异常！");    
+					// view("异常！");
 					$("#input").attr("disabled", "true")
 					$("#add").attr("disabled", "true")
 					$("#save").attr("disabled", "true")
@@ -125,7 +125,7 @@
 			});
 			//获取绑定用户userNames
 			$.ajax({
-				url: userUrl, // 跳转到 action    
+				url: userUrl, // 跳转到 action
 				type: 'get',
 				cache: false,
 				success: function(data) {
@@ -167,7 +167,7 @@
 					saveData.push(obj)
 				}
 				$.ajax({
-					url: ajaxUrl, // 跳转到 action    
+					url: ajaxUrl, // 跳转到 action
 					data: {
 						'grepString': JSON.stringify(saveData)
 					},
@@ -178,7 +178,7 @@
 						alert("同步成功！");
 					},
 					error: function() {
-						// view("异常！");    
+						// view("异常！");
 						alert("同步失败！");
 					}
 				});
