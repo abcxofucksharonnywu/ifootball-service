@@ -135,30 +135,31 @@ public class UserTask implements ApplicationListener<ContextRefreshedEvent> {
 
     private List<User> runGrepTeam(String groupName, String url) {
         List<User> users = new ArrayList<>();
-        try {
-            String host = String.format("http://www.dongqiudi.com/data?competition=%s&type=trank", url);
-            Document root = Utils.getDocument(host);
-            Elements list = root.select("td.team");
-            for (Element element : list) {
-                Element imgEL = element.getElementsByTag("img").first();
-                String name = imgEL.attr("alt");
-                String img = imgEL.attr("src");
-                User user = new User();
-                user.setGroupName(groupName);
-                user.setEmail(String.format("%s@ifootball.com", name));
-                user.setName(name);
-                user.setSign("官方球队帐号");
-                user.setAvatar(img);
-                user.setCover("http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg");
-                user.setGender(User.GenderType.MALE);
-                user.setUserType(User.UserType.TEAM);
-                userRepo.saveAndFlush(user);
-                users.add(user);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //TODO:shadow
+//        try {
+//            String host = String.format("http://www.dongqiudi.com/data?competition=%s&type=trank", url);
+//            Document root = Utils.getDocument(host);
+//            Elements list = root.select("td.team");
+//            for (Element element : list) {
+//                Element imgEL = element.getElementsByTag("img").first();
+//                String name = imgEL.attr("alt");
+//                String img = imgEL.attr("src");
+//                User user = new User();
+//                user.setGroupName(groupName);
+//                user.setEmail(String.format("%s@ifootball.com", name));
+//                user.setName(name);
+//                user.setSign("官方球队帐号");
+//                user.setAvatar(img);
+//                user.setCover("http://img.izhuti.cn/public/picture/20140506012/1381373364545.jpg");
+//                user.setGender(User.GenderType.MALE);
+//                user.setUserType(User.UserType.TEAM);
+//                userRepo.saveAndFlush(user);
+//                users.add(user);
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return users;
     }
 
