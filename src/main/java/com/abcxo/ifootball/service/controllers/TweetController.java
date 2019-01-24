@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.abcxo.ifootball.service.models.Message.MessageType.COMMENT;
+
 /**
  * Created by shadow on 15/11/15.
  */
@@ -259,6 +261,10 @@ public class TweetController {
                     originTweet.setStar(userTweetRepo.findByUidAndTidAndUserTweetType(uid, originTweet.getId(), UserTweet.UserTweetType.STAR) != null);
                     tweet.setOriginTweet(originTweet);
                 }
+                //获取评论
+                PageRequest messageReq = new PageRequest(0, 30, Sort.Direction.DESC, "date");
+                Page<Message> messages = messageRepo.findByTidAndMessageType(tweet.getId(),COMMENT,messageReq);
+                tweet.setMessages(messages.getContent());
             }
             return tweets.getContent();
         } else {
@@ -327,7 +333,7 @@ public class TweetController {
         userTweetRepo.saveAndFlush(userTweet);
 
 
-        message.setMessageType(Message.MessageType.COMMENT);
+        message.setMessageType(COMMENT);
         message.setTime(Utils.getTime());
         message.setDate(System.currentTimeMillis());
         Utils.message(messageRepo.saveAndFlush(message));

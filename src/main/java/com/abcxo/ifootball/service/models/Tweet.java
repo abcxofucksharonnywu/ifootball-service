@@ -5,6 +5,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * Created by SHARON on 15/10/29.
@@ -46,10 +47,18 @@ public class Tweet {
 
     @Transient
     private Tweet originTweet;
+
+    @Transient
+    private List<Message> messages;
+
     @Transient
     private boolean star;
 
+
+
     private long date;
+
+
 
 
     public long getId() {
@@ -206,6 +215,14 @@ public class Tweet {
 
     public void setOriginTweet(Tweet originTweet) {
         this.originTweet = originTweet;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 
     public boolean isStar() {
