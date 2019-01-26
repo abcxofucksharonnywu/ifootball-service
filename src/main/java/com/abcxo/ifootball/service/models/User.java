@@ -31,6 +31,7 @@ public class User {
     private double lat;
     private int focusCount;
     private int fansCount;
+    private int tweetCount;
 
     private GenderType gender = GenderType.MALE;
     private UserType userType = UserType.NORMAL;
@@ -164,6 +165,14 @@ public class User {
 
     public void setFansCount(int fansCount) {
         this.fansCount = fansCount;
+    }
+
+    public int getTweetCount() {
+        return tweetCount;
+    }
+
+    public void setTweetCount(int tweetCount) {
+        this.tweetCount = tweetCount;
     }
 
     public GenderType getGender() {

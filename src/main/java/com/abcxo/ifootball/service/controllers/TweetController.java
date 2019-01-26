@@ -52,6 +52,8 @@ public class TweetController {
         Tweet tweet = new Gson().fromJson(URLDecoder.decode(tweetJSON, "UTF8"), Tweet.class);
         long uid = tweet.getUid();
         User user = userRepo.findOne(uid);
+        user.setTweetCount(user.getTweetCount() + 1);
+        userRepo.saveAndFlush(user);
 
         if (user.getUserType() == User.UserType.SPECIAL && originTid > 0) {//超级用户
             Tweet t = tweetRepo.findOne(originTid);
@@ -172,11 +174,12 @@ public class TweetController {
     public enum GetsType {
 
         HOME(0),
-        TEAM(1),
-        VIDEO(2),
-        NEWS(3),
-        USER(4),
-        SEARCH(5);
+        PRO(1),
+        TEAM(2),
+        VIDEO(3),
+        NEWS(4),
+        USER(5),
+        SEARCH(6);
         private int index;
 
         GetsType(int index) {
@@ -204,7 +207,7 @@ public class TweetController {
         if (getsType != GetsType.VIDEO) {
             List<Long> uids = new ArrayList<>();
 
-            if (uid > 0 && (getsType == GetsType.HOME || getsType == GetsType.USER)) {
+            if (uid > 0 && (getsType == GetsType.HOME || getsType == GetsType.PRO || getsType == GetsType.USER)) {
                 uids.add(uid);
             }
             if (getsType != GetsType.USER) {
@@ -225,7 +228,7 @@ public class TweetController {
 
                 }
                 for (User user : users) {
-                    if (getsType == GetsType.HOME && (user.getUserType() == User.UserType.NORMAL ||
+                    if ((getsType == GetsType.HOME || getsType == GetsType.PRO) && (user.getUserType() == User.UserType.NORMAL ||
                             user.getUserType() == User.UserType.SPECIAL)) {
                         uids.add(user.getId());
                     } else if (getsType == GetsType.TEAM && user.getUserType() == User.UserType.TEAM) {
@@ -262,8 +265,8 @@ public class TweetController {
                     tweet.setOriginTweet(originTweet);
                 }
                 //获取评论
-                PageRequest messageReq = new PageRequest(0, 30, Sort.Direction.DESC, "date");
-                Page<Message> messages = messageRepo.findByTidAndMessageType(tweet.getId(),COMMENT,messageReq);
+                PageRequest messageReq = new PageRequest(0, 3, Sort.Direction.DESC, "date");
+                Page<Message> messages = messageRepo.findByTidAndMessageType(tweet.getId(), COMMENT, messageReq);
                 tweet.setMessages(messages.getContent());
             }
             return tweets.getContent();
@@ -276,6 +279,11 @@ public class TweetController {
 
     @RequestMapping(value = "/tweet", method = RequestMethod.DELETE)
     public void delete(@RequestParam("tid") long tid) {
+        Tweet tweet = tweetRepo.findOne(tid);
+        long uid = tweet.getUid();
+        User user = userRepo.findOne(uid);
+        user.setTweetCount(user.getTweetCount() - 1);
+        userRepo.saveAndFlush(user);
         messageRepo.deleteByTid(tid);
         tweetTweetRepo.deleteByTid(tid);
         userTweetRepo.deleteByTid(tid);
