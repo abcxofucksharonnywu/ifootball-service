@@ -1,0 +1,87 @@
+extends layout
+
+block content
+    link(rel='stylesheet', href='/stylesheets/showLoading.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js')
+    .header
+        img.logo(src='/images/logo.jpg')
+        .info
+            img.avatar(src='/images/avatar.png')
+            .name=name
+            .split |
+            .logout(@click='onLogout') 退出登录
+    .content
+        .rightPanel
+            .con
+    .dialog
+        .dialog-header
+        .dialog-content
+            .text.title
+            .text.des
+            .op-content
+                button.ok(@click="onOk") OK
+                button.cancel(@click="onCancel") Cancel
+    .toast.toast-error error
+
+
+    script.
+        var gVue;
+        $(document).ready(function () {
+            gVue = new Vue({
+                el: 'body',
+                data: {
+                    dialogCallback:null
+                },
+                methods: {
+                    showError: function (msg) {
+                        $(".toast-error").text(msg).fadeIn(500).delay(2000).fadeOut(1000);
+                    },
+                    showIndicator: function (str) {
+                        var target = $(str?str:'.rightPanel');
+                        target.showLoading();
+
+                    },
+                    hideIndicator: function (str) {
+                        var target = $(str?str:'.rightPanel');
+                        target.hideLoading();
+                    },
+                    showDialog: function (title,des,callback) {
+                        $(".dialog-content .title").text(title)
+                        $(".dialog-content .des").text(des)
+                        this.dialogCallback = callback;
+                        $(".dialog").fadeIn(200);
+                    },
+                    hideDialog: function () {
+                        $(".dialog-header").text("")
+                        this.dialogCallback = null;
+                        $(".dialog").fadeOut(200);
+                    },
+                    onOk:function () {
+                        if(this.dialogCallback){
+                            this.dialogCallback()
+                        }
+                        this.hideDialog()
+                    },
+                    onCancel:function () {
+                        this.hideDialog()
+                    },
+                    onLogout: function () {
+                        var vue = this;
+                        $.get('/api/user/logout', function (result) {
+                            if (result.code == 302) {
+                                window.location.href = result.url;
+                            } else {
+                                vue.showError(result.message)
+                            }
+                        });
+                    }
+                }
+            });
+            var E = window.wangEditor
+            var editor2 = new E('.con')
+            editor2.height = 600
+            editor2.create()
+        })
+
+

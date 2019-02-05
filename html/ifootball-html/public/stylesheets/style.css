@@ -1,0 +1,508 @@
+/* line 18, ../sass/common.scss */
+.toast {
+  z-index: 4;
+  display: none;
+  width: 200px;
+  height: auto;
+  position: fixed;
+  left: 50%;
+  margin-left: -100px;
+  bottom: 80px;
+  background-color: #000;
+  color: white;
+  font-size: 20px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 0 0 1px #E6E7E8;
+}
+
+/* line 35, ../sass/common.scss */
+.dialog {
+  top: 80px;
+  z-index: 3;
+  display: none;
+  width: 50%;
+  height: auto;
+  position: fixed;
+  left: 50%;
+  margin-left: -25%;
+  background-color: white;
+  color: white;
+  padding: 10px;
+  box-shadow: 0 0 20px 10px #E6E7E8;
+}
+/* line 48, ../sass/common.scss */
+.dialog .dialog-header {
+  cursor: pointer;
+  color: #20ABFF;
+}
+/* line 52, ../sass/common.scss */
+.dialog .dialog-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+/* line 56, ../sass/common.scss */
+.dialog .dialog-content .text {
+  color: #319AFF;
+  text-align: center;
+}
+/* line 60, ../sass/common.scss */
+.dialog .dialog-content .op-content {
+  display: flex;
+}
+/* line 62, ../sass/common.scss */
+.dialog .dialog-content .op-content .cancel {
+  background-color: #999;
+}
+/* line 66, ../sass/common.scss */
+.dialog .dialog-content button {
+  flex-grow: 1;
+  height: 40px;
+  outline: none !important;
+  border: none;
+  background-color: #319AFF;
+  margin: 40px 40px 0px;
+  color: white;
+  font-size: 16px;
+}
+/* line 75, ../sass/common.scss */
+.dialog .dialog-content button:active {
+  background-color: #3E50B4;
+}
+
+/* line 83, ../sass/common.scss */
+html {
+  height: 100%;
+}
+
+/* line 86, ../sass/common.scss */
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: tahoma,Century Schoolbook,Georgia,serif;
+  color: #000;
+  background-color: #eee;
+}
+/* line 93, ../sass/common.scss */
+body * {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* line 98, ../sass/common.scss */
+.header {
+  position: fixed;
+  padding: 0 40px;
+  height: 70px;
+  width: calc(100% - 80px);
+  background-color: white;
+  border-bottom: 1px solid #E4E5E6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+/* line 108, ../sass/common.scss */
+.header .logo {
+  height: 100%;
+}
+
+/* line 112, ../sass/common.scss */
+.content {
+  min-height: 100%;
+  width: 100%;
+}
+
+/* line 2, ../sass/style.scss */
+.info {
+  display: flex;
+}
+/* line 4, ../sass/style.scss */
+.info .avatar {
+  height: 20px;
+}
+/* line 7, ../sass/style.scss */
+.info .name {
+  margin-left: 10px;
+}
+/* line 10, ../sass/style.scss */
+.info .split {
+  margin-left: 20px;
+}
+/* line 13, ../sass/style.scss */
+.info .logout {
+  cursor: pointer;
+  margin-left: 20px;
+  color: #20ABFF;
+}
+
+/* line 20, ../sass/style.scss */
+.content {
+  padding-top: 70px;
+  display: flex;
+}
+/* line 23, ../sass/style.scss */
+.content .leftPanel {
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 0 20px;
+}
+/* line 29, ../sass/style.scss */
+.content .leftPanel .col {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 70px;
+  border-bottom: 1px solid #E4E5E6;
+  cursor: pointer;
+  color: #000;
+}
+/* line 38, ../sass/style.scss */
+.content .leftPanel .select {
+  color: #319AFF;
+}
+/* line 42, ../sass/style.scss */
+.content .rightPanel {
+  flex-grow: 2;
+  background-color: #eee;
+  padding: 10px;
+}
+/* line 46, ../sass/style.scss */
+.content .rightPanel .con {
+  background-color: white;
+  width: calc(100% - 20px);
+  height: 100%;
+  padding: 0px 10px;
+}
+/* line 52, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-title {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #E4E5E6;
+}
+/* line 59, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body {
+  margin: 0px 10px;
+}
+/* line 61, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation {
+  display: flex;
+  align-items: center;
+  height: 70px;
+  margin: 20px 0px;
+}
+/* line 66, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation .input-info {
+  margin-left: 20px;
+  font-size: 16px !important;
+  background-color: rgba(255, 255, 255, 0);
+  outline: none !important;
+  border: none;
+  border: 1px solid #E4E5E6;
+  height: 30px;
+  width: 182px;
+  color: #000;
+}
+/* line 76, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation .input-info::placeholder {
+  color: #999;
+}
+/* line 80, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation .label.staff {
+  margin-left: 20px;
+}
+/* line 83, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation .button-blue {
+  margin-left: 40px;
+  height: 30px;
+  width: 78px;
+  outline: none !important;
+  border: none;
+  background-color: #20ABFF;
+  color: white;
+  font-size: 16px;
+}
+/* line 92, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation .button-blue:active {
+  background-color: #444bff;
+}
+/* line 97, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation4 {
+  display: flex;
+  align-items: center;
+  height: auto;
+  margin: 20px 0px;
+}
+/* line 102, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation4 .input-info {
+  margin-left: 20px;
+  font-size: 16px !important;
+  background-color: rgba(255, 255, 255, 0);
+  outline: none !important;
+  border: none;
+  border: 1px solid #E4E5E6;
+  height: 30px;
+  width: 182px;
+  color: #000;
+}
+/* line 112, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation4 .input-info::placeholder {
+  color: #999;
+}
+/* line 118, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .button-blue {
+  height: 30px;
+  width: 78px;
+  outline: none !important;
+  border: none;
+  background-color: #20ABFF;
+  color: white;
+  font-size: 16px;
+}
+/* line 126, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .button-blue:active {
+  background-color: #444bff;
+}
+/* line 132, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation2 {
+  display: flex;
+  justify-content: flex-end;
+}
+/* line 135, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation2 .button-red {
+  height: 30px;
+  width: 100px;
+  outline: none !important;
+  border: none;
+  background-color: #319AFF;
+  color: white;
+  font-size: 16px;
+}
+/* line 143, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation2 .button-red:active {
+  background-color: #3E50B4;
+}
+/* line 148, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-content {
+  border: 1px solid #E4E5E6;
+  margin: 20px 0;
+  padding: 0;
+  list-style: none;
+}
+/* line 153, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-content li {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+/* line 157, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-content li .item {
+  margin: 10px;
+  text-align: center;
+  word-break: break-all;
+}
+/* line 163, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-content .th {
+  height: 30px;
+  background-color: #FFF6F8;
+}
+/* line 166, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-content .th .item {
+  flex-grow: 1;
+}
+/* line 170, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-content .tr {
+  border-top: 1px solid #E4E5E6;
+  min-height: 30px;
+}
+/* line 173, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-content .tr .action-edit {
+  cursor: pointer;
+  color: #20ABFF;
+}
+/* line 176, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-content .tr .action-edit:active {
+  color: #444bff;
+}
+/* line 183, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation3 {
+  display: flex;
+  justify-content: flex-end;
+  height: 70px;
+  align-items: center;
+}
+/* line 188, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation3 .leftRight {
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+  border: 1px solid #E4E5E6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* line 197, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation3 .label {
+  margin: 0 10px;
+}
+/* line 200, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation3 .input-index {
+  margin-left: 10px;
+  font-size: 16px !important;
+  background-color: rgba(255, 255, 255, 0);
+  outline: none !important;
+  border: none;
+  border: 1px solid #E4E5E6;
+  height: 30px;
+  width: 60px;
+  color: #000;
+}
+/* line 210, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation3 .input-index::placeholder {
+  color: #999;
+}
+/* line 214, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation3 .button-jump {
+  margin-left: 20px;
+  height: 30px;
+  width: 78px;
+  outline: none !important;
+  border: none;
+  background-color: #eee;
+  color: #000;
+  font-size: 16px;
+}
+/* line 223, ../sass/style.scss */
+.content .rightPanel .con .con-sub .con-body .con-operation3 .button-jump:active {
+  background-color: #999;
+}
+/* line 233, ../sass/style.scss */
+.content .rightPanel .con .con-order .start {
+  margin-left: 20px;
+}
+/* line 236, ../sass/style.scss */
+.content .rightPanel .con .con-order .end {
+  margin-left: 20px;
+}
+/* line 239, ../sass/style.scss */
+.content .rightPanel .con .con-order .input-info {
+  width: 160px !important;
+}
+/* line 242, ../sass/style.scss */
+.content .rightPanel .con .con-order .input-date {
+  margin-left: 20px;
+  font-size: 16px !important;
+  background-color: rgba(255, 255, 255, 0);
+  outline: none !important;
+  border: none;
+  border: 1px solid #E4E5E6;
+  height: 30px;
+  width: 160px;
+  color: #000;
+}
+/* line 252, ../sass/style.scss */
+.content .rightPanel .con .con-order .input-date::placeholder {
+  color: #999;
+}
+/* line 256, ../sass/style.scss */
+.content .rightPanel .con .con-order .button-yellow {
+  height: 30px;
+  width: 100px;
+  outline: none !important;
+  border: none;
+  background-color: #FFBA57;
+  color: white;
+  font-size: 16px;
+}
+/* line 264, ../sass/style.scss */
+.content .rightPanel .con .con-order .button-yellow:active {
+  background-color: #ff7c29;
+}
+
+/* line 276, ../sass/style.scss */
+.popup {
+  overflow: scroll;
+  max-height: calc(100% - 160px);
+  top: 80px;
+  z-index: 3;
+  display: none;
+  width: 50%;
+  height: auto;
+  position: fixed;
+  left: 50%;
+  margin-left: -25%;
+  background-color: white;
+  color: white;
+  padding: 10px;
+  box-shadow: 0 0 20px 10px #E6E7E8;
+}
+/* line 291, ../sass/style.scss */
+.popup .popup-header {
+  cursor: pointer;
+  color: #20ABFF;
+}
+/* line 295, ../sass/style.scss */
+.popup .popup-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+/* line 299, ../sass/style.scss */
+.popup .popup-content .op-content {
+  display: flex;
+}
+/* line 301, ../sass/style.scss */
+.popup .popup-content .op-content .delete {
+  background-color: #999;
+}
+/* line 305, ../sass/style.scss */
+.popup .popup-content .avatar {
+  width: 60px;
+  height: 60px;
+  margin-left: calc(50% - 30px);
+  border-radius: 30px;
+  object-fit: cover;
+}
+/* line 312, ../sass/style.scss */
+.popup .popup-content input {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  background-color: rgba(255, 255, 255, 0);
+  outline: none !important;
+  border: none;
+  border-bottom: 1px solid #E4E5E6;
+  height: 40px;
+  margin: 20px 40px 0px;
+  color: #000;
+}
+/* line 322, ../sass/style.scss */
+.popup .popup-content input::placeholder {
+  color: #999;
+}
+/* line 325, ../sass/style.scss */
+.popup .popup-content input:active, .popup .popup-content input:focus {
+  border-color: #000;
+}
+/* line 329, ../sass/style.scss */
+.popup .popup-content input:disabled {
+  color: #999;
+}
+/* line 333, ../sass/style.scss */
+.popup .popup-content button {
+  flex-grow: 1;
+  height: 40px;
+  outline: none !important;
+  border: none;
+  background-color: #319AFF;
+  margin: 40px 40px 0px;
+  color: white;
+  font-size: 16px;
+}
+/* line 342, ../sass/style.scss */
+.popup .popup-content button:active {
+  background-color: #3E50B4;
+}

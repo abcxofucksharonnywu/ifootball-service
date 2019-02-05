@@ -1,0 +1,101 @@
+/* line 9, ../sass/common.scss */
+.toast {
+  z-index: 3;
+  display: none;
+  width: 200px;
+  height: auto;
+  position: fixed;
+  left: 50%;
+  margin-left: -100px;
+  bottom: 80px;
+  background-color: #666;
+  color: white;
+  font-size: 20px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 0 0 1px #E6E7E8;
+}
+
+/* line 27, ../sass/common.scss */
+html {
+  height: 100%;
+}
+
+/* line 30, ../sass/common.scss */
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: tahoma,Century Schoolbook,Georgia,serif;
+  font-weight: 600 !important;
+  color: #666;
+  background-color: #eee;
+}
+/* line 37, ../sass/common.scss */
+body * {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* line 41, ../sass/common.scss */
+.header {
+  position: fixed;
+  height: 70px;
+  width: 100%;
+  background-color: white;
+}
+/* line 46, ../sass/common.scss */
+.header .logo {
+  margin-left: 35px;
+  height: 100%;
+}
+
+/* line 51, ../sass/common.scss */
+.content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* line 57, ../sass/common.scss */
+.content .panel {
+  background-color: white;
+  width: 400px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+/* line 63, ../sass/common.scss */
+.content .panel input {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  background-color: rgba(255, 255, 255, 0);
+  outline: none !important;
+  border: none;
+  border-bottom: 1px solid #E4E5E6;
+  height: 40px;
+  margin: 40px 40px 0px;
+  color: #666;
+}
+/* line 73, ../sass/common.scss */
+.content .panel input::placeholder {
+  color: #999;
+}
+/* line 76, ../sass/common.scss */
+.content .panel input:active, .content .panel input:focus {
+  border-color: #666;
+}
+/* line 80, ../sass/common.scss */
+.content .panel .login {
+  height: 40px;
+  outline: none !important;
+  border: none;
+  background-color: #C50B28;
+  margin: 40px 40px 0px;
+  color: white;
+  font-size: 16px;
+}
+/* line 88, ../sass/common.scss */
+.content .panel .login:active {
+  background-color: #B10318;
+}

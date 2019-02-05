@@ -1,0 +1,46 @@
+extends layout
+block content
+  link(rel='stylesheet', href='/stylesheets/login.css')
+  .header
+    img.logo(src='/images/logo.jpg')
+  .content
+    .panel
+      input.name(placeholder="邮箱",v-model="name")
+      input.password(placeholder="密码",type="password",v-model="password")
+      button.login(@click="onLogin") 登录
+  .toast.toast-error 发生错误
+
+  script.
+      (function () {
+          $(document).ready(function () {
+              var vue = new Vue({
+                  el: 'body',
+                  data: {
+                      name: null,
+                      password: null,
+                  },
+                  methods: {
+                    showError: function (msg) {
+                        $(".toast-error").text(msg).fadeIn(500).delay(2000).fadeOut(1000);
+                    },
+                    onLogin:function () {
+                      if(this.name && this.password && this.name.length<=15 && this.password.length<=15){
+                          var vue = this;
+                          $.get('/api/user/login', {name:this.name,password:md5(md5(this.password))}, function (result) {
+                              if (result.code == 302) {
+                                  window.location.href = result.url;
+                              } else {
+                                  vue.showError(result.message)
+                              }
+                          });
+                      }else{
+                          this.showError("账号或者密码错误")
+                      }
+                    }
+                  }
+              });
+
+          })
+
+      }())
+

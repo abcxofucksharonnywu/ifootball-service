@@ -16,6 +16,7 @@ import com.abcxo.ifootball.service.utils.Constants.UserNotFoundException;
 import com.abcxo.ifootball.service.utils.Constants.UserValidateException;
 import com.abcxo.ifootball.service.utils.Utils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.http.util.TextUtils;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -58,13 +59,16 @@ public class UserController {
     @RequestMapping(value = "/user/login", method = RequestMethod.GET)
     public User login(@RequestParam(value = "email", defaultValue = "") String email,
                       @RequestParam(value = "password", defaultValue = "") String password,
-                      @RequestParam(value = "deviceToken", defaultValue = "") String deviceToken) {
+                      @RequestParam(value = "deviceToken", defaultValue = "") String deviceToken,
+                      @RequestParam(value = "admin", defaultValue="false") boolean admin) {
 
         User user = userRepo.findByEmailAndPassword(email, password);
         if (user == null) {
             throw new UserValidateException();
         }
-        user.setDeviceToken(deviceToken);
+        if (!admin){
+            user.setDeviceToken(deviceToken);
+        }
         return user;
     }
 
@@ -109,9 +113,12 @@ public class UserController {
 
 
     @RequestMapping(value = "/user/logout", method = RequestMethod.GET)
-    public void logout(@RequestParam(value = "uid") long uid) {
+    public void logout(@RequestParam(value = "uid") long uid,
+                       @RequestParam(value = "admin", defaultValue="false") boolean admin) {
         User user = userRepo.findOne(uid);
-        user.setDeviceToken(null);
+        if (!admin){
+            user.setDeviceToken(null);
+        }
         userRepo.saveAndFlush(user);
     }
 

@@ -1,0 +1,116 @@
+.con-sub.con-tweet
+    .con-title 分析文章列表
+    .con-body
+        .con-operation
+            .label 文章标题
+            input.input-info.name(placeholder="输入关键字",v-model="search")
+            button.button-blue.search(@click="onSearch") 搜索
+        .con-operation2
+            button.button-red.add(@click="onAdd") + 添加
+        ul.table.con-content
+            li.th
+                .item.item-1 ID
+                .item.item-2 标题
+                .item.item-3 简要
+                .item.item-4 点赞数
+                .item.item-5 评论数
+                .item.item-6 转发数
+                .item.item-7 日期
+                .item.item-8 操作
+            li.tr(v-for="tweet in tweets")
+                .item.item-1 {{tweet.id}}
+                .item.item-2 {{tweet.title}}
+                .item.item-3 {{tweet.summary}}
+                .item.item-4 ${{tweet.starCount}}
+                .item.item-5 ${{tweet.commentCount}}
+                .item.item-6 ${{tweet.repeatCount}}
+                .item.item-7 ${{tweet.time}}
+                .item.item-8.action-edit(@click="onEdit(tweet)") 编辑
+        .con-operation3
+            .leftRight(@click="onPrevious") 《
+            .label {{index}}/{{total}}
+            .leftRight(@click="onNext") 》
+            input.input-index.index(placeholder="Index",type="Number",v-model="jumpIndex")
+            button.button-jump.jump(@click="onJump") 跳转
+script.
+    (function () {
+        var vue = new Vue({
+            el: '.con-tweet',
+            data: {
+                user: {
+                    icon: "",
+                    name: "",
+                    password: "",
+                    phone: "",
+                    email: "",
+                },
+                isEdit:false,
+                tweets: [],
+                search: "",
+                index: 1,
+                total: 1,
+                jumpIndex:null,
+                result:null
+
+
+            },
+            methods: {
+                onAdd:function () {
+                    $(".popup").fadeIn(200);
+                },
+                loadData: function () {
+                    var vue = this;
+                    $.get('/api/tweet/list',{search:this.search,index:this.index}, function (result) {
+                        if (result.code == 200) {
+                            vue.tweets.push.apply(vue.tweets, result.content);
+                            vue.total = result.total;
+                        } else {
+                            gVue.showError(result.message);
+                        }
+                        setTimeout(function () {
+                            $(".con-tweet .tr .item-1").width($(".con-tweet .th .item-1").width());
+                            $(".con-tweet .tr .item-2").width($(".con-tweet .th .item-2").width());
+                            $(".con-tweet .tr .item-3").width($(".con-tweet .th .item-3").width());
+                            $(".con-tweet .tr .item-4").width($(".con-tweet .th .item-4").width());
+                            $(".con-tweet .tr .item-5").width($(".con-tweet .th .item-5").width());
+                            $(".con-tweet .tr .item-6").width($(".con-tweet .th .item-6").width());
+                            $(".con-tweet .tr .item-7").width($(".con-tweet .th .item-7").width());
+                            $(".con-tweet .tr .item-8").width($(".con-tweet .th .item-8").width());
+                        })
+
+                    });
+
+                },
+                onPrevious: function () {
+                    if (this.index > 1) {
+                        this.index--;
+                        this.tweets = [];
+                        this.loadData();
+                    }
+                },
+                onNext: function () {
+                    if (this.index < this.total) {
+                        this.index++;
+                        this.tweets = [];
+                        this.loadData();
+                    }
+                },
+                onSearch: function () {
+                    this.index = 1;
+                    this.total = 1;
+                    this.jumpIndex = null;
+                    this.tweets = [];
+                    this.loadData();
+                },
+                onJump:function () {
+                    if (this.jumpIndex && this.jumpIndex>=1 && this.jumpIndex<=this.total) {
+                        this.index = this.jumpIndex;
+                        this.tweets = [];
+                        this.loadData();
+                    }
+                }
+
+            }
+        });
+        vue.loadData();
+    }())

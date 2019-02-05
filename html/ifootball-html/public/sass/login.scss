@@ -1,0 +1,45 @@
+@import "common";
+
+.content{
+  height:100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .panel{
+    background-color: white;
+    width: 400px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    input{
+      font-size: 16px!important;
+      font-weight: 600 !important;
+      background-color: rgba(white, 0);
+      outline: none !important;
+      border: none;
+      border-bottom: 1px solid #E4E5E6;
+      height: 40px;
+      margin: $margin-min $margin-min 0px;
+      color: $text-color;
+      &::placeholder {
+        color: $text-color-light;
+      }
+      &:active, &:focus{
+        border-color: $text-color;
+      }
+    }
+    .login{
+      height: 40px;
+      outline: none !important;
+      border: none;
+      background-color: $theme-color;
+      margin: $margin-min $margin-min 0px;
+      color: white;
+      font-size: 16px;
+      &:active{
+        background-color: $theme-color-dark;
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+@import "compass";
+$header-height:70px;
+$text-color:#000;
+$text-color-light:#999;
+$margin-min:40px;
+$margin-mix:20px;
+$margin-mix2:10px;
+$theme-color:#319AFF;
+$theme-color-dark:#3E50B4;
+$theme-color-light:#FFF6F8;
+$background-color:#eee;
+$blue-color:#20ABFF;
+$blue-color-dark: #444bff;
+$yellow-color:#FFBA57;
+$yellow-color-dark: #ff7c29;
+$gray-color:#eee;
+$gray-color-dark: #999;
+.toast{
+  z-index: 4;
+  display: none;
+  width:200px;
+  height:auto;
+  position:fixed;
+  left:50%;
+  margin-left:-100px;
+  bottom:80px;
+  background-color: $text-color;
+  color: white;
+  font-size: 20px;
+  padding:10px;
+  text-align:center;
+  box-shadow: 0 0 0 1px #E6E7E8;
+}
+
+.dialog{
+  top:80px;
+  z-index: 3;
+  display: none;
+  width:50%;
+  height:auto;
+  position:fixed;
+  left:50%;
+  margin-left:-25%;
+  background-color: white;
+  color: white;
+  padding:10px;
+  box-shadow: 0 0 20px 10px #E6E7E8;
+  .dialog-header{
+    cursor: pointer;
+    color:$blue-color;
+  }
+  .dialog-content{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    .text{
+      color:$theme-color;
+      text-align: center;
+    }
+    .op-content{
+      display: flex;
+      .cancel{
+        background-color: $gray-color-dark;
+      }
+    }
+    button{
+      flex-grow: 1;
+      height: 40px;
+      outline: none !important;
+      border: none;
+      background-color: $theme-color;
+      margin: $margin-min $margin-min 0px;
+      color: white;
+      font-size: 16px;
+      &:active{
+        background-color: $theme-color-dark;
+      }
+    }
+  }
+}
+
+
+html{
+  height: 100%;
+}
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  //font: $font-size "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: tahoma,Century Schoolbook,Georgia,serif;
+  //font-weight: 600 !important;
+  * {-webkit-font-smoothing: antialiased;}
+  color:$text-color;
+  background-color: $background-color;
+}
+
+.header{
+  position: fixed;
+  padding: 0 $margin-min;
+  height: $header-height;
+  width: calc(100% - 80px);
+  background-color: white;
+  border-bottom: 1px solid #E4E5E6;
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+  .logo{
+    height:100%;
+  }
+}
+.content{
+  min-height: 100%;
+  width: 100%;
+}

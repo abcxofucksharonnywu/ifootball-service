@@ -10,25 +10,25 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication
-@EnableScheduling
-public class Application{
-
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(Application.class, args);
-    }
-
-}
-
 //@SpringBootApplication
 //@EnableScheduling
-//public class Application extends SpringBootServletInitializer {
+//public class Application{
 //
-//    public static void main(String[] args) {
+//    public static void main(String[] args) throws Exception {
 //        SpringApplication.run(Application.class, args);
 //    }
-//    @Override
-//    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-//        return application.sources(Application.class);
-//    }
+//
 //}
+
+@SpringBootApplication
+@EnableScheduling
+public class Application extends SpringBootServletInitializer {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(Application.class);
+    }
+}

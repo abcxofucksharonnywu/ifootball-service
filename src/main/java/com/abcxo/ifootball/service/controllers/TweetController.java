@@ -5,6 +5,8 @@ import com.abcxo.ifootball.service.repos.*;
 import com.abcxo.ifootball.service.utils.Constants;
 import com.abcxo.ifootball.service.utils.Utils;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.Entity;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -243,8 +246,8 @@ public class TweetController {
 
             if (getsType != GetsType.SEARCH) {
                 if (uids.size() > 0) {
-                    List<Long> tids = userTweetRepo.findTidsByUidsAndUserTweetType(uids, UserTweet.UserTweetType.ADD);
-                    tweets = tweetRepo.findByIdIn(tids, pageRequest);
+                    List<Long> tids = userTweetRepo.findTidsByUidsAndUserTweetType(uids, UserTweet.UserTweetType.ADD);//获取推文
+                    tweets = tweetRepo.findByTweetTypeAndIdIn(getsType == GetsType.PRO ? Tweet.TweetType.PRO : Tweet.TweetType.NORMAL, tids, pageRequest);
                 }
             } else if (!StringUtils.isEmpty(keyword)) {
                 keyword = "%" + keyword + "%";
@@ -273,7 +276,54 @@ public class TweetController {
         } else {
             return new ArrayList<>();
         }
+    }
 
+    public class ListResponse {
+        private Long total;
+        private List<Tweet> content;
+
+        public ListResponse(Long total, List<Tweet> content) {
+            this.total = total;
+            this.content = content;
+        }
+
+        public Long getTotal() {
+            return total;
+        }
+
+        public void setTotal(Long total) {
+            this.total = total;
+        }
+
+        public List<Tweet> getContent() {
+            return content;
+        }
+
+        public void setContent(List<Tweet> content) {
+            this.content = content;
+        }
+    }
+
+    @RequestMapping(value = "/tweet/list2", method = RequestMethod.GET)
+    public ListResponse gets2(@RequestParam("tweetType") Tweet.TweetType tweetType,
+                              @RequestParam("uid") long uid,
+                              @RequestParam("keyword") String keyword,
+                              @RequestParam("pageIndex") int pageIndex,
+                              @RequestParam("pageSize") int pageSize) {
+        PageRequest pageRequest = new PageRequest(pageIndex, pageSize, Sort.Direction.DESC, "date");
+        Page<Tweet> tweets = null;
+        if (uid > 0) {
+            List<Long> uids = new ArrayList<>();
+            uids.add(uid);
+            List<Long> tids = userTweetRepo.findTidsByUidsAndUserTweetType(uids, UserTweet.UserTweetType.ADD);//获取推文
+            if (!StringUtils.isEmpty(keyword)) {
+                keyword = "%" + keyword + "%";
+                tweets = tweetRepo.findByTweetTypeAndIdInAndTitleLikeIgnoreCase(tweetType, tids, keyword, pageRequest);
+            } else {
+                tweets = tweetRepo.findByTweetTypeAndIdIn(tweetType, tids, pageRequest);
+            }
+        }
+        return new ListResponse(tweets != null ? tweets.getTotalElements() : 0, tweets != null ? tweets.getContent() : new ArrayList<>());
     }
 
 
