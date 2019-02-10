@@ -18,7 +18,7 @@ router.get('/user/login', function (req, res, next) {
         var password = req.query.password
         if (name && password) {
             request({
-                method: 'GET',
+                method: 'get',
                 url: host + '/user/login',
                 headers: {
                     'Content-Type': 'application/json'
@@ -49,7 +49,7 @@ router.get('/tweet/list', function (req, res, next) {
     var index = req.query.index
     if (req.session.user != null) {
         request({
-            method: 'GET',
+            method: 'get',
             url: host + '/tweet/list2',
             headers: {
                 'Content-Type': 'application/json'
@@ -75,9 +75,88 @@ router.get('/tweet/list', function (req, res, next) {
 });
 
 
+router.get('/tweet/delete', function (req, res, next) {
+    var tid = req.query.tid
+    if (req.session.user != null) {
+        request({
+            method: 'delete',
+            url: host + '/tweet',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            qs: {
+                tid: tid,
+                uid: req.session.user.id
+            }
+        }, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                res.send({code: 302, url: '/'})
+            } else {
+                res.send({code: 400, message: "推文不存在或删除失败"})
+            }
+        });
+    } else {
+        res.send({code: 400, message: "请尝试再次登录"})
+    }
+});
+
+
+router.get('/tweet/edit', function (req, res, next) {
+    var tid = req.query.tid
+    if (req.session.user != null) {
+        request({
+            method: 'post',
+            url: host + '/tweet',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            qs: {
+                tid: tid,
+                uid: req.session.user.id
+            }
+        }, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                res.send({code: 302, url: '/'})
+            } else {
+                res.send({code: 400, message: "推文不存在或删除失败"})
+            }
+        });
+    } else {
+        res.send({code: 400, message: "请尝试再次登录"})
+    }
+});
+
+
+router.get('/tweet/add', function (req, res, next) {
+    var tid = req.tweet
+    if (req.session.user != null) {
+        request({
+            method: 'post',
+            url: host + '/tweet',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            qs: {
+                tid: tid,
+                uid: req.session.user.id
+            }
+        }, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                res.send({code: 302, url: '/'})
+            } else {
+                res.send({code: 400, message: "推文不存在或删除失败"})
+            }
+        });
+    } else {
+        res.send({code: 400, message: "请尝试再次登录"})
+    }
+});
+
+
+
 router.getTweet = function getTweet(uid, tid, callback) {
     request({
-        method: 'GET',
+        method: 'get',
         url: host + '/tweet',
         headers: {
             'Content-Type': 'application/json'
