@@ -115,6 +115,11 @@ block content
                         var tid = GetUrlParam("tid")
                         var content = gEditor.txt.html()
                         var summary = gEditor.txt.text()
+                        var imgEs = $(gEditor.txt.html()).find('img')
+                        var images = []
+                        imgEs.each(function (index,img) {
+                            images.push($(img).attr('src'))
+                        })
                         var update = tid != null && tid > 0
                         if (vue.tweet.title != null && vue.tweet.title.length > 0 && content != null && content.length > 0 && content != '<p><br></p>') {
                             this.showIndicator();
@@ -123,6 +128,7 @@ block content
                                 title: vue.tweet.title,
                                 content: content,
                                 summary: summary,
+                                images: images.join(";"),
                                 update: update
                             }, function (result) {
                                 vue.hideIndicator()

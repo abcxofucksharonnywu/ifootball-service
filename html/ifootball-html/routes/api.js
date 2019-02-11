@@ -58,7 +58,7 @@ router.get('/tweet/list', function (req, res, next) {
                 tweetType: "PRO",//pro
                 uid: req.session.user.id,
                 keyword: search,
-                pageIndex: index-1,
+                pageIndex: index - 1,
                 pageSize: 30
             }
         }, function (error, response, body) {
@@ -106,13 +106,15 @@ router.post('/tweet/add', function (req, res, next) {
     var title = req.body.title
     var content = req.body.content
     var summary = req.body.summary
+    var images = req.body.images
     var update = req.body.update == 'true' ? true : false
     if (req.session.user != null) {
         var tweet = update ? {
             id: tid,
             title: title,
             content: content,
-            summary: summary
+            summary: summary,
+            images: images
         } : {
             uid: req.session.user.id,
             icon: req.session.user.avatar,
@@ -120,6 +122,7 @@ router.post('/tweet/add', function (req, res, next) {
             title: title,
             content: content,
             summary: summary,
+            images: images,
             tweetType: "PRO"
 
         }

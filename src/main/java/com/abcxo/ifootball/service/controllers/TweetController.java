@@ -247,7 +247,7 @@ public class TweetController {
             if (getsType != GetsType.SEARCH) {
                 if (uids.size() > 0) {
                     List<Long> tids = userTweetRepo.findTidsByUidsAndUserTweetType(uids, UserTweet.UserTweetType.ADD);//获取推文
-                    tweets = tweetRepo.findByTweetTypeAndIdIn(getsType == GetsType.PRO ? Tweet.TweetType.PRO : Tweet.TweetType.NORMAL, tids, pageRequest);
+                    tweets = getsType == GetsType.USER ? tweetRepo.findByIdIn(tids, pageRequest) : tweetRepo.findByTweetTypeAndIdIn(getsType == GetsType.PRO ? Tweet.TweetType.PRO : Tweet.TweetType.NORMAL, tids, pageRequest);
                 }
             } else if (!StringUtils.isEmpty(keyword)) {
                 keyword = "%" + keyword + "%";
@@ -335,8 +335,7 @@ public class TweetController {
 
         tweet.setTitle(tw.getTitle());
         tweet.setSummary(tw.getSummary());
-        List<String> imageUrls = new ArrayList<>();
-        tweet.setImages(String.join(";", imageUrls));
+        tweet.setImages(tw.getImages());
         tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, tw.getContent()).replace(Constants.TWEET_HTML_IMAGES_TAG, "")));
         tweet.setTime(Utils.getTime());
         tweet.setDate(System.currentTimeMillis());
