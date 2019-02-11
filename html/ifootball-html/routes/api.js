@@ -58,7 +58,7 @@ router.get('/tweet/list', function (req, res, next) {
                 tweetType: "PRO",//pro
                 uid: req.session.user.id,
                 keyword: search,
-                pageIndex: index,
+                pageIndex: index-1,
                 pageSize: 30
             }
         }, function (error, response, body) {
@@ -101,57 +101,55 @@ router.get('/tweet/delete', function (req, res, next) {
 });
 
 
-router.get('/tweet/edit', function (req, res, next) {
-    var tid = req.query.tid
+router.post('/tweet/add', function (req, res, next) {
+    var tid = req.body.tid
+    var title = req.body.title
+    var content = req.body.content
+    var summary = req.body.summary
+    var update = req.body.update == 'true' ? true : false
     if (req.session.user != null) {
+        var tweet = update ? {
+            id: tid,
+            title: title,
+            content: content,
+            summary: summary
+        } : {
+            uid: req.session.user.id,
+            icon: req.session.user.avatar,
+            name: req.session.user.name,
+            title: title,
+            content: content,
+            summary: summary,
+            tweetType: "PRO"
+
+        }
         request({
             method: 'post',
-            url: host + '/tweet',
+            url: host + '/tweet2',
             headers: {
                 'Content-Type': 'application/json'
             },
             qs: {
-                tid: tid,
-                uid: req.session.user.id
+                tweet: JSON.stringify(tweet),
+                update: update
             }
         }, function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                res.send({code: 302, url: '/'})
+                var json = JSON.parse(body)
+                if (update) {
+                    res.send({code: 200, message: "推文保存成功"})
+                } else {
+                    res.send({code: 302, url: '/tweet/content?tid=' + json.id, message: "推文保存成功"})
+                }
+
             } else {
-                res.send({code: 400, message: "推文不存在或删除失败"})
+                res.send({code: 400, message: "推文保存失败"})
             }
         });
     } else {
         res.send({code: 400, message: "请尝试再次登录"})
     }
 });
-
-
-router.get('/tweet/add', function (req, res, next) {
-    var tid = req.tweet
-    if (req.session.user != null) {
-        request({
-            method: 'post',
-            url: host + '/tweet',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            qs: {
-                tid: tid,
-                uid: req.session.user.id
-            }
-        }, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                res.send({code: 302, url: '/'})
-            } else {
-                res.send({code: 400, message: "推文不存在或删除失败"})
-            }
-        });
-    } else {
-        res.send({code: 400, message: "请尝试再次登录"})
-    }
-});
-
 
 
 router.getTweet = function getTweet(uid, tid, callback) {

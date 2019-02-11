@@ -29,14 +29,30 @@ router.get('/tweet', function (req, res, next) {
 router.get('/tweet/content', function (req, res, next) {
     var tid = req.query.tid;
     var uid = req.session.user.id;
-    api.getTweet(uid, tid, function (json) {
+    if (tid != null && tid > 0) {
+        api.getTweet(uid, tid, function (json) {
+            if (json != null) {
+                res.render('tweet-content', {
+                    title: '欢迎使用足球狗CMS',
+                    name: req.session.user.name,
+                    user: req.session.user,
+                    tweet: json
+                });
+            } else {
+                return res.redirect("/")
+            }
+
+        })
+
+    } else {
         res.render('tweet-content', {
             title: '欢迎使用足球狗CMS',
             name: req.session.user.name,
             user: req.session.user,
-            tweet: json
+            tweet: {}
         });
-    })
+    }
+
 });
 
 

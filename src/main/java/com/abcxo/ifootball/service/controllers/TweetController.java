@@ -328,41 +328,33 @@ public class TweetController {
 
 
     //新建Tweet
-    @RequestMapping(value = "/tweet", method = RequestMethod.POST)
-    public Tweet add2(@RequestParam("tweet") String tweetStr) {
-        Tweet tweet = new Gson().fromJson(tweetStr, Tweet.class);
-        long uid = tweet.getUid();
-        User user = userRepo.findOne(uid);
-        user.setTweetCount(user.getTweetCount() + 1);
-        userRepo.saveAndFlush(user);
+    @RequestMapping(value = "/tweet2", method = RequestMethod.POST)
+    public Tweet add2(@RequestParam("tweet") String tweetStr, @RequestParam(value = "update", defaultValue = "false") boolean update) {
+        Tweet tw = new Gson().fromJson(tweetStr, Tweet.class);
+        Tweet tweet = update ? tweetRepo.findOne(tw.getId()) : tw;
 
-        String content = tweet.getContent();
-        tweet.setSummary(content);
-        content = content.replace(" ", "&nbsp;").replace("\n", "<br>");
-        Pattern pattern = Pattern.compile("@[^\\p{P}|\\p{S}|\\p{Z}|\\p{M}]*");
-        String mContent = content;
-        Matcher matcher = pattern.matcher(mContent);
-        while (matcher.find()) {
-            int start = matcher.start();
-            int end = matcher.end();
-            String p = mContent.substring(start, end);
-            content = content.replace(p, Constants.TWEET_ADD_PROMPT_HTML.replace(Constants.TWEET_HTML_PROMPT_TAG, p));
-        }
-
+        tweet.setTitle(tw.getTitle());
+        tweet.setSummary(tw.getSummary());
         List<String> imageUrls = new ArrayList<>();
-        StringBuffer imageContent = new StringBuffer();
         tweet.setImages(String.join(";", imageUrls));
-        tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, content).replace(Constants.TWEET_HTML_IMAGES_TAG, "")));
+        tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, tw.getContent()).replace(Constants.TWEET_HTML_IMAGES_TAG, "")));
         tweet.setTime(Utils.getTime());
         tweet.setDate(System.currentTimeMillis());
-
         tweet = tweetRepo.saveAndFlush(tweet);
 
-        UserTweet userTweet = new UserTweet();
-        userTweet.setUid(uid);
-        userTweet.setTid(tweet.getId());
-        userTweet.setUserTweetType(UserTweet.UserTweetType.ADD);
-        userTweetRepo.saveAndFlush(userTweet);
+        if (!update) {
+            long uid = tweet.getUid();
+            User user = userRepo.findOne(uid);
+            user.setTweetCount(user.getTweetCount() + 1);
+            userRepo.saveAndFlush(user);
+
+            UserTweet userTweet = new UserTweet();
+            userTweet.setUid(uid);
+            userTweet.setTid(tweet.getId());
+            userTweet.setUserTweetType(UserTweet.UserTweetType.ADD);
+            userTweetRepo.saveAndFlush(userTweet);
+        }
+
 
         return tweet;
     }

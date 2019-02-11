@@ -1,6 +1,6 @@
 /* line 19, ../sass/common.scss */
 .toast {
-  z-index: 4;
+  z-index: 2000000;
   display: none;
   width: 200px;
   height: auto;

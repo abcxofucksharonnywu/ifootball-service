@@ -14,6 +14,9 @@ block content
     .content
         .rightPanel
             .con
+                .tweet-title
+                    .label 文章标题
+                    input.input-info.name(placeholder="输入文章标题",v-model="tweet.title")
                 .tweet-con
                 .tweet-con-op
                     button.button-red.del(@click="onDel") 删除
@@ -57,7 +60,7 @@ block content
             gVue = new Vue({
                 el: 'body',
                 data: {
-                    dialogCallback: null
+                    tweet: !{JSON.stringify(tweet)}
                 },
                 methods: {
 
@@ -111,15 +114,29 @@ block content
                         var vue = this;
                         var tid = GetUrlParam("tid")
                         var content = gEditor.txt.html()
-                        if (content != null && content.length > 0) {
+                        var summary = gEditor.txt.text()
+                        var update = tid != null && tid > 0
+                        if (vue.tweet.title != null && vue.tweet.title.length > 0 && content != null && content.length > 0 && content != '<p><br></p>') {
                             this.showIndicator();
-                            $.get(tid != null && tid > 0 ? '/api/tweet/edit' : '/api/tweet/add', {
+                            $.post('/api/tweet/add', {
                                 tid: tid,
-                                content: content
+                                title: vue.tweet.title,
+                                content: content,
+                                summary: summary,
+                                update: update
                             }, function (result) {
                                 vue.hideIndicator()
                                 vue.showError(result.message)
+                                if (!update) {
+                                    setTimeout(function () {
+                                        if (result.code == 302) {
+                                            window.location.href = result.url;
+                                        }
+                                    }, 500)
+                                }
                             });
+                        } else {
+                            vue.showError("请输入标题和内容")
                         }
 
 
@@ -138,9 +155,16 @@ block content
                 }
             });
             var E = window.wangEditor
-            var editor = new E('.tweet-con')
-            editor.create()
-            gEditor = editor
+            gEditor = new E('.tweet-con')
+            gEditor.create()
+            if (gVue.tweet.content != null && gVue.tweet.content.indexOf("http") > -1) {
+                gVue.showIndicator();
+                $.get(gVue.tweet.content, function (result) {
+                    gVue.hideIndicator()
+                    gEditor.txt.html($($(result).siblings('.content')).html())
+                });
+            }
+
         })
 
 

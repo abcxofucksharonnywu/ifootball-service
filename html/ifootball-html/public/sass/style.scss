@@ -313,6 +313,27 @@
         }
       }
 
+      .tweet-title {
+        display: flex;
+        align-items: center;
+        height: $header-height;
+        .input-info {
+          margin-left: $margin-mix;
+          font-size: 16px !important;
+          background-color: rgba(white, 0);
+          outline: none !important;
+          border: none;
+          border: 1px solid #E4E5E6;
+          height: 30px;
+          width: 182px;
+          color: $text-color;
+
+          &::placeholder {
+            color: $text-color-light;
+          }
+        }
+
+      }
 
       .tweet-con {
         width: 100%;
@@ -326,11 +347,12 @@
       .tweet-con-op {
         margin-top: 40px;
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
 
         .button-red {
           height: 50px;
           width: 40%;
+          max-width: 200px;
           outline: none !important;
           border: none;
           background-color: $gray-color-dark;
@@ -346,6 +368,7 @@
           margin-left: $margin-min;
           height: 50px;
           width: 40%;
+          max-width: 200px;
           outline: none !important;
           border: none;
           background-color: $blue-color;

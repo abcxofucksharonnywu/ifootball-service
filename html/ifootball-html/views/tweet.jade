@@ -21,10 +21,10 @@
                 .item.item-1 {{tweet.id}}
                 .item.item-2 {{tweet.title}}
                 .item.item-3 {{tweet.summary}}
-                .item.item-4 ${{tweet.starCount}}
-                .item.item-5 ${{tweet.commentCount}}
-                .item.item-6 ${{tweet.repeatCount}}
-                .item.item-7 ${{tweet.time}}
+                .item.item-4 {{tweet.starCount}}
+                .item.item-5 {{tweet.commentCount}}
+                .item.item-6 {{tweet.repeatCount}}
+                .item.item-7 {{tweet.time}}
                 .item.item-8.action-edit(@click="onEdit(tweet)") 编辑
         .con-operation3
             .leftRight(@click="onPrevious") 《
@@ -57,6 +57,9 @@ script.
             methods: {
                 onAdd:function () {
                     window.open("/tweet/content")
+                },
+                onEdit: function (tweet) {
+                    window.open("/tweet/content?tid="+tweet.id)
                 },
                 loadData: function () {
                     var vue = this;
