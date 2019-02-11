@@ -42,8 +42,8 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.3.5'
     compile 'com.belerweb:pinyin4j:2.5.0'
     compile 'net.sourceforge.htmlunit:htmlunit:2.19'
-//    provided 'org.springframework.boot:spring-boot-starter-tomcat'
-    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    provided 'org.springframework.boot:spring-boot-starter-tomcat'
+//    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
 
 

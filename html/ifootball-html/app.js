@@ -32,7 +32,7 @@ app.use(bodyParser.json({limit: "50mb"}));
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit: 50000}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-MongoStore = require('connect-mongo')(session)
+// MongoStore = require('connect-mongo')(session)
 app.use(session({
     secret: 'ifootball',
     saveUninitialized: true,
@@ -40,7 +40,7 @@ app.use(session({
     //     maxAge: 365 * 3600000
     // },
     resave: true,
-    store: new MongoStore({url: 'mongodb://localhost:27017/ifootball'})
+    // store: new MongoStore({url: 'mongodb://localhost:27017/ifootball'})
 }))
 
 
