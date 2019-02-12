@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 // var db = require('monk')('localhost/ifootball')
 var request = require('request');
-var host = "http://localhost:8080/ifootball/"
+var host = "http://www.iamthefootball.com:8080/ifootball"
 // var host = "http://localhost:8080"
 
 router.get('/user/logout', function (req, res, next) {
@@ -126,13 +126,8 @@ router.post('/tweet/add', function (req, res, next) {
             tweetType: "PRO"
 
         }
-        request({
-            method: 'post',
-            url: host + '/tweet2',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            qs: {
+        request.post(host + '/tweet2', {
+            form: {
                 tweet: JSON.stringify(tweet),
                 update: update
             }
