@@ -117,30 +117,35 @@ block content
                         var summary = gEditor.txt.text()
                         var imgEs = $(gEditor.txt.html()).find('img')
                         var images = []
-                        imgEs.each(function (index,img) {
+                        imgEs.each(function (index, img) {
                             images.push($(img).attr('src'))
                         })
                         var update = tid != null && tid > 0
                         if (vue.tweet.title != null && vue.tweet.title.length > 0 && content != null && content.length > 0 && content != '<p><br></p>') {
-                            this.showIndicator();
-                            $.post('/api/tweet/add', {
-                                tid: tid,
-                                title: vue.tweet.title,
-                                content: content,
-                                summary: summary,
-                                images: images.join(";"),
-                                update: update
-                            }, function (result) {
-                                vue.hideIndicator()
-                                vue.showError(result.message)
-                                if (!update) {
-                                    setTimeout(function () {
-                                        if (result.code == 302) {
-                                            window.location.href = result.url;
-                                        }
-                                    }, 500)
-                                }
-                            });
+                            if (images.length > 0) {
+                                this.showIndicator();
+                                $.post('/api/tweet/add', {
+                                    tid: tid,
+                                    title: vue.tweet.title,
+                                    content: content,
+                                    summary: summary,
+                                    images: images.join(";"),
+                                    update: update
+                                }, function (result) {
+                                    vue.hideIndicator()
+                                    vue.showError(result.message)
+                                    if (!update) {
+                                        setTimeout(function () {
+                                            if (result.code == 302) {
+                                                window.location.href = result.url;
+                                            }
+                                        }, 500)
+                                    }
+                                });
+                            } else {
+                                vue.showError("请添加图片")
+                            }
+
                         } else {
                             vue.showError("请输入标题和内容")
                         }
@@ -162,7 +167,10 @@ block content
             });
             var E = window.wangEditor
             gEditor = new E('.tweet-con')
+            // 下面两个配置，使用其中一个即可显示“上传图片”的tab。但是两者不要同时使用！！！
+            gEditor.customConfig.uploadImgServer = '/api/upload'
             gEditor.create()
+
             if (gVue.tweet.content != null && gVue.tweet.content.indexOf("http") > -1) {
                 gVue.showIndicator();
                 $.get(gVue.tweet.content, function (result) {

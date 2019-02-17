@@ -60,13 +60,13 @@ public class UserController {
     public User login(@RequestParam(value = "email", defaultValue = "") String email,
                       @RequestParam(value = "password", defaultValue = "") String password,
                       @RequestParam(value = "deviceToken", defaultValue = "") String deviceToken,
-                      @RequestParam(value = "admin", defaultValue="false") boolean admin) {
+                      @RequestParam(value = "admin", defaultValue = "false") boolean admin) {
 
         User user = userRepo.findByEmailAndPassword(email, password);
         if (user == null) {
             throw new UserValidateException();
         }
-        if (!admin){
+        if (!admin) {
             user.setDeviceToken(deviceToken);
         }
         return user;
@@ -104,7 +104,7 @@ public class UserController {
             focus(user.getId(), userRepo.findByName(Constants.NEWS_HUABIAN).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.NEWS_VIDEO).getId(), true);
             focus(user.getId(), userRepo.findByName(Constants.SPECIAL_BREAK).getId(), true);
-        }else{
+        } else {
             user.setDeviceToken(deviceToken);
             user = userRepo.saveAndFlush(user);
         }
@@ -114,9 +114,9 @@ public class UserController {
 
     @RequestMapping(value = "/user/logout", method = RequestMethod.GET)
     public void logout(@RequestParam(value = "uid") long uid,
-                       @RequestParam(value = "admin", defaultValue="false") boolean admin) {
+                       @RequestParam(value = "admin", defaultValue = "false") boolean admin) {
         User user = userRepo.findOne(uid);
-        if (!admin){
+        if (!admin) {
             user.setDeviceToken(null);
         }
         userRepo.saveAndFlush(user);
@@ -263,7 +263,7 @@ public class UserController {
                         user2.setDistanceLong(Utils.distance(user.getLon(), user.getLat(), user2.getLon(), user2.getLat()));
                         String str;
                         if (user2.getDistanceLong() < 1000) {
-                            str = String.format("%dm", user2.getDistanceLong());
+                            str = user2.getDistanceLong() < 100 ? "很近" : String.format("%dm", user2.getDistanceLong());
                         } else {
                             str = String.format("%.2fkm", user2.getDistanceLong() / 1000.0f);
                         }

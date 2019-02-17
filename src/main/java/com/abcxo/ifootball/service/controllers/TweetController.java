@@ -338,7 +338,9 @@ public class TweetController {
         tweet.setImages(tw.getImages());
         tweet.setContent(Utils.content(Constants.TWEET_ADD_HTML.replace(Constants.TWEET_HTML_CONTENT_TAG, tw.getContent()).replace(Constants.TWEET_HTML_IMAGES_TAG, "")));
         tweet.setTime(Utils.getTime());
-        tweet.setDate(System.currentTimeMillis());
+        if (!update) {
+            tweet.setDate(System.currentTimeMillis());
+        }
         tweet = tweetRepo.saveAndFlush(tweet);
 
         if (!update) {
@@ -356,6 +358,12 @@ public class TweetController {
 
 
         return tweet;
+    }
+
+    //新建Tweet
+    @RequestMapping(value = "/tweet/upload", method = RequestMethod.POST)
+    public String upload(@RequestParam("image") MultipartFile image) {
+        return Utils.image(image);
     }
 
 

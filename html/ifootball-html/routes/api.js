@@ -150,6 +150,45 @@ router.post('/tweet/add', function (req, res, next) {
 });
 
 
+var multer = require('multer')
+var storage = multer.memoryStorage()
+var upload = multer({storage: storage})
+router.post('/upload', upload.any(), function (req, res, next) {
+    if (req.session.user != null && req.files.length > 0) {
+        const formData = {
+            image: {
+                value: req.files[0].buffer,
+                options: {
+                    filename: req.files[0].fieldname,
+                    contentType: req.files[0].mimetype
+                }
+            }
+        };
+        request.post({
+                url: host + '/tweet/upload', formData: formData
+            }, function (error, response, body) {
+                if (!error && response.statusCode == 200 && body != null) {
+                    res.send({
+                        // errno 即错误代码，0 表示没有错误。
+                        //       如果有错误，errno != 0，可通过下文中的监听函数 fail 拿到该错误码进行自定义处理
+                        "errno": 0,
+                        // data 是一个数组，返回若干图片的线上地址
+                        "data": [
+                            body
+                        ]
+                    })
+                } else {
+                    res.send({code: 400, message: "图片上传失败"})
+                }
+            }
+        )
+        ;
+    } else {
+        res.send({code: 400, message: "请尝试再次登录"})
+    }
+});
+
+
 router.getTweet = function getTweet(uid, tid, callback) {
     request({
         method: 'get',
