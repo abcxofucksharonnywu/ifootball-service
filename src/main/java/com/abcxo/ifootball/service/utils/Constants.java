@@ -22,7 +22,7 @@ public class Constants {
     public static final String EMAIL_PASSWORD = "srnrtunumukwdccd";
 
 
-    public static final int MAX_SUMMARY = 70;
+    public static final int MAX_SUMMARY = 200;
 
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";
 
