@@ -285,13 +285,13 @@ public class UserController {
                 });
 
 
+                pageIndex = pageIndex + 1;
                 for (int i = 0; i < userList.size(); i++) {
-                    if (i > (pageIndex - 1) * pageSize && i < pageIndex * pageSize) {
+                    if (i < (pageIndex - 1) * pageSize) {
                         continue;
-                    } else if (i < (pageIndex + 1) * pageSize && i >= pageIndex * pageSize) {
+                    } else if (i >= (pageIndex - 1) * pageSize && i < pageIndex * pageSize) {
                         User user2 = userList.get(i);
                         getsUsers.add(user2);
-
                     } else {
                         break;
                     }

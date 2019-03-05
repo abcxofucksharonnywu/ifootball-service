@@ -24,7 +24,7 @@ block content
                             $(".toast-error").text(msg).fadeIn(500).delay(2000).fadeOut(1000);
                         },
                         onLogin: function () {
-                            if (this.name && this.password && this.name.length <= 15 && this.password.length <= 15) {
+                            if (this.name && this.password && this.name.length >= 3 && this.password.length >= 3) {
                                 var vue = this;
                                 $.get('/api/user/login', {
                                     name: this.name,
