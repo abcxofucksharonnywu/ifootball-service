@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 // var db = require('monk')('localhost/ifootball')
 var request = require('request');
-// var host = "http://www.iamthefootball.com:8080/ifootball"
-var host = "http://localhost:8080"
+var host = "http://www.iamthefootball.com:8080/ifootball"
+// var host = "http://localhost:8080"
 
 router.get('/user/logout', function (req, res, next) {
     req.session.destroy(function (err) {
