@@ -169,6 +169,7 @@ block content
             gEditor = new E('.tweet-con')
             // 下面两个配置，使用其中一个即可显示“上传图片”的tab。但是两者不要同时使用！！！
             gEditor.customConfig.uploadImgServer = '/api/upload'
+            gEditor.customConfig.uploadImgTimeout = 60000
             gEditor.create()
 
             if (gVue.tweet.content != null && gVue.tweet.content.indexOf("http") > -1) {
