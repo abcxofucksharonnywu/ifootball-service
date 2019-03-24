@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 // var db = require('monk')('localhost/ifootball')
 var request = require('request');
-var host = "http://www.iamthefootball.com:8080/ifootball"
-// var host = "http://localhost:8080"
+// var host = "http://www.iamthefootball.com:8080/ifootball"
+var host = "http://localhost:8080"
 
 router.get('/user/logout', function (req, res, next) {
     req.session.destroy(function (err) {
@@ -165,7 +165,7 @@ router.post('/upload', upload.any(), function (req, res, next) {
             }
         };
         request.post({
-                url: host + '/tweet/upload', formData: formData
+                url: host + '/tweet/upload', formData: formData,timeout: 20000
             }, function (error, response, body) {
                 if (!error && response.statusCode == 200 && body != null) {
                     res.send({
